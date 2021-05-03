@@ -8,8 +8,12 @@
 
     public interface ICategoriesService
     {
+        public Task AddAsync(CategoryInputModel input);
+
+        public Task EditAsync(int id, CategoryInputModel input);
+
         public IEnumerable<CategoryCrudModel> GetAll();
 
-        public Task AddAsync(CategoryInputModel input);
+        public CategoryEditModel GetById(int id);
     }
 }

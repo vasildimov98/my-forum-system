@@ -42,5 +42,32 @@
 
             return this.RedirectToAction("Index");
         }
+
+        public IActionResult Edit(int id)
+        {
+            var category = this.categorieService.GetById(id);
+
+            return this.View(category);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, CategoryInputModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(id);
+            }
+
+            try
+            {
+                await this.categorieService.EditAsync(id, input);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("Index");
+        }
     }
 }
