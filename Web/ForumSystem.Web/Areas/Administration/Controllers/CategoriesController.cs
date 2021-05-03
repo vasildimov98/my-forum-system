@@ -1,23 +1,46 @@
 ﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using ForumSystem.Data;
     using ForumSystem.Services.Data;
-    using ForumSystem.Web.ViewModels.Administration.Dashboard;
+    using ForumSystem.Web.ViewModels.Administration.Categories;
 
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoriesController : AdministrationController
     {
-        private readonly ISettingsService settingsService;
+        private readonly ICategoriesService categorieService;
 
-        public CategoriesController(ISettingsService settingsService)
+        public CategoriesController(ICategoriesService categoriesService)
         {
-            this.settingsService = settingsService;
+            this.categorieService = categoriesService;
         }
 
         public IActionResult Index()
         {
-            var viewModel = new IndexViewModel { SettingsCount = this.settingsService.GetCount(), };
-            return this.View(viewModel);
+            var categories = this.categorieService.GetAll();
+
+            return this.View(categories);
+        }
+
+        public IActionResult Create()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CategoryInputModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            await this.categorieService.AddAsync(input);
+
+            return this.RedirectToAction("Index");
         }
     }
 }
