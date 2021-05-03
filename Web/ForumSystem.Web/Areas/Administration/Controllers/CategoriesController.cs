@@ -5,11 +5,11 @@
 
     using Microsoft.AspNetCore.Mvc;
 
-    public class DashboardController : AdministrationController
+    public class CategoriesController : AdministrationController
     {
         private readonly ISettingsService settingsService;
 
-        public DashboardController(ISettingsService settingsService)
+        public CategoriesController(ISettingsService settingsService)
         {
             this.settingsService = settingsService;
         }
