@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using ForumSystem.Data.Models;
     using ForumSystem.Web.ViewModels.Administration.Categories;
 
     public interface ICategoriesService
@@ -12,8 +11,10 @@
 
         public Task EditAsync(int id, CategoryInputModel input);
 
+        public Task DeleteAsync(int id);
+
         public IEnumerable<CategoryCrudModel> GetAll();
 
-        public CategoryEditModel GetById(int id);
+        public Task<CategoryViewModel> GetByIdAsync(int id);
     }
 }

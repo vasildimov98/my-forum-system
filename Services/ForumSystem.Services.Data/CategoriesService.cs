@@ -9,6 +9,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Administration.Categories;
+    using Microsoft.EntityFrameworkCore;
 
     public class CategoriesService : ICategoriesService
     {
@@ -51,6 +52,21 @@
             await this.categories.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            var categoryToDelete = this.categories
+                .All()
+                .FirstOrDefault(x => x.Id == id);
+
+            if (categoryToDelete == null)
+            {
+                throw new ArgumentNullException(nameof(categoryToDelete));
+            }
+
+            this.categories.Delete(categoryToDelete);
+            await this.categories.SaveChangesAsync();
+        }
+
         public IEnumerable<CategoryCrudModel> GetAll()
         {
             var categories = this.categories.All()
@@ -60,11 +76,11 @@
             return categories;
         }
 
-        public CategoryEditModel GetById(int id)
-            => this.categories
+        public async Task<CategoryViewModel> GetByIdAsync(int id)
+            => await this.categories
                 .All()
                 .Where(x => x.Id == id)
-                .To<CategoryEditModel>()
-                .FirstOrDefault();
+                .To<CategoryViewModel>()
+                .FirstOrDefaultAsync();
     }
 }

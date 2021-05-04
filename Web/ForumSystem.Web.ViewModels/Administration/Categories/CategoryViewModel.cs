@@ -3,7 +3,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
 
-    public class CategoryEditModel : IMapFrom<Category>
+    public class CategoryViewModel : IMapFrom<Category>
     {
         public int Id { get; set; }
 

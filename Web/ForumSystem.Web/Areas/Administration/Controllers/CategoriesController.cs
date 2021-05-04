@@ -1,9 +1,7 @@
 ﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using ForumSystem.Data;
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Administration.Categories;
 
@@ -31,6 +29,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryInputModel input)
         {
             if (!this.ModelState.IsValid)
@@ -40,17 +39,23 @@
 
             await this.categorieService.AddAsync(input);
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(this.Index));
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var category = this.categorieService.GetById(id);
+            var category = await this.categorieService.GetByIdAsync(id);
+
+            if (category == null)
+            {
+                return this.NotFound();
+            }
 
             return this.View(category);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryInputModel input)
         {
             if (!this.ModelState.IsValid)
@@ -67,7 +72,41 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction("Index");
+            return this.RedirectToAction(nameof(this.Index));
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var category = await this.categorieService.GetByIdAsync((int)id);
+
+            if (category == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(category);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                await this.categorieService.DeleteAsync(id);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }
