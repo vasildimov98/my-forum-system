@@ -2,6 +2,9 @@
 
 @{
     this.ViewData["Title"] = "Create a post";
+
+    var categories = this.Model.Categories
+        .Select(x => new SelectListItem(x.Name, x.Id.ToString()));
 }
 
 <h1>@this.ViewData["Title"]</h1>
@@ -38,7 +41,7 @@
     <hr />
     <div class="form-group">
         <label asp-for="CategoryId"></label>
-        <input asp-for="CategoryId" class="form-control" />
+        <select asp-for="CategoryId" asp-items="categories" class="form-control"></select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 

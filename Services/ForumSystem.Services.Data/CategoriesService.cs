@@ -67,20 +67,20 @@
             await this.categories.SaveChangesAsync();
         }
 
-        public IEnumerable<CategoryCrudModel> GetAll()
+        public IEnumerable<T> GetAll<T>()
         {
             var categories = this.categories.All()
-                .To<CategoryCrudModel>()
+                .To<T>()
                 .ToList();
 
             return categories;
         }
 
-        public async Task<CategoryViewModel> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync<T>(int id)
             => await this.categories
                 .All()
                 .Where(x => x.Id == id)
-                .To<CategoryViewModel>()
+                .To<T>()
                 .FirstOrDefaultAsync();
     }
 }

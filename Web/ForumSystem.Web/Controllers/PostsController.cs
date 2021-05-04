@@ -3,38 +3,31 @@
     using System;
     using System.Threading.Tasks;
 
-    using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
+    using ForumSystem.Web.ViewModels.Posts;
 
     using Microsoft.AspNetCore.Mvc;
 
     public class PostsController : BaseController
     {
-        private readonly ISettingsService settingsService;
+        private readonly ICategoriesService categoriesService;
 
-        private readonly IDeletableEntityRepository<Setting> repository;
-
-        public PostsController(ISettingsService settingsService, IDeletableEntityRepository<Setting> repository)
+        public PostsController(ICategoriesService categoriesService)
         {
-            this.settingsService = settingsService;
-            this.repository = repository;
+            this.categoriesService = categoriesService;
         }
 
         public IActionResult Create()
         {
-            return this.View();
-        }
+            var categories = this.categoriesService.GetAll<CategoryDropDownViewModel>();
 
-        public async Task<IActionResult> InsertSetting()
-        {
-            var random = new Random();
-            var setting = new Setting { Name = $"Name_{random.Next()}", Value = $"Value_{random.Next()}" };
+            var inputModel = new PostInputModel
+            {
+                Categories = categories,
+            };
 
-            await this.repository.AddAsync(setting);
-            await this.repository.SaveChangesAsync();
-
-            return this.RedirectToAction(nameof(this.Create));
+            return this.View(inputModel);
         }
     }
 }

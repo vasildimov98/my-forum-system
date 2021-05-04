@@ -13,8 +13,8 @@
 
         public Task DeleteAsync(int id);
 
-        public IEnumerable<CategoryCrudModel> GetAll();
+        public IEnumerable<T> GetAll<T>();
 
-        public Task<CategoryViewModel> GetByIdAsync(int id);
+        public Task<T> GetByIdAsync<T>(int id);
     }
 }

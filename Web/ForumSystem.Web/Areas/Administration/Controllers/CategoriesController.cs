@@ -18,7 +18,7 @@
 
         public IActionResult Index()
         {
-            var categories = this.categorieService.GetAll();
+            var categories = this.categorieService.GetAll<CategoryCrudModel>();
 
             return this.View(categories);
         }
@@ -44,7 +44,7 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            var category = await this.categorieService.GetByIdAsync(id);
+            var category = await this.categorieService.GetByIdAsync<CategoryViewModel>(id);
 
             if (category == null)
             {
@@ -82,7 +82,7 @@
                 return this.NotFound();
             }
 
-            var category = await this.categorieService.GetByIdAsync((int)id);
+            var category = await this.categorieService.GetByIdAsync<CategoryViewModel>((int)id);
 
             if (category == null)
             {
