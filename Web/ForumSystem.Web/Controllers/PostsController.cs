@@ -10,23 +10,21 @@
 
     using Microsoft.AspNetCore.Mvc;
 
-    public class SettingsController : BaseController
+    public class PostsController : BaseController
     {
         private readonly ISettingsService settingsService;
 
         private readonly IDeletableEntityRepository<Setting> repository;
 
-        public SettingsController(ISettingsService settingsService, IDeletableEntityRepository<Setting> repository)
+        public PostsController(ISettingsService settingsService, IDeletableEntityRepository<Setting> repository)
         {
             this.settingsService = settingsService;
             this.repository = repository;
         }
 
-        public IActionResult Index()
+        public IActionResult Create()
         {
-            var settings = this.settingsService.GetAll<SettingViewModel>();
-            var model = new SettingsListViewModel { Settings = settings };
-            return this.View(model);
+            return this.View();
         }
 
         public async Task<IActionResult> InsertSetting()
@@ -37,7 +35,7 @@
             await this.repository.AddAsync(setting);
             await this.repository.SaveChangesAsync();
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Create));
         }
     }
 }

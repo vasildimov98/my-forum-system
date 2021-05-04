@@ -1,11 +1,11 @@
 ﻿@model List<ForumSystem.Web.ViewModels.Administration.Categories.CategoryCrudModel>
 @{
     var count = 1;
-    this.ViewData["Title"] = "Category Admin panel";
+    this.ViewData["Title"] = "Admin Category";
 }
 
 <section class="pb-5 header text-center">
-    <div class="container py-5 text-primary">
+    <div class="container py-5">
         <header class="py-5">
             <h1>@this.ViewData["Title"]</h1>
             <a class="btn btn-primary" asp-area="Administration" asp-controller="Categories" asp-action="Create">Create Category</a>
@@ -16,7 +16,7 @@
                     <div class="card-body p-5">
                         <!-- Responsive table -->
                         <div class="table-responsive">
-                            <table class="table m-0">
+                            <table class="table m-0 text-nowrap">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
