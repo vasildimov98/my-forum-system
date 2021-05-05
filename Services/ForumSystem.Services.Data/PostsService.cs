@@ -9,11 +9,11 @@
     using ForumSystem.Services.Mapping;
     using Microsoft.EntityFrameworkCore;
 
-    public class PostService : IPostService
+    public class PostsService : IPostsService
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
 
-        public PostService(IDeletableEntityRepository<Post> postsRepository)
+        public PostsService(IDeletableEntityRepository<Post> postsRepository)
         {
             this.postsRepository = postsRepository;
         }
@@ -34,7 +34,7 @@
             return id;
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>()
+        public async Task<IEnumerable<T>> GetAllAsync<T>()
             => await this.postsRepository
                 .All()
                 .To<T>()

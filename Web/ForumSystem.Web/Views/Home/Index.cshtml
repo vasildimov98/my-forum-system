@@ -1,11 +1,74 @@
-﻿@using ForumSystem.Common
+﻿@model ForumSystem.Web.ViewModels.Posts.PostsListViewModel
 @{
     this.ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to @GlobalConstants.SystemName!</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="wrapper wrapper-content animated fadeInRight">
 
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="p-xs">
+                        <div class="pull-left m-r-md">
+                            <i class="fa fa-globe text-navy mid-icon"></i>
+                        </div>
+                        <h2>Welcome to Tell me more</h2>
+                        <span>Feel free to choose topic you're interested in.</span>
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+
+                    <div class="forum-title">
+                        <div class="pull-right forum-desc">
+                            <samll>Total posts: @this.Model.Posts.Count()</samll>
+                        </div>
+                        <h3>Posts: </h3>
+                    </div>
+
+                    @foreach (var post in this.Model.Posts)
+                    {
+                        <div class="forum-item active">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="forum-icon">
+                                        <img src="@post.CategoryImage" width="50" class="d-sm-block ui-w-40 rounded-circle" />
+                                    </div>
+                                    <a asp-controller="Posts" asp-action="ById" asp-route-id="@post.Id" class="forum-item-title">@post.Title</a>
+                                    <div class="forum-sub-title">@Html.Raw(post.SanitizeContent)</div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        1216
+                                    </span>
+                                    <div>
+                                        <small>Views</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        368
+                                    </span>
+                                    <div>
+                                        <small>Topics</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 forum-info">
+                                    <span class="views-number">
+                                        140
+                                    </span>
+                                    <div>
+                                        <small>Posts</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 

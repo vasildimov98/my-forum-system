@@ -1,11 +1,11 @@
 ﻿namespace ForumSystem.Web.ViewModels.Posts
 {
-    using AutoMapper;
+    using System;
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+
     using Ganss.XSS;
-    using System;
 
     public class PostViewModel : IMapFrom<Post>
     {
@@ -26,5 +26,7 @@
         public DateTime UserCreatedOn { get; set; }
 
         public int UserPostsCount { get; set; }
+
+        public string CategoryImage { get; set; }
     }
 }

@@ -14,12 +14,12 @@
     public class PostsController : BaseController
     {
         private readonly ICategoriesService categoriesService;
-        private readonly IPostService postsService;
+        private readonly IPostsService postsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public PostsController(
             ICategoriesService categoriesService,
-            IPostService postsService,
+            IPostsService postsService,
             UserManager<ApplicationUser> userManager)
         {
             this.categoriesService = categoriesService;
@@ -39,7 +39,6 @@
 
             return this.View(inputModel);
         }
-
 
         [HttpPost]
         [Authorize]

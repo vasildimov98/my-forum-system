@@ -1,16 +1,34 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
 
+    using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels;
-
+    using ForumSystem.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
     {
-        public IActionResult Index()
+        private IPostsService postService;
+
+        public HomeController(IPostsService postService)
         {
-            return this.View();
+            this.postService = postService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var posts = await this.postService.GetAllAsync<PostViewModel>();
+
+            var postsList = new PostsListViewModel
+            {
+                Posts = posts
+                .OrderByDescending(x => x.CreatedOn),
+            };
+
+            return this.View(postsList);
         }
 
         public IActionResult Privacy()
