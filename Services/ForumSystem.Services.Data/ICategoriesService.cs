@@ -13,7 +13,7 @@
 
         public Task DeleteAsync(int id);
 
-        public IEnumerable<T> GetAll<T>();
+        public Task<IEnumerable<T>> GetAllAsync<T>();
 
         public Task<T> GetByIdAsync<T>(int id);
     }

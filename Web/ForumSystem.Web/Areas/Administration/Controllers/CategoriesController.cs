@@ -16,9 +16,9 @@
             this.categorieService = categoriesService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var categories = this.categorieService.GetAll<CategoryCrudModel>();
+            var categories = await this.categorieService.GetAllAsync<CategoryCrudModel>();
 
             return this.View(categories);
         }

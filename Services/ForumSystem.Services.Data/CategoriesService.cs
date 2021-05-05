@@ -67,11 +67,11 @@
             await this.categories.SaveChangesAsync();
         }
 
-        public IEnumerable<T> GetAll<T>()
+        public async Task<IEnumerable<T>> GetAllAsync<T>()
         {
-            var categories = this.categories.All()
+            var categories = await this.categories.All()
                 .To<T>()
-                .ToList();
+                .ToListAsync();
 
             return categories;
         }

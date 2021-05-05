@@ -1,9 +1,9 @@
-﻿namespace ForumSystem.Web.ViewModels.Settings
+﻿namespace ForumSystem.Web.ViewModels.Posts
 {
     using System.Collections.Generic;
 
     public class SettingsListViewModel
     {
-        public IEnumerable<SettingViewModel> Settings { get; set; }
+        public IEnumerable<PostViewModel> Settings { get; set; }
     }
 }
