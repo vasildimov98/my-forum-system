@@ -6,7 +6,7 @@
 
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels;
-    using ForumSystem.Web.ViewModels.Posts;
+    using ForumSystem.Web.ViewModels.Home;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
@@ -20,9 +20,9 @@
 
         public async Task<IActionResult> Index()
         {
-            var posts = await this.postService.GetAllAsync<PostViewModel>();
+            var posts = await this.postService.GetAllAsync<HomePostViewModel>();
 
-            var postsList = new PostsListViewModel
+            var postsList = new HomePostsListViewModel
             {
                 Posts = posts
                 .OrderByDescending(x => x.CreatedOn),

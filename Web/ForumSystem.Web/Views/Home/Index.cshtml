@@ -1,4 +1,4 @@
-﻿@model ForumSystem.Web.ViewModels.Posts.PostsListViewModel
+﻿@model             ForumSystem.Web.ViewModels.Home.HomePostsListViewModel
 @{
     this.ViewData["Title"] = "Home Page";
 }
@@ -36,7 +36,7 @@
                                         <img src="@post.CategoryImage" width="50" class="d-sm-block ui-w-40 rounded-circle" />
                                     </div>
                                     <a asp-controller="Posts" asp-action="ById" asp-route-id="@post.Id" class="forum-item-title">@post.Title</a>
-                                    <div class="forum-sub-title">@Html.Raw(post.SanitizeContent)</div>
+                                    <div class="forum-sub-title">@Html.Raw(post.ShortContent)</div>
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-number">
@@ -65,7 +65,6 @@
                             </div>
                         </div>
                     }
-
                 </div>
             </div>
         </div>

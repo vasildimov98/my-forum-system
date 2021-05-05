@@ -29,9 +29,9 @@
             };
 
             await this.postsRepository.AddAsync(post);
-            var id = await this.postsRepository.SaveChangesAsync();
+            await this.postsRepository.SaveChangesAsync();
 
-            return id;
+            return post.Id;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>()
