@@ -3,10 +3,9 @@
     using System;
     using System.Net;
     using System.Text.RegularExpressions;
+
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-
-    using Ganss.XSS;
 
     public class HomePostViewModel : IMapFrom<Post>
     {
@@ -27,15 +26,7 @@
             }
         }
 
-        public string CategoryName { get; set; }
-
         public DateTime CreatedOn { get; set; }
-
-        public string UserUserName { get; set; }
-
-        public DateTime UserCreatedOn { get; set; }
-
-        public int UserPostsCount { get; set; }
 
         public string CategoryImage { get; set; }
     }
