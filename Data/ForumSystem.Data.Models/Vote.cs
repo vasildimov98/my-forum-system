@@ -5,7 +5,7 @@
     using ForumSystem.Data.Common.Models;
     using ForumSystem.Data.Models.Enums;
 
-    public class Vote : BaseDeletableModel<int>
+    public class Vote : BaseModel<int>
     {
         public int PostId { get; set; }
 
