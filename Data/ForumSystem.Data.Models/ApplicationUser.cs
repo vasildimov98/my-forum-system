@@ -18,6 +18,7 @@ namespace ForumSystem.Data.Models
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.Posts = new HashSet<Post>();
             this.Votes = new HashSet<Vote>();
+            this.Comments = new HashSet<Comment>();
         }
 
         // Audit info
@@ -39,5 +40,7 @@ namespace ForumSystem.Data.Models
         public virtual ICollection<Post> Posts { get; set; }
 
         public virtual ICollection<Vote> Votes { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

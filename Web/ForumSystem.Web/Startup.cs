@@ -1,8 +1,6 @@
 ﻿namespace ForumSystem.Web
 {
-    using System;
     using System.Reflection;
-    using System.Threading.Tasks;
 
     using ForumSystem.Data;
     using ForumSystem.Data.Common;
@@ -18,7 +16,6 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -53,8 +50,14 @@
             services.AddControllersWithViews(
                 options =>
                     {
-                       // options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     }).AddRazorRuntimeCompilation();
+
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "X-CSRF-TOKEN";
+            });
+
             services.AddRazorPages();
             services.AddDatabaseDeveloperPageExceptionFilter();
 
