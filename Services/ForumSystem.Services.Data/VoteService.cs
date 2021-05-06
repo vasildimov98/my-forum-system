@@ -28,7 +28,8 @@
         {
             var vote = await this.votesRepository
                     .All()
-                    .FirstOrDefaultAsync(x => x.PostId == postId);
+                    .FirstOrDefaultAsync(x => x.PostId == postId
+                                    && x.UserId == userId);
 
             var typeVote = isUpVote ? VoteType.Like : VoteType.Dislike;
 
