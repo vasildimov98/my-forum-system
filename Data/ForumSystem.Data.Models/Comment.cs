@@ -1,6 +1,6 @@
 ﻿namespace ForumSystem.Data.Models
 {
-    using System.ComponentModel.DataAnnotations; 
+    using System.ComponentModel.DataAnnotations;
 
     using ForumSystem.Data.Common.Models;
 
