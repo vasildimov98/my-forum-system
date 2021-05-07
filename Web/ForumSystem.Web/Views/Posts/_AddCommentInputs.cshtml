@@ -1,0 +1,12 @@
+﻿@model ForumSystem.Web.ViewModels.Comments.CommentInputModel
+
+<input type="hidden" name="PostId" value="@this.Model.PostId" />
+<input type="hidden" name="ParentId" value="0" />
+<div class="form-group">
+    <textarea asp-for="Content" class="form-control"></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+</div>
+
+<div class="float-right">
+    <input id="myPostCommentBtn" type="submit" class="btn btn-primary" value="Comment" />
+</div>

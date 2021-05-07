@@ -1,9 +1,12 @@
 ﻿namespace ForumSystem.Services.Data
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
-    using ForumSystem.Data.Models;
     using ForumSystem.Data.Common.Repositories;
+    using ForumSystem.Data.Models;
+
+    using Microsoft.EntityFrameworkCore;
 
     public class CommentsService : ICommentsServer
     {
@@ -28,6 +31,17 @@
             await this.comments.SaveChangesAsync();
 
             return comment.Id;
+        }
+
+        public async Task<bool> IsInPostIdAsync(int commentId, int postId)
+        {
+            var commentPostId = await this.comments
+                .All()
+                .Where(x => x.Id == commentId)
+                .Select(x => x.PostId)
+                .FirstOrDefaultAsync();
+
+            return commentPostId == postId;
         }
     }
 }

@@ -28,7 +28,7 @@
         public async Task<ActionResult<CommentInputModel>> Create(CommentInputModel input)
         {
             var parentId = input.ParentId == 0 ?
-                (int?)0 :
+                null :
                 input.ParentId;
 
             var userId = this.userManager.GetUserId(this.User);

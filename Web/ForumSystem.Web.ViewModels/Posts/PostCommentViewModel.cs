@@ -13,5 +13,9 @@
         public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
 
         public string FormCommentId => $"commentBox{this.Id}";
+
+        public string UserUserName { get; set; }
+
+        public int PostId { get; set; }
     }
 }
