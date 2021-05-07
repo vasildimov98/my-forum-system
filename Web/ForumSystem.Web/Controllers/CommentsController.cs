@@ -31,9 +31,17 @@
                 null :
                 input.ParentId;
 
+            if (parentId.HasValue)
+            {
+                if (!await this.commentsServer.IsInPostIdAsync(parentId.Value, input.PostId))
+                {
+                    return this.BadRequest();
+                }
+            }
+
             var userId = this.userManager.GetUserId(this.User);
 
-            var commentId = await this.commentsServer.AddAsync(input.PostId, userId, input.Content, parentId);
+            await this.commentsServer.AddAsync(input.PostId, userId, input.Content, parentId);
 
             return this.RedirectToAction("ById", "Posts", new { id = input.PostId });
         }

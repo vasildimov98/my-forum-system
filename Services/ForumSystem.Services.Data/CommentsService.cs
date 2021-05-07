@@ -17,7 +17,7 @@
             this.comments = comments;
         }
 
-        public async Task<int> AddAsync(int postId, string userId, string content, int? parentId = null)
+        public async Task AddAsync(int postId, string userId, string content, int? parentId = null)
         {
             var comment = new Comment
             {
@@ -29,8 +29,6 @@
 
             await this.comments.AddAsync(comment);
             await this.comments.SaveChangesAsync();
-
-            return comment.Id;
         }
 
         public async Task<bool> IsInPostIdAsync(int commentId, int postId)

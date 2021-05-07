@@ -27,6 +27,8 @@
 
         public string UserUserName { get; set; }
 
+        public string LoggedInUserName { get; set; }
+
         public DateTime UserCreatedOn { get; set; }
 
         public int UserPostsCount { get; set; }

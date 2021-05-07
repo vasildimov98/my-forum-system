@@ -1,5 +1,29 @@
 ﻿@using ForumSystem.Web.ViewModels.Comments;
-@model ForumSystem.Web.ViewModels.Posts.PostCommentViewModel;
+@using ForumSystem.Web.ViewModels.Posts;
+@model PostCommentViewModel
+
+@{
+    async Task DisplaySubComments(int parentId)
+    {
+        var comments = Enumerable.Empty<PostCommentViewModel>();
+
+        if (!comments.Any())
+        {
+            return;
+        }
+
+        foreach (var comment in comments)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <partial name="_ShowComments" model="comment" />
+                </div>
+            </div>
+        }
+    }
+
+
+}
 
 <div class="container-fluid mt-100">
     <div class="row">
@@ -40,6 +64,9 @@
                                 </form>
                             </div>
                         </div>
+
+                        @{await DisplaySubComments(this.Model.Id);}
+
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
     using System;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using CommandLine;
@@ -50,6 +51,17 @@
         private static async Task<int> SandboxCode(SandboxOptions options, IServiceProvider serviceProvider)
         {
             var sw = Stopwatch.StartNew();
+
+            var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
+
+            var comments = context.Comments
+                .Where(x => x.ParentId == null)
+                .ToList();
+
+            foreach (var comment in comments)
+            {
+                Console.WriteLine(comment.Comments.Count);
+            }
 
             Console.WriteLine(sw.Elapsed);
             return await Task.FromResult(0);

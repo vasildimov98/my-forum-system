@@ -58,7 +58,11 @@
         [Authorize]
         public async Task<IActionResult> ById(int id)
         {
+            var user = await this.userManager.GetUserAsync(this.User);
             var post = await this.postsService.GetByIdAsync<PostViewModel>(id);
+
+            post.LoggedInUserName = user.UserName;
+
             if (post == null)
             {
                 return this.NotFound();
