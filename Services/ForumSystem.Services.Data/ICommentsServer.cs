@@ -4,6 +4,6 @@
 
     public interface ICommentsServer
     {
-        public Task<int> AddAsync(int postId, string id, string content);
+        public Task<int> AddAsync(int postId, string userId, string content, int? parentId);
     }
 }

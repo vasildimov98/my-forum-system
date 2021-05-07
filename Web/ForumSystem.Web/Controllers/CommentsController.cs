@@ -10,8 +10,6 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
-    [ApiController]
-    [Route("/api/[controller]")]
     public class CommentsController : ControllerBase
     {
         private readonly ICommentsServer commentsServer;
@@ -27,14 +25,17 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<CommentResponseModel>> Post(int postId, string content)
+        public async Task<ActionResult<CommentInputModel>> Create(CommentInputModel input)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
+            var parentId = input.ParentId == 0 ?
+                (int?)0 :
+                input.ParentId;
 
-            var commentId = await this.commentsServer.AddAsync(postId, user.Id, content);
+            var userId = this.userManager.GetUserId(this.User);
 
-            // var comment = await this.commentsServer.GetByIdAsync(commentId);
-            return new CommentResponseModel { Content = content };
+            var commentId = await this.commentsServer.AddAsync(input.PostId, userId, input.Content, parentId);
+
+            return this.RedirectToAction("ById", "Posts", new { id = input.PostId });
         }
     }
 }

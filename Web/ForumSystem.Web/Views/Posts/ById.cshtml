@@ -1,6 +1,8 @@
 ﻿@model ForumSystem.Web.ViewModels.Posts.PostViewModel
 
 @{
+    var comment = this.Model.Comments.FirstOrDefault();
+
     var totalDays = (int)(DateTime.UtcNow - this.Model.CreatedOn).TotalDays;
 
     var createdDaysAgo = totalDays == 0 ?
@@ -64,11 +66,12 @@
                         <span>Write a comment @this.Model.UserUserName</span>
                     </div>
 
-                    <form action="/" method="post">
+                    <form asp-controller="Comments" asp-action="Create" method="post">
+                        <input type="hidden" name="PostId" value="@this.Model.Id" />
+                        <input type="hidden" name="ParentId" value="0" />
                         <div class="form-group">
                             <label for="Content"></label>
-                            <textarea for="Content" class="form-control" required></textarea>
-                            <span asp-validation-for="Content" class="text-danger"></span>
+                            <textarea name="Content" class="form-control"></textarea>
                         </div>
 
                         <div class="float-right">
@@ -81,6 +84,61 @@
     </div>
 </div>
 
+<div class="container-fluid mt-100">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="media flex-wrap w-100 align-items-center">
+                        <img src="https://thispersondoesnotexist.com/image" width="20" class="d-sm-block ui-w-40 rounded-circle">
+
+                        <div class="media-body ml-3">
+                            <h6>@this.Model.UserUserName</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @Html.Raw(comment.SanitizeContent)
+                </div>
+                <div class="card-footer">
+                    <div class="container my-container">
+                        <div class="row justify-content-between">
+                            <div class="col-md-3 align-items-center">
+                                <i class="fa fa-arrow-up"></i>
+                                0
+                                <i class="fa fa-arrow-down"></i>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <button onclick="chageCommentBox(@comment.FormCommentId)"class="btn btn-primary">
+                                    <i class="fa fa-comment-dots"></i>
+                                    Reply
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <form id=@comment.FormCommentId asp-controller="Comments" asp-action="Create" method="post" style="display: none">
+                                    <input type="hidden" name="PostId" value="@this.Model.Id" />
+                                    <input type="hidden" name="ParentId" value="0" />
+                                    <div class="form-group">
+                                        <label for="Content"></label>
+                                        <textarea name="Content" class="form-control"></textarea>
+                                    </div>
+
+                                    <div class="float-right">
+                                        <input type="submit" class="btn btn-primary" value="Comment" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <script src="/js/vote.js"></script>
+    <script src="/js/post.js"></script>
 }

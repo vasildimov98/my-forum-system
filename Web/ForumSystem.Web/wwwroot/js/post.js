@@ -18,3 +18,15 @@
             votesCountDiv.textContent = votesCount;
         });
 }
+
+function chageCommentBox(commentBox) {
+
+    var commentBoxDisplay = commentBox.style.display;
+
+    if (commentBoxDisplay == 'none') {
+        commentBox.style.display = 'block';
+        return;
+    }
+
+    commentBox.style.display = 'none';
+}
