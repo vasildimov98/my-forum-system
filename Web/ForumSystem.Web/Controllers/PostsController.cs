@@ -1,6 +1,7 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
@@ -30,7 +31,8 @@
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            var categories = this.categoriesService.GetAllAsync<CategoryDropDownViewModel>();
+            var categories = this.categoriesService
+                .GetAllAsync<CategoryDropDownViewModel>();
 
             var inputModel = new PostInputModel
             {
@@ -59,7 +61,10 @@
         public async Task<IActionResult> ById(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-            var post = await this.postsService.GetByIdAsync<PostViewModel>(id);
+            var post = await this.postsService
+                .GetByIdAsync<PostViewModel>(id);
+
+            post.Comments = post.Comments;
 
             post.LoggedInUserName = user.UserName;
 

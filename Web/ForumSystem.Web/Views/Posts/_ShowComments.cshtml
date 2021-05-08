@@ -1,11 +1,13 @@
 ﻿@using ForumSystem.Web.ViewModels.Comments;
 @using ForumSystem.Web.ViewModels.Posts;
-@model PostCommentViewModel
+@model IEnumerable<PostCommentViewModel>
 
 @{
-    async Task DisplaySubComments(int parentId)
+    async Task DisplayComments(int? parentId)
     {
-        var comments = Enumerable.Empty<PostCommentViewModel>();
+        var comments = this.Model
+            .Where(x => x.ParentId == parentId)
+            .OrderByDescending(x => x.CreatedOn);
 
         if (!comments.Any())
         {
@@ -14,62 +16,69 @@
 
         foreach (var comment in comments)
         {
-            <div class="row">
-                <div class="col-md-12">
-                    <partial name="_ShowComments" model="comment" />
+            <div class="container-fluid mt-100">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <div class="media flex-wrap w-100 align-items-center">
+                                    <img src="https://thispersondoesnotexist.com/image" width="20" class="d-sm-block ui-w-40 rounded-circle">
+
+                                    <div class="media-body ml-3">
+                                        <h6>@comment.UserUserName</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @Html.Raw(comment.SanitizeContent)
+                            </div>
+                            <div class="card-footer">
+                                <div class="container">
+                                    <div class="row justify-content-between">
+                                        <div class="col-md-3 align-items-center">
+                                            <a href="#" onclick="sendVote(@comment.Id, true)">
+                                                <i class="fa fa-arrow-up"></i>
+                                            </a>
+                                            <span>0</span>
+                                            <a href="#" onclick="sendVote(@comment.Id, false)">
+                                                <i class="fa fa-arrow-down"></i>
+                                            </a>
+                                        </div>
+
+                                        <div class="col-md-3 text-right">
+                                            <button onclick="chageCommentBox(@comment.FormCommentId, @comment.Id)" class="btn btn-primary">
+                                                <i class="fa fa-comment-dots"></i>
+                                                Reply
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form id=@comment.FormCommentId asp-controller="Comments" asp-action="Create" method="post" style="display: none">
+                                                <partial name="_AddCommentInputs" model="new CommentInputModel() { PostId = comment.PostId }" />
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            @{await DisplayComments(comment.Id);}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         }
     }
-
-
 }
 
-<div class="container-fluid mt-100">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <div class="media flex-wrap w-100 align-items-center">
-                        <img src="https://thispersondoesnotexist.com/image" width="20" class="d-sm-block ui-w-40 rounded-circle">
+@{await DisplayComments(null);}
 
-                        <div class="media-body ml-3">
-                            <h6>@this.Model.UserUserName</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    @Html.Raw(this.Model.SanitizeContent)
-                </div>
-                <div class="card-footer">
-                    <div class="container my-container">
-                        <div class="row justify-content-between">
-                            <div class="col-md-3 align-items-center">
-                                <i class="fa fa-arrow-up"></i>
-                                0
-                                <i class="fa fa-arrow-down"></i>
-                            </div>
-                            <div class="col-md-3 text-right">
-                                <button onclick="chageCommentBox(@this.Model.FormCommentId, @this.Model.Id)" class="btn btn-primary">
-                                    <i class="fa fa-comment-dots"></i>
-                                    Reply
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form id=@this.Model.FormCommentId asp-controller="Comments" asp-action="Create" method="post" style="display: none">
-                                    <partial name="_AddCommentInputs" model="new CommentInputModel() { PostId = this.Model.PostId }" />
-                                </form>
-                            </div>
-                        </div>
-
-                        @{await DisplaySubComments(this.Model.Id);}
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@section Scripts {
+    <script src="~/js/vote.js"></script>
+}

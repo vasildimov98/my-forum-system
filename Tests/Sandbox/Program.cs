@@ -58,11 +58,6 @@
                 .Where(x => x.ParentId == null)
                 .ToList();
 
-            foreach (var comment in comments)
-            {
-                Console.WriteLine(comment.Comments.Count);
-            }
-
             Console.WriteLine(sw.Elapsed);
             return await Task.FromResult(0);
         }

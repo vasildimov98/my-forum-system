@@ -85,11 +85,9 @@
     </div>
 </div>
 
-@foreach (var comment in this.Model.Comments)
-{
-    <partial name="_ShowComments" model="comment" />
-}
+<partial name="_ShowComments" model="this.Model.Comments" />
 
 @section Scripts {
     <script src="/js/post.js"></script>
+    <script src="~/js/vote.js"></script>
 }

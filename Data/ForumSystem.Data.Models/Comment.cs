@@ -1,6 +1,5 @@
 ﻿namespace ForumSystem.Data.Models
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using ForumSystem.Data.Common.Models;
@@ -22,7 +21,5 @@
         public string UserId { get; set; }
 
         public virtual ApplicationUser User { get; set; }
-
-        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
