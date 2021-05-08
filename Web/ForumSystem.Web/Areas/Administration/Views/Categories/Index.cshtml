@@ -1,4 +1,5 @@
-﻿@model List<ForumSystem.Web.ViewModels.Administration.Categories.CategoryCrudModel>
+﻿@using ForumSystem.Web.ViewModels.Administration.Categories;
+@model List<CategoryCrudModel>
 @{
     var count = 1;
     this.ViewData["Title"] = "Admin Category";
@@ -25,7 +26,7 @@
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody >
                                     @foreach (var category in this.Model)
                                     {
                                         <tr>
@@ -33,7 +34,7 @@
                                             <td>
                                                 <img class="img-responsive pull-left" src="@category.Image" width="100" />
                                             </td>
-                                            <td class="d-flex align-items-center justify-content-center">@category.Name</td>
+                                            <td class="d-flex text-center justify-content-center">@category.Name</td>
                                             <td>
                                                 <!-- Call to action buttons -->
                                                 <ul class="list-inline m-0">

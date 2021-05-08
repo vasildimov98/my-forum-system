@@ -32,6 +32,8 @@ body {
     .forum-avatar .img-circle {
         height: 48px;
         width: 48px;
+        margin: auto;
+        display: block;
     }
 
 .author-info {
@@ -70,6 +72,8 @@ body {
     .media-body > .media .forum-avatar .img-circle {
         height: 38px;
         width: 38px;
+        margin: auto;
+        display: block;
     }
 
 .mid-icon {
@@ -99,7 +103,6 @@ body {
 
 .forum-item .forum-sub-title {
     color: #999;
-    margin-left: 50px;
 }
 
 .forum-title {
@@ -157,9 +160,6 @@ a.forum-item-title {
         float: none !important;
     }
 }
-
-
-
 
 
 .ibox {
