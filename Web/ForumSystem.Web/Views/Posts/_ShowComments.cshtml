@@ -36,11 +36,11 @@
                                 <div class="container">
                                     <div class="row justify-content-between">
                                         <div class="col-md-3 align-items-center">
-                                            <a href="#" onclick="sendVote(@comment.Id, true)">
+                                            <a href="javascript:;" onclick="sendVote(@comment.Id, true, '/api/votes/comment')">
                                                 <i class="fa fa-arrow-up"></i>
                                             </a>
-                                            <span>0</span>
-                                            <a href="#" onclick="sendVote(@comment.Id, false)">
+                                            <span id=@comment.VotesCountId >@comment.VoteTypeCount</span>
+                                            <a href="javascript:;" onclick="sendVote(@comment.Id, false, '/api/votes/comment')">
                                                 <i class="fa fa-arrow-down"></i>
                                             </a>
                                         </div>
@@ -78,7 +78,3 @@
 }
 
 @{await DisplayComments(null);}
-
-@section Scripts {
-    <script src="~/js/vote.js"></script>
-}

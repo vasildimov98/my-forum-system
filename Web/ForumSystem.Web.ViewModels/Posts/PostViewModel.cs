@@ -19,6 +19,8 @@
 
         public string Content { get; set; }
 
+        public string VotesCountId => $"votesCount{this.Id}";
+
         public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
 
         public string CategoryName { get; set; }

@@ -50,12 +50,12 @@
             services.AddControllersWithViews(
                 options =>
                     {
-                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                        // options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     }).AddRazorRuntimeCompilation();
 
             services.AddAntiforgery(options =>
             {
-                options.HeaderName = "X-CSRF-TOKEN";
+               // options.HeaderName = "X-CSRF-TOKEN";
             });
 
             services.AddRazorPages();
@@ -72,7 +72,7 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ICategoriesService, CategoriesService>();
             services.AddTransient<IPostsService, PostsService>();
-            services.AddTransient<IVotesService, VoteService>();
+            services.AddTransient<IVotesService, VotesService>();
             services.AddTransient<ICommentsServer, CommentsService>();
         }
 
