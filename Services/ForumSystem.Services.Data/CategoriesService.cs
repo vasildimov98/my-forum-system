@@ -82,5 +82,13 @@
                 .Where(x => x.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
+
+        public async Task<IEnumerable<T>> GetMostPostsCategories<T>(int take = 5)
+            => await this.categories
+                .All()
+                .OrderByDescending(x => x.Posts.Count())
+                .Take(take)
+                .To<T>()
+                .ToListAsync();
     }
 }

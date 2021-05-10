@@ -1,4 +1,8 @@
 ﻿@using ForumSystem.Common
+@{ 
+    var viewPath = this.ViewContext.View.Path;
+}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +44,29 @@
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
-            @this.RenderBody()
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        @this.RenderBody()
+                    </div>
+
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <aside class="col-md-3">
+                            <vc:most-posts-categories></vc:most-posts-categories>
+                        </aside>
+                    }
+
+                    @if (!this.User.Identity.IsAuthenticated
+                        && viewPath.Contains("Home/Index"))
+                    {
+                        <aside class="col-md-3">
+                            <vc:most-posts-categories></vc:most-posts-categories>
+                        </aside>
+                    }
+
+                </div>
+            </div>
         </main>
     </div>
 

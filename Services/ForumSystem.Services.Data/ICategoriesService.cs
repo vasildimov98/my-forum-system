@@ -15,6 +15,8 @@
 
         public Task<IEnumerable<T>> GetAllAsync<T>();
 
+        public Task<IEnumerable<T>> GetMostPostsCategories<T>(int take = 5);
+
         public Task<T> GetByIdAsync<T>(int id);
     }
 }
