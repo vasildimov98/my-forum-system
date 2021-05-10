@@ -52,7 +52,7 @@
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-number">
-                                        @post.Likes
+                                        @post.Votes.Where(x => (int)x.Type == 1).Count()
                                     </span>
                                     <div>
                                         <i class="fa fa-thumbs-up"></i>
@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="col-md-1 forum-info">
                                     <span class="views-number">
-                                        @post.Dislikes
+                                        @post.Votes.Where(x => (int)x.Type == -1).Count()
                                     </span>
                                     <div>
                                         <i class="fa fa-thumbs-down" style="color: red"></i>
@@ -74,6 +74,54 @@
                             </div>
                         </div>
                     }
+
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            @if (this.Model.CurrentPage == 1)
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@(this.Model.CurrentPage - 1)">Previous</a>
+                                </li>
+                            }
+
+                            @for (int i = 1; i <= this.Model.PagesCount; i++)
+                            {
+                                var active = i == this.Model.CurrentPage ? "active" : string.Empty;
+
+                                <li class="page-item @active">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@i">
+                                        @i
+                                    </a>
+                                </li>
+                            }
+
+                            @if (this.Model.CurrentPage == this.Model.PagesCount)
+                            {
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1">Next</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       asp-action="Index"
+                                       asp-route-page="@(this.Model.CurrentPage + 1)">Next</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+
                 </div>
             </div>
         </div>

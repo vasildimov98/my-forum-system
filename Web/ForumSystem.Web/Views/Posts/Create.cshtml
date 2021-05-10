@@ -24,9 +24,9 @@
 
     <div class="form-group">
         <label asp-for="Title"></label>
-        <input asp-for="Title" onkeyup="textCounter(this,'counter',100);" id="message" class="form-control" maxlength="300" />
+        <input asp-for="Title" onkeyup="textCounter(this,'counter',300);" id="message" class="form-control" maxlength="300" />
         <div id="counter" class="words-written">
-            0/100
+            0/300
         </div>
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>

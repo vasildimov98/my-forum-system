@@ -34,11 +34,23 @@
             return post.Id;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>()
-            => await this.postsRepository
+        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
+        {
+            var postsQuery = this.postsRepository
                 .All()
+                .OrderByDescending(x => x.CreatedOn)
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                postsQuery = postsQuery
+                    .Take(take.Value);
+            }
+
+            return await postsQuery
                 .To<T>()
                 .ToListAsync();
+        }
 
         public async Task<T> GetByIdAsync<T>(int id)
             => await this.postsRepository
@@ -46,5 +58,13 @@
                 .Where(x => x.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
+
+        public int GetCount()
+        {
+            return this
+                .postsRepository
+                .All()
+                .Count();
+        }
     }
 }

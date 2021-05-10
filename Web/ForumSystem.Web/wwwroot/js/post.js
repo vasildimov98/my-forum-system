@@ -10,7 +10,7 @@ function textCounter(field, field2, maxlimit) {
         field.value = field.value.substring(0, maxlimit);
         return false;
     } else {
-        countfield.innerHTML = field.value.length + "/100"
+        countfield.innerHTML = field.value.length + "/300"
     }
 }
 

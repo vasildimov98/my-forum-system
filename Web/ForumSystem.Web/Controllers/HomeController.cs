@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
+    using System;
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
@@ -11,6 +12,8 @@
 
     public class HomeController : BaseController
     {
+        private const int PostsPerPage = 5;
+
         private IPostsService postService;
 
         public HomeController(IPostsService postService)
@@ -18,14 +21,18 @@
             this.postService = postService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var posts = await this.postService.GetAllAsync<HomePostViewModel>();
+            var posts = await this.postService
+                .GetAllAsync<HomePostViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
 
+            var count = this.postService.GetCount();
+            var pageCount = (int)Math.Ceiling((double)count / PostsPerPage);
             var postsList = new HomePostsListViewModel
             {
-                Posts = posts
-                .OrderByDescending(x => x.CreatedOn),
+                Posts = posts,
+                CurrentPage = page,
+                PagesCount = pageCount,
             };
 
             return this.View(postsList);

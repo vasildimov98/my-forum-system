@@ -1,6 +1,7 @@
 ﻿namespace ForumSystem.Web.ViewModels.Home
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
@@ -11,7 +12,7 @@
     using ForumSystem.Data.Models.Enums;
     using ForumSystem.Services.Mapping;
 
-    public class HomePostViewModel : IMapFrom<Post>, IHaveCustomMappings
+    public class HomePostViewModel : IMapFrom<Post>
     {
         public int Id { get; set; }
 
@@ -38,27 +39,6 @@
 
         public string UserUserName { get; set; }
 
-        public int Likes { get; set; }
-
-        public int Dislikes { get; set; }
-
-        public void CreateMappings(IProfileExpression configuration)
-        {
-            configuration
-                .CreateMap<Post, HomePostViewModel>()
-                .ForMember(x => x.Likes, opt =>
-                {
-                    opt.MapFrom(y => y.Votes
-                        .Count());
-                });
-
-            configuration
-                .CreateMap<Post, HomePostViewModel>()
-                .ForMember(x => x.Dislikes, opt =>
-                {
-                    opt.MapFrom(y => y.Votes
-                        .Count());
-                });
-        }
+        public IEnumerable<HomePostVotesViewModel> Votes { get; set; }
     }
 }
