@@ -1,0 +1,81 @@
+﻿@using ForumSystem.Web.ViewModels.Home;
+@model HomePostsListViewModel
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @if (this.Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-page="@this.Model.PreviousPage">
+                    <span aria-hidden="true">Previous</span>
+                </a>
+            </li>
+        }
+
+        @{
+            const int MorePagesToShow = 3;
+            var pagesToShow = new List<int>();
+            for (var i = 1; i <= MorePagesToShow; i++)
+            {
+                pagesToShow.Add(i);
+            }
+
+            for (var i = this.Model.CurrentPage - MorePagesToShow; i <= this.Model.CurrentPage + MorePagesToShow; i++)
+            {
+                if (i <= 0)
+                {
+                    i = 1;
+                }
+
+                pagesToShow.Add(i);
+            }
+
+            for (var i = this.Model.PagesCount - MorePagesToShow + 1; i <= this.Model.PagesCount; i++)
+            {
+                if (i <= 0)
+                {
+                    i = 1;
+                }
+
+                pagesToShow.Add(i);
+            }
+
+            pagesToShow = pagesToShow.Where(x => x <= this.Model.PagesCount).Distinct().OrderBy(x => x).ToList();
+        }
+
+        @for (var i = 0; i < pagesToShow.Count; i++)
+        {
+            var className = string.Empty;
+            var pageNumber = pagesToShow[i];
+
+            if (pageNumber == this.Model.CurrentPage)
+            {
+                className = "active";
+            }
+
+            if (i > 0 && pageNumber - 1 != pagesToShow[i - 1])
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(pagesToShow[i - 1] + 1)">
+                        ...
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @className">
+                <a class="page-link" asp-action="Index" asp-route-page="@pageNumber">
+                    @pageNumber
+                </a>
+            </li>
+        }
+
+        @if (this.Model.CurrentPage < this.Model.PagesCount)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index" asp-route-page="@this.Model.NextPage">
+                    <span aria-hidden="true">Next</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

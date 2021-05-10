@@ -2,14 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net;
     using System.Text.RegularExpressions;
 
-    using AutoMapper;
-
     using ForumSystem.Data.Models;
-    using ForumSystem.Data.Models.Enums;
     using ForumSystem.Services.Mapping;
 
     public class HomePostViewModel : IMapFrom<Post>

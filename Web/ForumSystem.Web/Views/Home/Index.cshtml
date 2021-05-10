@@ -1,6 +1,8 @@
-﻿@model ForumSystem.Web.ViewModels.Home.HomePostsListViewModel
+﻿@using ForumSystem.Common;
+@using ForumSystem.Web.ViewModels.Home;
+@model HomePostsListViewModel
 @{
-    this.ViewData["Title"] = "Home Page";
+    this.ViewData["Title"] = "Posts";
 }
 
 <div class="container">
@@ -13,7 +15,12 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2>Welcome to Tell me more</h2>
+                        <h2>Welcome to @GlobalConstants.SystemName</h2>
+
+                        <div class="pull-right forum-desc">
+                            <samll>Total posts: @this.Model.TotalPosts</samll>
+                        </div>
+
                         <span>Feel free to choose topic you're interested in.</span>
                     </div>
                 </div>
@@ -21,9 +28,6 @@
                 <div class="ibox-content forum-container">
 
                     <div class="forum-title">
-                        <div class="pull-right forum-desc">
-                            <samll>Total posts: @this.Model.Posts.Count()</samll>
-                        </div>
                         <h3>Posts: </h3>
                     </div>
 
@@ -75,53 +79,7 @@
                         </div>
                     }
 
-                    <nav>
-                        <ul class="pagination justify-content-center">
-                            @if (this.Model.CurrentPage == 1)
-                            {
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-page="@(this.Model.CurrentPage - 1)">Previous</a>
-                                </li>
-                            }
-
-                            @for (int i = 1; i <= this.Model.PagesCount; i++)
-                            {
-                                var active = i == this.Model.CurrentPage ? "active" : string.Empty;
-
-                                <li class="page-item @active">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-page="@i">
-                                        @i
-                                    </a>
-                                </li>
-                            }
-
-                            @if (this.Model.CurrentPage == this.Model.PagesCount)
-                            {
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Next</a>
-                                </li>
-                            }
-                            else
-                            {
-                                <li class="page-item">
-                                    <a class="page-link"
-                                       asp-action="Index"
-                                       asp-route-page="@(this.Model.CurrentPage + 1)">Next</a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
-
+                    <partial name="_HomePagination">
                 </div>
             </div>
         </div>

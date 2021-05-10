@@ -31,6 +31,7 @@
             var postsList = new HomePostsListViewModel
             {
                 Posts = posts,
+                TotalPosts = count,
                 CurrentPage = page,
                 PagesCount = pageCount,
             };
