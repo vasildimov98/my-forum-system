@@ -13,7 +13,8 @@
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
 
-        public PostsService(IDeletableEntityRepository<Post> postsRepository)
+        public PostsService(
+            IDeletableEntityRepository<Post> postsRepository)
         {
             this.postsRepository = postsRepository;
         }
@@ -40,6 +41,25 @@
                 .All()
                 .OrderByDescending(x => x.CreatedOn)
                 .Skip(skip);
+
+            if (take.HasValue)
+            {
+                postsQuery = postsQuery
+                    .Take(take.Value);
+            }
+
+            return await postsQuery
+                .To<T>()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllByCategoryIdAsync<T>(int categoryId, int? take = null, int skip = 0)
+        {
+            var postsQuery = this.postsRepository
+               .All()
+               .Where(x => x.CategoryId == categoryId)
+               .OrderByDescending(x => x.CreatedOn)
+               .Skip(skip);
 
             if (take.HasValue)
             {

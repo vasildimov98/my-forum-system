@@ -4,7 +4,26 @@
     this.ViewData["Title"] = "Create a post";
 
     var categories = this.Model.Categories
-        .Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+        .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
+        .ToList();
+
+
+    if (this.Model.Selected != null)
+    {
+        for (int i = 0; i < categories.Count; i++)
+        {
+            var category = categories[i];
+
+            category.Selected = false;
+
+            if (category.Text == this.Model.Selected)
+            {
+                var temp = categories[0];
+                categories[0] = category;
+                categories[i] = temp;
+             }
+        }
+    }
 }
 
 <h1>@this.ViewData["Title"]</h1>
@@ -46,7 +65,7 @@
     </div>
 
     <hr />
-    <input type="submit" class="btn btn-primary" value="Submit" onclick="ValidateTinyMCE"/>
+    <input type="submit" class="btn btn-primary" value="Submit" onclick="ValidateTinyMCE" />
 </form>
 
 @section Scripts {

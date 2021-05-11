@@ -8,6 +8,7 @@
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels;
     using ForumSystem.Web.ViewModels.Home;
+    using ForumSystem.Web.ViewModels.PartialViews;
     using Microsoft.AspNetCore.Mvc;
 
     public class HomeController : BaseController
@@ -21,19 +22,25 @@
             this.postService = postService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Posts(int id = 1)
         {
+            var page = id;
+
             var posts = await this.postService
                 .GetAllAsync<HomePostViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
 
             var count = this.postService.GetCount();
-            var pageCount = (int)Math.Ceiling((double)count / PostsPerPage);
+            var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
             var postsList = new HomePostsListViewModel
             {
                 Posts = posts,
-                TotalPosts = count,
-                CurrentPage = page,
-                PagesCount = pageCount,
+                PaginationModel = new PaginationViewModel
+                {
+                    TotalPosts = count,
+                    CurrentPage = page,
+                    PagesCount = pagesCount,
+                    RouteName = "default",
+                },
             };
 
             return this.View(postsList);

@@ -16,7 +16,6 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -55,7 +54,7 @@
 
             services.AddAntiforgery(options =>
             {
-               // options.HeaderName = "X-CSRF-TOKEN";
+                // options.HeaderName = "X-CSRF-TOKEN";
             });
 
             services.AddRazorPages();
@@ -116,27 +115,27 @@
                 endpoints =>
                     {
                         endpoints
-                            .MapControllerRoute(
-                                name: "categories",
-                                pattern: "Category/{name:required}",
-                                defaults: new
-                                 {
-                                     controller = "Categories",
-                                     action = "ByName",
-                                 });
+                           .MapControllerRoute(
+                               name: "post-id-title",
+                               pattern: "Post/{id:min(1)}/{title:required}",
+                               defaults: new
+                               {
+                                   controller = "Posts",
+                                   action = "ById",
+                               });
 
                         endpoints
-                            .MapControllerRoute(
-                                name: "posts",
-                                pattern: "Post/{id:min(1)}/{title:required}",
-                                defaults: new
-                                {
-                                    controller = "Posts",
-                                    action = "ById",
-                                });
+                           .MapControllerRoute(
+                               name: "category-name-page",
+                               pattern: "Category/{name:required}/{id?}",
+                               defaults: new
+                               {
+                                   controller = "Categories",
+                                   action = "ByName",
+                               });
 
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                        endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                        endpoints.MapControllerRoute("default", "{controller=Home}/{action=Posts}/{id?}");
                         endpoints.MapRazorPages();
                     });
         }

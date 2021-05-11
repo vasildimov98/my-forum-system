@@ -1,7 +1,7 @@
 ﻿@using ForumSystem.Web.ViewModels.Categories;
 @model CategoryPostsListModel
 @{
-    this.ViewData["Title"] = "Posts";
+    this.ViewData["Title"] = "Category";
 }
 
 <div class="container">
@@ -11,20 +11,28 @@
 
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
+
                         <div class="pull-left m-r-md">
-                            <i class="fa fa-globe text-navy mid-icon"></i>
+                            <img src="@this.Model.Image" width="100" />
                         </div>
+
                         <h2>@this.Model.Name</h2>
+                        <p>@this.Model.Description</p>
 
-                        <div class="pull-right forum-desc">
-                            <samll>Total posts: @this.Model.PostsCount</samll>
+                        <div>
+                            <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-primary">
+                                Create Post for this Category
+                            </a>
                         </div>
-
-                        <span>Feel free to choose topic you're interested in.</span>
                     </div>
                 </div>
 
                 <div class="ibox-content forum-container">
+                    <div class="pull-right forum-desc">
+                        <samll>Total posts: @this.Model.PostsCount</samll>
+                    </div>
+
+                    <span>Feel free to choose topic you're interested in.</span>
 
                     <div class="forum-title">
                         <h3>Posts: </h3>
@@ -78,6 +86,7 @@
                         </div>
                     }
 
+                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel">
                 </div>
             </div>
         </div>

@@ -19,9 +19,9 @@
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var categories = await this.categoriesService
-                .GetMostPostsCategories<MostPostsCategoryViewModel>();
+                .GetMostPostsCategories<MostPostsInCategoryViewModel>();
 
-            var viewModel = new MostPostsCategoriesListModel
+            var viewModel = new MostPostsInCategoryListModel
             {
                 Categories = categories,
             };

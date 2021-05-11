@@ -9,6 +9,8 @@
 
         public Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
+        public Task<IEnumerable<T>> GetAllByCategoryIdAsync<T>(int categoryId, int? take = null, int skip = 0);
+
         public Task<T> GetByIdAsync<T>(int id);
 
         int GetCount();

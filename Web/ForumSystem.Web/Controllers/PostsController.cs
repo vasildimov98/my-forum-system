@@ -29,14 +29,15 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string selected)
         {
-            var categories = this.categoriesService
+            var categories = await this.categoriesService
                 .GetAllAsync<CategoryDropDownViewModel>();
 
             var inputModel = new PostInputModel
             {
-                Categories = await categories,
+                Categories = categories,
+                Selected = selected,
             };
 
             return this.View(inputModel);
