@@ -1,6 +1,5 @@
-﻿@using ForumSystem.Common;
-@using ForumSystem.Web.ViewModels.Home;
-@model HomePostsListViewModel
+﻿@using ForumSystem.Web.ViewModels.Categories;
+@model CategoryPostsListModel
 @{
     this.ViewData["Title"] = "Posts";
 }
@@ -15,10 +14,10 @@
                         <div class="pull-left m-r-md">
                             <i class="fa fa-globe text-navy mid-icon"></i>
                         </div>
-                        <h2>Welcome to @GlobalConstants.SystemName</h2>
+                        <h2>@this.Model.Name</h2>
 
                         <div class="pull-right forum-desc">
-                            <samll>Total posts: @this.Model.TotalPosts</samll>
+                            <samll>Total posts: @this.Model.PostsCount</samll>
                         </div>
 
                         <span>Feel free to choose topic you're interested in.</span>
@@ -49,7 +48,7 @@
                                         @post.CommentsCount
                                     </span>
                                     <div>
-                                        <a href="@post.Url">
+                                        <a href=@post.Url>
                                             <i class="fas fa-comments"></i>
                                         </a>
                                     </div>
@@ -79,10 +78,8 @@
                         </div>
                     }
 
-                    <partial name="_HomePagination">
                 </div>
             </div>
         </div>
     </div>
 </div>
-

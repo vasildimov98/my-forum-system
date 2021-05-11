@@ -90,5 +90,12 @@
                 .Take(take)
                 .To<T>()
                 .ToListAsync();
+
+        public async Task<T> GetByNameAsync<T>(string name)
+            => await this.categories
+            .All()
+            .Where(x => x.Name == name)
+            .To<T>()
+            .FirstOrDefaultAsync();
     }
 }

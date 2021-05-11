@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Home
+﻿namespace ForumSystem.Web.ViewModels.Categories
 {
     using System;
     using System.Collections.Generic;
@@ -7,16 +7,17 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+    using ForumSystem.Web.ViewModels.Home;
 
-    public class HomePostViewModel : IMapFrom<Post>
+    public class CategoryPostViewModel : IMapFrom<Post>
     {
         public int Id { get; set; }
 
         public string Title { get; set; }
 
-        public string Content { get; set; }
-
         public string Url => $"/Post/{this.Id}/{this.Title.ToLower().Replace(" ", "-")}";
+
+        public string Content { get; set; }
 
         public int CommentsCount { get; set; }
 

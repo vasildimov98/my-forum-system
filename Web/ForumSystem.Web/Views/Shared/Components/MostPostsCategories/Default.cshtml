@@ -4,19 +4,22 @@
 <div class="ibox-content forum-container">
 
     <div class="forum-title">
-        <h6 >Famous Categories</h6>
+        <h6>Famous Categories</h6>
     </div>
 
-    @foreach (var post in this.Model.Categories)
+    @foreach (var category in this.Model.Categories)
     {
         <div class="forum-item active">
             <div class="row align-items-center my-row ">
-                <div class="col-md-12 my-col">
-                        <img src="@post.Image" width="30" class="ui-w-40 rounded-circle center-block" />
-                        <span>@post.Name</span>
-                </div>
+                <a href="@category.Url" class="text-dark">
+                    <div class="col-md-12 my-col">
+                        <img src="@category.Image" width="30" class="ui-w-40 rounded-circle center-block" />
+                        <span>@category.Name</span>
+                    </div>
+                </a>
             </div>
         </div>
     }
 
+    <a href="#" class="btn btn-primary">View All Categories</a>
 </div>

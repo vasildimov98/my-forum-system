@@ -1,5 +1,5 @@
 ﻿@using ForumSystem.Common
-@{ 
+@{
     var viewPath = this.ViewContext.View.Path;
 }
 
@@ -50,7 +50,9 @@
                         @this.RenderBody()
                     </div>
 
-                    @if (this.User.Identity.IsAuthenticated)
+                    @if (this.User.Identity.IsAuthenticated
+                     && !viewPath.Contains("Administration")
+                     && !viewPath.Contains("Manage"))
                     {
                         <aside class="col-md-3">
                             <vc:most-posts-categories></vc:most-posts-categories>
@@ -58,7 +60,7 @@
                     }
 
                     @if (!this.User.Identity.IsAuthenticated
-                        && viewPath.Contains("Home/Index"))
+                     && viewPath.Contains("Home/Index"))
                     {
                         <aside class="col-md-3">
                             <vc:most-posts-categories></vc:most-posts-categories>
