@@ -12,6 +12,7 @@
     public class CategoriesController : BaseController
     {
         private const int PostsPerPage = 5;
+        private const int CategoriesPerPage = 10;
 
         private readonly ICategoriesService categoriesService;
         private readonly IPostsService postsService;
@@ -22,6 +23,31 @@
         {
             this.categoriesService = categoriesService;
             this.postsService = postsService;
+        }
+
+        public async Task<IActionResult> All(int id)
+        {
+            var page = Math.Max(1, id);
+
+            var categories = await this.categoriesService
+                .GetAllAsync<CategoryViewModel>(CategoriesPerPage, (page - 1) * CategoriesPerPage);
+
+            var categoriesCount = this.categoriesService.GetCount();
+
+            var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+
+            var viewModel = new CategoryViewModelList
+            {
+                Categories = categories,
+                PaginationModel = new PaginationViewModel
+                {
+                    CurrentPage = page,
+                    PagesCount = pagesCount,
+                    RouteName = "default",
+                },
+            };
+
+            return this.View(viewModel);
         }
 
         public async Task<IActionResult> ByName(string name, int id)
@@ -45,7 +71,6 @@
 
             category.PaginationModel = new PaginationViewModel
             {
-                TotalPosts = category.PostsCount,
                 CurrentPage = page,
                 PagesCount = pagesCount,
                 RouteName = "category-name-page",
@@ -53,5 +78,6 @@
 
             return this.View(category);
         }
+
     }
 }

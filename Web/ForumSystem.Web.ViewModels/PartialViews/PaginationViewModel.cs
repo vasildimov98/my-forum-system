@@ -10,8 +10,6 @@
 
         public int PagesCount { get; set; }
 
-        public int TotalPosts { get; set; }
-
         public string RouteName { get; set; }
     }
 }

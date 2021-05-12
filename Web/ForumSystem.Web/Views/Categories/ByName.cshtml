@@ -19,10 +19,20 @@
                         <h2>@this.Model.Name</h2>
                         <p>@this.Model.Description</p>
 
-                        <div>
-                            <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-primary">
-                                Create Post for this Category
-                            </a>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-primary">
+                                        Write a Post about @this.Model.Name
+                                    </a>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <a asp-action="All" asp-route-id="1" class="btn btn-danger float-right">
+                                        Go Back To Categories
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,9 +44,23 @@
 
                     <span>Feel free to choose topic you're interested in.</span>
 
-                    <div class="forum-title">
-                        <h3>Posts: </h3>
-                    </div>
+                    @if (this.Model.PostsCount == 0)
+                    {
+                        <div class="forum-title">
+                            <h3>It feels empty! There is still no posts about this category. You can be the first to write one :)</h3>
+                        </div>
+
+                        <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-block btn-primary">
+                            Write a Post about @this.Model.Name
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="forum-title">
+                            <h3>Posts: </h3>
+                        </div>
+                    }
+
 
                     @foreach (var post in this.Model.Posts)
                     {

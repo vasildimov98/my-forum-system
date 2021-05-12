@@ -1,10 +1,10 @@
 ﻿@using ForumSystem.Web.ViewModels.Components;
 @model MostPostsInCategoryListModel
 
-<div class="ibox-content forum-container">
+<div class="ibox-content forum-container text-center">
 
     <div class="forum-title">
-        <h6>Famous Categories</h6>
+        <h5>Famous Categories</h5>
     </div>
 
     @foreach (var category in this.Model.Categories)
@@ -21,5 +21,5 @@
         </div>
     }
 
-    <a href="#" class="btn btn-primary">View All Categories</a>
+    <a asp-controller="Categories" asp-action="All" asp-route-id="1" class="btn btn-block btn-primary">View All Categories</a>
 </div>

@@ -18,7 +18,7 @@
                         <h2>Welcome to @GlobalConstants.SystemName</h2>
 
                         <div class="pull-right forum-desc">
-                            <samll>Total posts: @this.Model.PaginationModel.TotalPosts</samll>
+                            <samll>Total posts: @this.Model.Posts.Count()</samll>
                         </div>
 
                         <span>Feel free to choose topic you're interested in.</span>
@@ -79,7 +79,7 @@
                         </div>
                     }
 
-                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel">
+                    <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel">
                 </div>
             </div>
         </div>

@@ -67,13 +67,22 @@
             await this.categories.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>()
+        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var categories = await this.categories.All()
+            var query = this.categories
+                .All()
+                .OrderByDescending(x => x.Posts.Count)
+                .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query
+                    .Take(take.Value);
+            }
+
+            return await query
                 .To<T>()
                 .ToListAsync();
-
-            return categories;
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
@@ -97,5 +106,10 @@
             .Where(x => x.Name == name)
             .To<T>()
             .FirstOrDefaultAsync();
+
+        public int GetCount()
+            => this.categories
+                   .All()
+                   .Count();
     }
 }

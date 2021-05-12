@@ -36,7 +36,6 @@
                 Posts = posts,
                 PaginationModel = new PaginationViewModel
                 {
-                    TotalPosts = count,
                     CurrentPage = page,
                     PagesCount = pagesCount,
                     RouteName = "default",

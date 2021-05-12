@@ -13,12 +13,14 @@
 
         public Task DeleteAsync(int id);
 
-        public Task<IEnumerable<T>> GetAllAsync<T>();
+        public Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
 
         public Task<IEnumerable<T>> GetMostPostsCategories<T>(int take = 5);
 
         public Task<T> GetByIdAsync<T>(int id);
 
         public Task<T> GetByNameAsync<T>(string name);
+
+        public int GetCount();
     }
 }
