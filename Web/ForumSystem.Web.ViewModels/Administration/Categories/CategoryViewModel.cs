@@ -4,6 +4,7 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+    using Ganss.XSS;
 
     public class CategoryViewModel : IMapFrom<Category>
     {
@@ -20,6 +21,8 @@
         [Required]
         [MinLength(50)]
         public string Description { get; set; }
+
+        public string SanitizeDescription => new HtmlSanitizer().Sanitize(this.Description);
 
         [Required]
         [RegularExpression(

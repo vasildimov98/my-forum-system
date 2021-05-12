@@ -60,7 +60,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(id);
+                return this.RedirectToAction(nameof(this.Edit), new { id });
             }
 
             try
