@@ -1,7 +1,7 @@
 ﻿@using ForumSystem.Web.ViewModels.Administration.Categories;
-@model List<CategoryCrudModel>
+@model CategoryCrudModelList
 @{
-    var count = 1;
+    var count = (this.Model.PaginationModel.CurrentPage - 1) * 5 + 1;
     this.ViewData["Title"] = "Admin Category";
 }
 
@@ -26,8 +26,8 @@
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
-                                <tbody >
-                                    @foreach (var category in this.Model)
+                                <tbody>
+                                    @foreach (var category in this.Model.Categories)
                                     {
                                         <tr>
                                             <th scope="row">@(count++)</th>
@@ -49,6 +49,7 @@
                                         </tr>
                                     }
                                 </tbody>
+                                <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel" />
                             </table>
 
                         </div>

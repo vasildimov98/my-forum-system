@@ -2,7 +2,7 @@
 @model CategoryViewModelList
 
 @{
-    var count = 1;
+    var count = ((this.Model.PaginationModel.CurrentPage - 1) * 10) + 1;
 }
 
 <div class="ibox-content forum-container text-center">

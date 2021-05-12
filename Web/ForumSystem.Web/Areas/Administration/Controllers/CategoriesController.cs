@@ -1,14 +1,18 @@
 ﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
+    using System;
     using System.Threading.Tasks;
 
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Administration.Categories;
+    using ForumSystem.Web.ViewModels.PartialViews;
 
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoriesController : AdministrationController
     {
+        private const int CategoryPerPage = 5;
+
         private readonly ICategoriesService categorieService;
 
         public CategoriesController(ICategoriesService categoriesService)
@@ -16,11 +20,29 @@
             this.categorieService = categoriesService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int id)
         {
-            var categories = await this.categorieService.GetAllAsync<CategoryCrudModel>();
+            var page = Math.Max(1, id);
 
-            return this.View(categories);
+            var categories = await this.categorieService
+                .GetAllAsync<CategoryCrudModel>(CategoryPerPage, (page - 1) * CategoryPerPage);
+
+            var categoryCount = this.categorieService.GetCount();
+
+            var pagesCount = (int)Math.Ceiling((decimal)categoryCount / CategoryPerPage);
+
+            var viewModel = new CategoryCrudModelList
+            {
+                Categories = categories,
+                PaginationModel = new PaginationViewModel
+                {
+                    CurrentPage = page,
+                    PagesCount = pagesCount,
+                    RouteName = "areaRoute",
+                },
+            };
+
+            return this.View(viewModel);
         }
 
         public IActionResult Create()
