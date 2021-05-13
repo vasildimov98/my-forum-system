@@ -35,7 +35,7 @@
 
         public int UserPostsCount { get; set; }
 
-        public string CategoryImage { get; set; }
+        public string CategoryImageUrl { get; set; }
 
         public int VoteTypeCount { get; set; }
 

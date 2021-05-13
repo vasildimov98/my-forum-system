@@ -9,6 +9,6 @@
 
         public string UrlName => this.Name.Replace(" ", "-");
 
-        public string Image { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

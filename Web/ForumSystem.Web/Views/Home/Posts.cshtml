@@ -18,7 +18,7 @@
                         <h2>Welcome to @GlobalConstants.SystemName</h2>
 
                         <div class="pull-right forum-desc">
-                            <samll>Total posts: @this.Model.Posts.Count()</samll>
+                            <samll>Total posts: @this.Model.PostsCount</samll>
                         </div>
 
                         <span>Feel free to choose topic you're interested in.</span>
@@ -37,7 +37,7 @@
                             <div class="row align-items-center my-row ">
                                 <div class="col-md-1 my-col">
                                     <div class="forum-icon">
-                                        <img src="@post.CategoryImage" width="50" class="d-sm-block ui-w-40 rounded-circle center-block" />
+                                        <img src="@post.CategoryImageUrl" width="50" class="d-sm-block ui-w-40 rounded-circle center-block" />
                                     </div>
                                 </div>
                                 <div class="col-md-8 my-col">

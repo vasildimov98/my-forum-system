@@ -33,6 +33,7 @@
             var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
             var postsList = new HomePostsListViewModel
             {
+                PostsCount = count,
                 Posts = posts,
                 PaginationModel = new PaginationViewModel
                 {

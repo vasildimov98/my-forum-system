@@ -26,7 +26,7 @@
             {
                 Name = input.Name,
                 Description = input.Description,
-                Image = input.Image,
+                ImageUrl = input.ImageUrl,
             };
 
             await this.categories.AddAsync(category);
@@ -46,7 +46,7 @@
 
             categoryToEdit.Name = input.Name;
             categoryToEdit.Description = input.Description;
-            categoryToEdit.Image = input.Image;
+            categoryToEdit.ImageUrl = input.ImageUrl;
 
             this.categories.Update(categoryToEdit);
             await this.categories.SaveChangesAsync();

@@ -25,9 +25,10 @@
         public string SanitizeDescription => new HtmlSanitizer().Sanitize(this.Description);
 
         [Required]
+        [Display(Name = "Image")]
         [RegularExpression(
             @"(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png))(?:\?([^#]*))?(?:#(.*))?",
             ErrorMessage = "That is invalid image address. It should end with .jgp, jgep, gif or png!")]
-        public string Image { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

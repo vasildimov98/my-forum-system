@@ -34,7 +34,7 @@
 
         public DateTime CreatedOn { get; set; }
 
-        public string CategoryImage { get; set; }
+        public string CategoryImageUrl { get; set; }
 
         public string UserUserName { get; set; }
 

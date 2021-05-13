@@ -19,7 +19,7 @@
         public string Description { get; set; }
 
         [Required]
-        public string Image { get; set; }
+        public string ImageUrl { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
     }
