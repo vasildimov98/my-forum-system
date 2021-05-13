@@ -2,7 +2,7 @@
 @model ForumSystem.Web.ViewModels.Posts.PostViewModel;
 
 @{
-    this.ViewData["Title"] = $"{this.Model.Title}";
+    this.ViewData["Title"] = "Post";
 
     var totalDays = (int)(DateTime.UtcNow - this.Model.CreatedOn).TotalDays;
 

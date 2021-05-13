@@ -43,7 +43,8 @@
             if (user != null
                 && !isUserAdmin)
             {
-                await userManager.AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
+                await userManager
+                    .AddToRoleAsync(user, GlobalConstants.AdministratorRoleName);
             }
         }
     }

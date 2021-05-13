@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Categories
+﻿namespace ForumSystem.Web.ViewModels.Users
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Posts;
 
-    public class CategoryPostViewModel : IMapFrom<Post>
+    public class UserPostsViewModel : IMapFrom<Post>
     {
         public int Id { get; set; }
 

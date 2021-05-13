@@ -1,5 +1,5 @@
-﻿@using ForumSystem.Web.ViewModels.Categories;
-@model CategoryPostsListModel
+﻿@using ForumSystem.Web.ViewModels.Users;
+@model UserViewModel
 @{
     this.ViewData["Title"] = "Category";
 }
@@ -13,27 +13,10 @@
                     <div class="p-xs">
 
                         <div class="pull-left m-r-md">
-                            <img src="@this.Model.Image" width="100" />
+                            <img src="https://thispersondoesnotexist.com/image" width="100" />
                         </div>
 
-                        <h2>@this.Model.Name</h2>
-                        <p>@Html.Raw(this.Model.SanitizeDescription)</p>
-
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-primary">
-                                        Write a Post about @this.Model.Name
-                                    </a>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <a asp-action="All" asp-route-id="1" class="btn btn-danger float-right">
-                                        Go Back To Categories
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <span>@this.Model.UserName</span>
                     </div>
                 </div>
 
@@ -50,9 +33,9 @@
                             <h3>It feels empty! There is still no posts about this category. You can be the first to write one :)</h3>
                         </div>
 
-                        <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-block btn-primary">
+                        @*<a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-block btn-primary">
                             Write a Post about @this.Model.Name
-                        </a>
+                        </a>*@
                     }
                     else
                     {

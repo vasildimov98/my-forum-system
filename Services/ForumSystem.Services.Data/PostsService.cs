@@ -72,6 +72,25 @@
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> GetAllByUserIdAsync<T>(string userId, int? take = null, int skip = 0)
+        {
+            var postsQuery = this.postsRepository
+               .All()
+               .Where(x => x.UserId == userId)
+               .OrderByDescending(x => x.CreatedOn)
+               .Skip(skip);
+
+            if (take.HasValue)
+            {
+                postsQuery = postsQuery
+                    .Take(take.Value);
+            }
+
+            return await postsQuery
+                .To<T>()
+                .ToListAsync();
+        }
+
         public async Task<T> GetByIdAsync<T>(int id)
             => await this.postsRepository
                 .All()

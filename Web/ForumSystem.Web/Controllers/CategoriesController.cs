@@ -78,6 +78,5 @@
 
             return this.View(category);
         }
-
     }
 }

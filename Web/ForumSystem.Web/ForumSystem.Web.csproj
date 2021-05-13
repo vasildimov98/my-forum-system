@@ -41,4 +41,6 @@
     <ProjectReference Include="..\ForumSystem.Web.Infrastructure\ForumSystem.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\ForumSystem.Web.ViewModels\ForumSystem.Web.ViewModels.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties libman_1json__JsonSchema="https://json.schemastore.org/sarif-2.1.0.json" /></VisualStudio></ProjectExtensions>
 </Project>

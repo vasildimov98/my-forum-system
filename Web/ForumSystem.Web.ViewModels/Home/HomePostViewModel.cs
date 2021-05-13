@@ -7,6 +7,7 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+    using ForumSystem.Web.ViewModels.Posts;
 
     public class HomePostViewModel : IMapFrom<Post>
     {
@@ -37,6 +38,6 @@
 
         public string UserUserName { get; set; }
 
-        public IEnumerable<HomePostVotesViewModel> Votes { get; set; }
+        public IEnumerable<PostVotesViewModel> Votes { get; set; }
     }
 }
