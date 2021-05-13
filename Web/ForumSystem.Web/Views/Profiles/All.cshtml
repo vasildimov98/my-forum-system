@@ -1,22 +1,25 @@
-﻿@using ForumSystem.Web.ViewModels.Users;
-@model UserViewModel
+﻿@using ForumSystem.Web.ViewModels.Profiles;
+@model ProfileViewModel
 @{
     this.ViewData["Title"] = "Category";
 }
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="wrapper wrapper-content animated fadeInRight">
 
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
 
-                        <div class="pull-left m-r-md">
-                            <img src="https://thispersondoesnotexist.com/image" width="100" />
+                        <input onchange="uploadImage('myInput')" id="myInput" type="file" hidden />
+                        <input id="myPost" type="submit" name="image" hidden />
+
+                        <div class="content">
+                            <img src="https://neilpatel.com/wp-content/uploads/2017/09/image-editing-tools.jpg" width="170">
+                            <a onclick="$('#myInput').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit"></i></a>
                         </div>
 
-                        <span>@this.Model.UserName</span>
                     </div>
                 </div>
 
@@ -34,8 +37,8 @@
                         </div>
 
                         @*<a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-block btn-primary">
-                            Write a Post about @this.Model.Name
-                        </a>*@
+                                Write a Post about @this.Model.Name
+                            </a>*@
                     }
                     else
                     {
@@ -99,3 +102,29 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function uploadImage(inputId) {
+            var input = document.getElementById(inputId);
+            var file = input.value;
+            var formData = new FormData();
+
+            formData.append("image", file);
+
+            $.ajax(
+                {
+                    url: "/api/Users",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    type: "POST",
+                    success: function (data) {
+                        alert("Files Uploaded!");
+                    }
+                }
+            );
+        }
+
+    </script>
+}

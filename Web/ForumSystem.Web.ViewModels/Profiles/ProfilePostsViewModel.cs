@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Users
+﻿namespace ForumSystem.Web.ViewModels.Profiles
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Posts;
 
-    public class UserPostsViewModel : IMapFrom<Post>
+    public class ProfilePostsViewModel : IMapFrom<Post>
     {
         public int Id { get; set; }
 
@@ -25,7 +25,7 @@
         {
             get
             {
-                var content = WebUtility.HtmlDecode(Regex.Replace(this.Content, @"<[^>]*>", string.Empty));
+                var content = WebUtility.HtmlDecode(Regex.Replace(Content, @"<[^>]*>", string.Empty));
                 return content.Length > 400
                         ? content.Substring(0, 400) + $"... <a href={this.Url} class=\"text-secondary\">read more</a>"
                         : content + $"... <a href={this.Url} class=\"text-secondary\">read more</a>";

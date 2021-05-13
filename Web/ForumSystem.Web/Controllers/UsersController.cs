@@ -1,64 +1,68 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Text;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
-    using ForumSystem.Services.Data;
-    using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Users;
+
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
-    public class UsersController : BaseController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UsersController : ControllerBase
     {
-        private const int PostsPerPage = 5;
-
-        private readonly IPostsService postsService;
+        private readonly IWebHostEnvironment environment;
         private readonly UserManager<ApplicationUser> userManager;
 
         public UsersController(
-            IPostsService postsService,
+            IWebHostEnvironment environment,
             UserManager<ApplicationUser> userManager)
         {
+            this.environment = environment;
             this.userManager = userManager;
-            this.postsService = postsService;
         }
 
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Posts(int id)
+        public string Post([FromForm]IFormFile files)
         {
-            var page = Math.Max(1, id);
-
-            var userId = this.userManager.GetUserId(this.User);
-
-            var user = await this.userManager.Users
-                .Include(x => x.Posts)
-                .FirstOrDefaultAsync(x => x.Id == userId);
-
-            var posts = await this.postsService
-                .GetAllByUserIdAsync<UserPostsViewModel>(user.Id, PostsPerPage, (page - 1) * PostsPerPage);
-
-            var postsCount = user.Posts.Count;
-
-            var pagesCount = (int)Math.Ceiling((double)postsCount / PostsPerPage);
-
-            var viewModel = new UserViewModel
+            string result;
+            try
             {
-                UserName = user.UserName,
-                Posts = posts,
-                PostsCount = postsCount,
-                PaginationModel = new PaginationViewModel
-                {
-                    CurrentPage = page,
-                    PagesCount = pagesCount,
-                    RouteName = "default",
-                },
-            };
+                long size = 0;
+                var file = this.Request.Form.Files;
+                var filename = ContentDispositionHeaderValue
+                                .Parse(file[0].ContentDisposition).FileName
+                                .Trim('"');
 
-            return this.View(viewModel);
+                string filePath = this.environment.WebRootPath + $@"/{filename}";
+
+                size += file[0].Length;
+
+                using (FileStream fs = System.IO.File.Create(filePath))
+                {
+                    file[0].CopyTo(fs);
+                    fs.Flush();
+                }
+
+                result = filePath;
+            }
+            catch (Exception ex)
+            {
+                result = ex.Message;
+            }
+
+            return result;
         }
     }
 }

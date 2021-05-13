@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-namespace ForumSystem.Data.Migrations
+﻿namespace ForumSystem.Data.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class ChangeCommentImageEntityName : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

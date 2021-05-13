@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Users
+﻿namespace ForumSystem.Web.ViewModels.Profiles
 {
     using System.Collections.Generic;
 
@@ -6,7 +6,7 @@
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.PartialViews;
 
-    public class UserViewModel : IMapFrom<ApplicationUser>
+    public class ProfileViewModel : IMapFrom<ApplicationUser>
     {
         public string UserName { get; set; }
 
@@ -14,6 +14,6 @@
 
         public PaginationViewModel PaginationModel { get; set; }
 
-        public IEnumerable<UserPostsViewModel> Posts { get; set; }
+        public IEnumerable<ProfilePostsViewModel> Posts { get; set; }
     }
 }

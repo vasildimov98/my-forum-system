@@ -22,6 +22,8 @@ namespace ForumSystem.Data.Models
             this.CommentVotes = new HashSet<CommentVote>();
         }
 
+        public bool HasImage { get; set; }
+
         // Audit info
         public DateTime CreatedOn { get; set; }
 
@@ -31,6 +33,10 @@ namespace ForumSystem.Data.Models
         public bool IsDeleted { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
+        public int ProfileImageId { get; set; }
+
+        public virtual ProfileImage ProfileImage { get; set; }
 
         public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
 

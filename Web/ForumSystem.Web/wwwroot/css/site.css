@@ -2,6 +2,22 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 /*home page forum posts*/
+
+div.content {
+    position: relative;
+}
+
+    div.content a {
+        position: absolute;
+        top: 67%;
+        right: 77%;
+        background-color: white
+    }
+
+.fa-edit {
+    color: green;
+}
+
 body {
     margin-top: 20px;
     background: #eee;
