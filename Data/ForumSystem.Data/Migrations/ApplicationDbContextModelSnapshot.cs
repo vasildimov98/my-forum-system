@@ -117,8 +117,8 @@ namespace ForumSystem.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProfileImageId")
-                        .HasColumnType("int");
+                    b.Property<string>("ProfileImageId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -141,6 +141,8 @@ namespace ForumSystem.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("ProfileImageId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -325,11 +327,9 @@ namespace ForumSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("ProfileImage");
+                    b.ToTable("ProfileImages");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.Vote", b =>
@@ -468,6 +468,15 @@ namespace ForumSystem.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("ForumSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.ProfileImage", "ProfileImage")
+                        .WithMany()
+                        .HasForeignKey("ProfileImageId");
+
+                    b.Navigation("ProfileImage");
+                });
+
             modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.Comment", "Parent")
@@ -534,8 +543,8 @@ namespace ForumSystem.Data.Migrations
             modelBuilder.Entity("ForumSystem.Data.Models.ProfileImage", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.ApplicationUser", "User")
-                        .WithOne("ProfileImage")
-                        .HasForeignKey("ForumSystem.Data.Models.ProfileImage", "UserId");
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -621,8 +630,6 @@ namespace ForumSystem.Data.Migrations
                     b.Navigation("Logins");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("ProfileImage");
 
                     b.Navigation("Roles");
 

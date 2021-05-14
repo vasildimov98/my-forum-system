@@ -12,6 +12,8 @@
 
         public int PostsCount { get; set; }
 
+        public string ImageSrc { get; set; }
+
         public PaginationViewModel PaginationModel { get; set; }
 
         public IEnumerable<ProfilePostsViewModel> Posts { get; set; }

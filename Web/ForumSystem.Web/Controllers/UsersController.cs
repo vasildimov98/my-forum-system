@@ -1,68 +1,105 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Net.Http;
-    using System.Net.Http.Headers;
-    using System.Text;
+    using System.Linq;
     using System.Threading.Tasks;
 
+    using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
-    using ForumSystem.Web.ViewModels.Users;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
 
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
         private readonly IWebHostEnvironment environment;
+        private readonly IRepository<ProfileImage> profileImageRepository;
         private readonly UserManager<ApplicationUser> userManager;
 
         public UsersController(
             IWebHostEnvironment environment,
+            IRepository<ProfileImage> profileImageRepository,
             UserManager<ApplicationUser> userManager)
         {
             this.environment = environment;
+            this.profileImageRepository = profileImageRepository;
             this.userManager = userManager;
         }
 
         [HttpPost]
         [Authorize]
-        public string Post([FromForm]IFormFile files)
+        public async Task<IActionResult> Post([FromForm] IFormFile image)
         {
-            string result;
+            var validExtention = new[] { ".png", ".jpeg", "jpg" };
+
+            var profileImage = new ProfileImage();
             try
             {
-                long size = 0;
-                var file = this.Request.Form.Files;
-                var filename = ContentDispositionHeaderValue
-                                .Parse(file[0].ContentDisposition).FileName
-                                .Trim('"');
+                var fileName = image.FileName;
 
-                string filePath = this.environment.WebRootPath + $@"/{filename}";
-
-                size += file[0].Length;
-
-                using (FileStream fs = System.IO.File.Create(filePath))
+                if (image == null
+                    || image.Length > 10 * 1024 * 1024)
                 {
-                    file[0].CopyTo(fs);
-                    fs.Flush();
+                    throw new InvalidOperationException("File is missing or its too big! Allowed length is 10MB");
                 }
 
-                result = filePath;
+                var fileExtension = Path.GetExtension(fileName);
+
+                if (!validExtention.Contains(fileExtension))
+                {
+                    throw new InvalidOperationException("Invalid file extention. Only png, jpeg, jpg are allowed");
+                }
+
+                var userId = this.userManager.GetUserId(this.User);
+
+                var user = await this.userManager.Users
+                    .Include(x => x.ProfileImage)
+                    .FirstOrDefaultAsync(x => x.Id == userId);
+
+                if (user.HasImage)
+                {
+                    System.IO.File.Delete($"{this.environment.WebRootPath}\\profileImages\\{user.ProfileImageId}{user.ProfileImage.Extention}");
+
+                    this.profileImageRepository
+                        .Delete(user.ProfileImage);
+
+                    await this.profileImageRepository.SaveChangesAsync();
+                }
+
+                profileImage.Extention = fileExtension;
+                profileImage.UserId = user.Id;
+
+                user.ProfileImage = profileImage;
+                user.HasImage = true;
+
+                await this.userManager.UpdateAsync(user);
+                await this.profileImageRepository.SaveChangesAsync();
+
+                var filePathName = profileImage.Id + profileImage.Extention;
+
+                var filePath = $"{this.environment.WebRootPath}\\profileImages\\";
+                Directory.CreateDirectory(filePath);
+
+                var physicalPath = $"{filePath}\\{filePathName}";
+                using (var fs = new FileStream(physicalPath, FileMode.Create))
+                {
+                    await image.CopyToAsync(fs);
+                    await fs.FlushAsync();
+                }
             }
             catch (Exception ex)
             {
-                result = ex.Message;
+                return this.BadRequest(ex.Message);
             }
 
-            return result;
+            return this.Ok("/profileImages/" + profileImage.Id + profileImage.Extention);
         }
     }
 }

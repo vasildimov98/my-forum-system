@@ -8,22 +8,21 @@
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "HasImage",
-                table: "AspNetUsers",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
-            migrationBuilder.AddColumn<int>(
+            migrationBuilder.AddColumn<string>(
                 name: "ProfileImageId",
                 table: "AspNetUsers",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                type: "nvarchar(450)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+               name: "HasImage",
+               table: "AspNetUsers",
+               type: "bit",
+               nullable: false,
+               defaultValue: false);
 
             migrationBuilder.CreateTable(
-                name: "ProfileImage",
+                name: "ProfileImages",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -34,9 +33,9 @@
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProfileImage", x => x.Id);
+                    table.PrimaryKey("PK_ProfileImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProfileImage_AspNetUsers_UserId",
+                        name: "FK_ProfileImages_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -44,25 +43,44 @@
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProfileImage_UserId",
-                table: "ProfileImage",
-                column: "UserId",
-                unique: true,
-                filter: "[UserId] IS NOT NULL");
+                name: "IX_AspNetUsers_ProfileImageId",
+                table: "AspNetUsers",
+                column: "ProfileImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfileImages_UserId",
+                table: "ProfileImages",
+                column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_ProfileImages_ProfileImageId",
+                table: "AspNetUsers",
+                column: "ProfileImageId",
+                principalTable: "ProfileImages",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "ProfileImage");
+            migrationBuilder.DropForeignKey(
+                name: "FK_AspNetUsers_ProfileImages_ProfileImageId",
+                table: "AspNetUsers");
 
-            migrationBuilder.DropColumn(
-                name: "HasImage",
+            migrationBuilder.DropTable(
+                name: "ProfileImages");
+
+            migrationBuilder.DropIndex(
+                name: "IX_AspNetUsers_ProfileImageId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
                 name: "ProfileImageId",
                 table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "ProfileImageId",
+                table: "HasImage");
         }
     }
 }

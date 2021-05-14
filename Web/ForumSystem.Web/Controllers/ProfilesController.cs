@@ -1,6 +1,7 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
@@ -9,6 +10,7 @@
     using ForumSystem.Web.ViewModels.Profiles;
 
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -18,14 +20,17 @@
         private const int PostsPerPage = 5;
 
         private readonly IPostsService postsService;
+        private readonly IWebHostEnvironment environment;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ProfilesController(
             IPostsService postsService,
+            IWebHostEnvironment environment,
             UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
             this.postsService = postsService;
+            this.environment = environment;
         }
 
         [Authorize]
@@ -37,12 +42,17 @@
 
             var user = await this.userManager.Users
                 .Include(x => x.Posts)
+                .Include(x => x.ProfileImage)
                 .FirstOrDefaultAsync(x => x.Id == userId);
 
             var posts = await this.postsService
                 .GetAllByUserIdAsync<ProfilePostsViewModel>(user.Id, PostsPerPage, (page - 1) * PostsPerPage);
 
             var postsCount = user.Posts.Count;
+
+            var imageSrc = user.HasImage ?
+                "/profileImages/" + user.ProfileImage.Id + user.ProfileImage.Extention :
+                "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
             var pagesCount = (int)Math.Ceiling((double)postsCount / PostsPerPage);
 
@@ -51,6 +61,7 @@
                 UserName = user.UserName,
                 Posts = posts,
                 PostsCount = postsCount,
+                ImageSrc = imageSrc,
                 PaginationModel = new PaginationViewModel
                 {
                     CurrentPage = page,

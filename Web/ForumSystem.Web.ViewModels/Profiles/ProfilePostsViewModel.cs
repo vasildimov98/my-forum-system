@@ -25,7 +25,7 @@
         {
             get
             {
-                var content = WebUtility.HtmlDecode(Regex.Replace(Content, @"<[^>]*>", string.Empty));
+                var content = WebUtility.HtmlDecode(Regex.Replace(this.Content, @"<[^>]*>", string.Empty));
                 return content.Length > 400
                         ? content.Substring(0, 400) + $"... <a href={this.Url} class=\"text-secondary\">read more</a>"
                         : content + $"... <a href={this.Url} class=\"text-secondary\">read more</a>";

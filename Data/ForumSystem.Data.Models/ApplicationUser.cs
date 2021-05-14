@@ -3,6 +3,7 @@ namespace ForumSystem.Data.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using ForumSystem.Data.Common.Models;
 
@@ -34,7 +35,8 @@ namespace ForumSystem.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public int ProfileImageId { get; set; }
+        [ForeignKey(nameof(ProfileImage))]
+        public string ProfileImageId { get; set; }
 
         public virtual ProfileImage ProfileImage { get; set; }
 

@@ -34,6 +34,8 @@
 
         public DbSet<CommentVote> CommentVotes { get; set; }
 
+        public DbSet<ProfileImage> ProfileImages { get; set; }
+
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
