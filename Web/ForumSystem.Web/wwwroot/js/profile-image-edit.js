@@ -6,7 +6,7 @@
 
     formData.append("image", profileImage);
 
-    const response = await fetch("/api/users", {
+    const response = await fetch("/api/users/upload", {
         method: 'POST',
         body: formData
     });
@@ -28,7 +28,7 @@
 
         setTimeout(function () {
             document.getElementById('my-alert-div').style.display = 'none';
-        }, 3000); // <-- time in milliseconds
+        }, 3000); 
 
         input.value = "";
     };
