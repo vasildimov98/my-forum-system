@@ -9,7 +9,7 @@
     {
         <li class="nav-item">
             <a class="dropdown-toggle nav-link text-dark" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Hello @this.User.Identity.Name!
+                Hello @(this.UserManager.GetUserAsync(this.User).Result.UserName)!
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">

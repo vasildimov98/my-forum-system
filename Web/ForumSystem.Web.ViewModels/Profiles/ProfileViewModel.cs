@@ -16,6 +16,6 @@
 
         public PaginationViewModel PaginationModel { get; set; }
 
-        public IEnumerable<ProfilePostsViewModel> Posts { get; set; }
+        public IEnumerable<PostListViewModel> Posts { get; set; }
     }
 }

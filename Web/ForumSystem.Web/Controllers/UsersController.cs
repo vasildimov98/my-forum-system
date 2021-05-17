@@ -8,6 +8,7 @@
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
+    using ForumSystem.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -31,6 +32,33 @@
             this.environment = environment;
             this.usersService = usersService;
             this.userManager = userManager;
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("username")]
+        public async Task<ActionResult<EditResponseModel>> EditUsername(EditUsernameInputModel input)
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            string username;
+
+            try
+            {
+                username = await this.usersService.ChangeUsername(input.Username, user);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return new EditResponseModel
+                {
+                    ErrorMessage = ioe.Message,
+                    Username = user.UserName,
+                };
+            }
+
+            return new EditResponseModel
+            {
+                Username = username,
+            };
         }
 
         [HttpPost]

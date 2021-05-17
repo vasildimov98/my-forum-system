@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Services.Data;
@@ -27,7 +26,7 @@
             var page = id;
 
             var posts = await this.postService
-                .GetAllAsync<HomePostViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
+                .GetAllAsync<PostListViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
 
             var count = this.postService.GetCount();
             var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);

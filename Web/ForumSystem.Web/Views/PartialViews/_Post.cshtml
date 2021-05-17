@@ -1,0 +1,47 @@
+﻿@using ForumSystem.Web.ViewModels.PartialViews;
+@model PostListViewModel
+
+<div class="forum-item active">
+    <div class="row align-items-center my-row ">
+        <div class="col-md-1 my-col">
+            <div class="forum-icon">
+                <img src="@this.Model.CategoryImageUrl" width="50" class="d-sm-block ui-w-40 rounded-circle center-block" />
+            </div>
+        </div>
+        <div class="col-md-8 my-col">
+            <a href="@this.Model.Url" class="forum-item-title">@this.Model.Title</a>
+            <a class="text-secondary">Posted By @this.Model.UserUserName</a>
+        </div>
+        <div class="col-md-1 my-col forum-info">
+            <span class="views-number">
+                @this.Model.CommentsCount
+            </span>
+            <div>
+                <a href=@this.Model.Url>
+                    <i class="fas fa-comments"></i>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-1 forum-info">
+            <span class="views-number">
+                @this.Model.Votes.Where(x => (int)x.Type == 1).Count()
+            </span>
+            <div>
+                <i class="fa fa-thumbs-up"></i>
+            </div>
+        </div>
+        <div class="col-md-1 forum-info">
+            <span class="views-number">
+                @this.Model.Votes.Where(x => (int)x.Type == -1).Count()
+            </span>
+            <div>
+                <i class="fa fa-thumbs-down" style="color: red"></i>
+            </div>
+        </div>
+    </div>
+    <div class="row my-row">
+        <div class="col-md-8 my-col offset-1">
+            <div class="forum-sub-title">@Html.Raw(this.Model.ShortContent)</div>
+        </div>
+    </div>
+</div>

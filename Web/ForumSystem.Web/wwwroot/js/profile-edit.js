@@ -64,6 +64,7 @@ async function editUsername(inputId) {
 
     if (!errorMessage) {
         input.value = username;
+        document.getElementById('dropdownMenuLink').textContent = "Hello " + username + "!";
     }
 }
 

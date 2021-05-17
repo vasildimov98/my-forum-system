@@ -65,7 +65,7 @@
             }
 
             category.Posts = await this.postsService
-                .GetAllByCategoryIdAsync<CategoryPostViewModel>(category.Id, PostsPerPage, (page - 1) * PostsPerPage);
+                .GetAllByCategoryIdAsync<PostListViewModel>(category.Id, PostsPerPage, (page - 1) * PostsPerPage);
 
             var pagesCount = (int)Math.Ceiling((double)category.PostsCount / PostsPerPage);
 

@@ -8,7 +8,7 @@
     {
         public int PostsCount { get; set; }
 
-        public IEnumerable<HomePostViewModel> Posts { get; set; }
+        public IEnumerable<PostListViewModel> Posts { get; set; }
 
         public PaginationViewModel PaginationModel { get; set; }
     }

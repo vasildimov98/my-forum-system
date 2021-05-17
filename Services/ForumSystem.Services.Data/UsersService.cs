@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Common.Repositories;

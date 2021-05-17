@@ -4,14 +4,6 @@
     this.ViewData["Title"] = "Category";
 }
 
-<style>
-    .no-border {
-        border: 0;
-        box-shadow: none;
-        width: 300px;
-    }
-</style>
-
 <div id="my-container" class="container">
     <div class="row">
         <div class="col-md-12">
@@ -63,53 +55,10 @@
 
                     @foreach (var post in this.Model.Posts)
                     {
-                        <div class="forum-item active">
-                            <div class="row align-items-center my-row ">
-                                <div class="col-md-1 my-col">
-                                    <div class="forum-icon">
-                                        <img src="@post.CategoryImageUrl" width="50" class="d-sm-block ui-w-40 rounded-circle center-block" />
-                                    </div>
-                                </div>
-                                <div class="col-md-8 my-col">
-                                    <a href="@post.Url" class="forum-item-title">@post.Title</a>
-                                    <a class="text-secondary">Posted By @post.UserUserName</a>
-                                </div>
-                                <div class="col-md-1 my-col forum-info">
-                                    <span class="views-number">
-                                        @post.CommentsCount
-                                    </span>
-                                    <div>
-                                        <a href=@post.Url>
-                                            <i class="fas fa-comments"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 forum-info">
-                                    <span class="views-number">
-                                        @post.Votes.Where(x => (int)x.Type == 1).Count()
-                                    </span>
-                                    <div>
-                                        <i class="fa fa-thumbs-up"></i>
-                                    </div>
-                                </div>
-                                <div class="col-md-1 forum-info">
-                                    <span class="views-number">
-                                        @post.Votes.Where(x => (int)x.Type == -1).Count()
-                                    </span>
-                                    <div>
-                                        <i class="fa fa-thumbs-down" style="color: red"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row my-row">
-                                <div class="col-md-8 my-col offset-1">
-                                    <div class="forum-sub-title">@Html.Raw(post.ShortContent)</div>
-                                </div>
-                            </div>
-                        </div>
+                        <partial name="~/Views/PartialViews/_Post.cshtml" , model="post" />
                     }
 
-                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel">
+                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel" />
                 </div>
             </div>
         </div>

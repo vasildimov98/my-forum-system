@@ -3,6 +3,12 @@ for details on configuring this project to bundle and minify static web assets. 
 
 /*home page forum posts*/
 
+.no-border {
+    border: 0;
+    box-shadow: none;
+    width: 300px;
+}
+
 div.content {
     position: relative;
 }

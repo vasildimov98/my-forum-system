@@ -46,7 +46,7 @@
                 .FirstOrDefaultAsync(x => x.Id == userId);
 
             var posts = await this.postsService
-                .GetAllByUserIdAsync<ProfilePostsViewModel>(user.Id, PostsPerPage, (page - 1) * PostsPerPage);
+                .GetAllByUserIdAsync<PostListViewModel>(user.Id, PostsPerPage, (page - 1) * PostsPerPage);
 
             var postsCount = user.Posts.Count;
 

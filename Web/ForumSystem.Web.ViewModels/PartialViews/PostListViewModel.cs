@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Categories
+﻿namespace ForumSystem.Web.ViewModels.PartialViews
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Posts;
 
-    public class CategoryPostViewModel : IMapFrom<Post>
+    public class PostListViewModel : IMapFrom<Post>
     {
         public int Id { get; set; }
 
@@ -34,7 +34,7 @@
 
         public DateTime CreatedOn { get; set; }
 
-        public string CategoryImage { get; set; }
+        public string CategoryImageUrl { get; set; }
 
         public string UserUserName { get; set; }
 
