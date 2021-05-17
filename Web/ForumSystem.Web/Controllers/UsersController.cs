@@ -6,7 +6,7 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
-
+    using ForumSystem.Web.ViewModels.Users;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -50,6 +50,25 @@
             }
 
             return this.Ok(imagePath);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("username")]
+        public async Task<ActionResult<EditResponseModel>> Edit(EditUsernameInputModel input)
+        {
+            string username;
+            var user = await this.userManager.GetUserAsync(this.User);
+            try
+            {
+                username = await this.usersService.ChangeUsername(input.Username, user);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return new EditResponseModel { ErrorMessage = ioe.Message, Username = user.UserName };
+            }
+
+            return new EditResponseModel { Username = user.UserName };
         }
     }
 }

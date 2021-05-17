@@ -4,6 +4,14 @@
     this.ViewData["Title"] = "Category";
 }
 
+<style>
+    .no-border {
+        border: 0;
+        box-shadow: none;
+        width: 300px;
+    }
+</style>
+
 <div id="my-container" class="container">
     <div class="row">
         <div class="col-md-12">
@@ -19,6 +27,10 @@
                         <div class="content">
                             <img id="profile-image" src="@this.Model.ImageSrc" width="170" height="150">
                             <a onclick="$('#my-input').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit"></i></a>
+                        </div>
+
+                        <div>
+                            <strong>Username:</strong> <input onchange="editUsername('my-username-input')" id="my-username-input" class="no-border" type="text" name="username" value="@this.Model.UserName" />
                         </div>
 
                     </div>
@@ -105,5 +117,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/profile-image-edit.js"></script>
+    <script src="~/js/profile-edit.js"></script>
 }

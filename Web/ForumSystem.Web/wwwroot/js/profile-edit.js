@@ -34,6 +34,39 @@
     };
 }
 
+async function editUsername(inputId) {
+    var input = document.getElementById(inputId);
+    var username = input.value;
+    var json = JSON.stringify({ username });
+
+    const jsonResponse = await fetch('/api/users/username', {
+        method: 'Post',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: json,
+    }).then(res => res.json());
+
+    var username = jsonResponse['username'];
+    var errorMessage = jsonResponse['errorMessage'];
+
+    if (errorMessage) {
+        document
+            .getElementById('my-container')
+            .prepend(createBootstrapDivAlertElement(errorMessage));
+
+        setTimeout(function () {
+            document.getElementById('my-alert-div').style.display = 'none';
+        }, 3000);
+
+        input.value = username;
+    }
+
+    if (!errorMessage) {
+        input.value = username;
+    }
+}
+
 function createBootstrapDivAlertElement(text) {
     var div = document.createElement('div');
 

@@ -3,7 +3,9 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
+
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
 
@@ -23,6 +25,25 @@
         {
             this.profileImages = profileImages;
             this.userManager = userManager;
+        }
+
+        public async Task<string> ChangeUsername(string username, ApplicationUser user)
+        {
+            var userWithSameuserName = await this.userManager.Users
+                .Where(x => x.UserName == username
+                    && x.Id != user.Id)
+                .FirstOrDefaultAsync();
+
+            if (userWithSameuserName != null)
+            {
+                throw new InvalidOperationException("This username is taken. Try another one!");
+            }
+
+            user.UserName = username;
+
+            await this.userManager.UpdateAsync(user);
+
+            return user.UserName;
         }
 
         public async Task<string> UploadProfileImage(IFormFile image, string userId, string path)

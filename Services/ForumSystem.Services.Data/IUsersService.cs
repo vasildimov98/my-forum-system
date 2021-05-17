@@ -2,10 +2,14 @@
 {
     using System.Threading.Tasks;
 
+    using ForumSystem.Data.Models;
+
     using Microsoft.AspNetCore.Http;
 
     public interface IUsersService
     {
         Task<string> UploadProfileImage(IFormFile image, string userId, string path);
+
+        Task<string> ChangeUsername(string username, ApplicationUser user);
     }
 }
