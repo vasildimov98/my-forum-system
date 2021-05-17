@@ -78,8 +78,10 @@
 
             if (user.HasImage)
             {
+                var oldProfileImagePath = Path.Combine(path, user.ProfileImageId + user.ProfileImage.Extention);
+
                 File
-                    .Delete(path + user.ProfileImageId + user.ProfileImage.Extention);
+                    .Delete(oldProfileImagePath);
 
                 this.profileImages
                     .Delete(user.ProfileImage);

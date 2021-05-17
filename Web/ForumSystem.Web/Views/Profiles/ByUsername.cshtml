@@ -47,12 +47,6 @@
                 </div>
 
                 <div class="ibox-content forum-container">
-                    <div class="pull-right forum-desc">
-                        <samll>Total posts: @this.Model.PostsCount</samll>
-                    </div>
-
-                    <span>Feel free to choose topic you're interested in.</span>
-
                     @if (this.Model.PostsCount == 0)
                     {
                         <div class="forum-title">
@@ -61,6 +55,12 @@
                     }
                     else
                     {
+                        <div class="pull-right forum-desc">
+                            <samll>Total posts: @this.Model.PostsCount</samll>
+                        </div>
+
+                        <span>Feel free to choose topic you're interested in.</span>
+
                         <div class="forum-title">
                             <h3>Posts: </h3>
                         </div>
