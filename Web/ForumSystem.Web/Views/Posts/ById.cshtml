@@ -48,7 +48,7 @@
 
                         <div class="media-body ml-3">
                             <h3>@this.Model.Title</h3>
-                            <p href="javascript:void(0)" data-abc="true">Created by @this.Model.UserUserName</p>
+                            <a asp-controller="Profiles" asp-action="All" data-abc="true">Created by @this.Model.UserUserName</a>
                             <div class="text-muted small">@createdDaysAgo</div>
                         </div>
                         <div class="text-muted small ml-3">

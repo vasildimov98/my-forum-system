@@ -1,0 +1,84 @@
+﻿@using ForumSystem.Web.ViewModels.Profiles;
+@model ProfileViewModel
+@{
+    this.ViewData["Title"] = "Category";
+}
+
+<div class="container-fluid mt-100">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <div class="media flex-wrap w-100 align-items-center">
+                        <div class="px-4 pt-3">
+
+                            @if (this.Model.IsLoggedInUser)
+                            {
+                                <form method="post">
+                                    <input onchange="uploadImage('my-input')" id="my-input" type="file" hidden />
+                                </form>
+                            }
+
+                            <div>
+                                <img id="profile-image" src="@this.Model.ImageSrc" width="170" height="150">
+                                @if (this.Model.IsLoggedInUser)
+                                {
+                                    <a onclick="$('#my-input').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit"></i></a>
+                                }
+                            </div>
+
+                            <div>
+                                @if (this.Model.IsLoggedInUser)
+                                {
+                                    <strong>Username:</strong> <input onchange="editUsername('my-username-input')" id="my-username-input" class="no-border" type="text" name="username" value="@this.Model.UserName" />
+                                }
+                                else
+                                {
+                                    <strong>Username:</strong> @this.Model.UserName
+                                }
+                            </div>
+                        </div>
+
+                        <div class="text-muted small ml-3 float-lg-right">
+                            <div>Member since <strong>@this.Model.CreatedOn.Date.ToString("d")</strong></div>
+                            <div class="float-sm-right"><strong>@this.Model.PostsCount</strong> posts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox-content forum-container">
+                    <div class="pull-right forum-desc">
+                        <samll>Total posts: @this.Model.PostsCount</samll>
+                    </div>
+
+                    <span>Feel free to choose topic you're interested in.</span>
+
+                    @if (this.Model.PostsCount == 0)
+                    {
+                        <div class="forum-title">
+                            <h4>It feels empty! There is still no posts written from current user</h4>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="forum-title">
+                            <h3>Posts: </h3>
+                        </div>
+                    }
+
+
+                    @foreach (var post in this.Model.Posts)
+                    {
+                        <partial name="~/Views/PartialViews/_Post.cshtml" , model="post" />
+                    }
+
+                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/profile-edit.js"></script>
+}

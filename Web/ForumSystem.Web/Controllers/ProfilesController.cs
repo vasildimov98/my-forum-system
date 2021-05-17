@@ -34,16 +34,16 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> All(int id)
+        public async Task<IActionResult> ByUsername(string username, int id)
         {
             var page = Math.Max(1, id);
 
-            var userId = this.userManager.GetUserId(this.User);
+            var loggedInUserId = this.userManager.GetUserId(this.User);
 
             var user = await this.userManager.Users
                 .Include(x => x.Posts)
                 .Include(x => x.ProfileImage)
-                .FirstOrDefaultAsync(x => x.Id == userId);
+                .FirstOrDefaultAsync(x => x.UserName == username);
 
             var posts = await this.postsService
                 .GetAllByUserIdAsync<PostListViewModel>(user.Id, PostsPerPage, (page - 1) * PostsPerPage);
@@ -62,11 +62,13 @@
                 Posts = posts,
                 PostsCount = postsCount,
                 ImageSrc = imageSrc,
+                CreatedOn = user.CreatedOn,
+                IsLoggedInUser = user.Id == loggedInUserId,
                 PaginationModel = new PaginationViewModel
                 {
                     CurrentPage = page,
                     PagesCount = pagesCount,
-                    RouteName = "default",
+                    RouteName = "user-username-page",
                 },
             };
 

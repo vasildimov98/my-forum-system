@@ -22,7 +22,7 @@
                         <div class="card mb-4">
                             <div class="card-header">
                                 <div class="media flex-wrap w-100 align-items-center">
-                                    <img src="https://thispersondoesnotexist.com/image" width="20" class="d-sm-block ui-w-40 rounded-circle">
+                                    <img src="@comment.ImageSrc" width="20" class="d-sm-block ui-w-40 rounded-circle">
 
                                     <div class="media-body ml-3">
                                         <h6>@comment.UserUserName</h6>
@@ -39,7 +39,7 @@
                                             <a href="javascript:;" onclick="sendVote(@comment.Id, true, '/api/votes/comment')">
                                                 <i class="fa fa-arrow-up"></i>
                                             </a>
-                                            <span id=@comment.VotesCountId >@comment.VoteTypeCount</span>
+                                            <span id=@comment.VotesCountId>@comment.VoteTypeCount</span>
                                             <a href="javascript:;" onclick="sendVote(@comment.Id, false, '/api/votes/comment')">
                                                 <i class="fa fa-arrow-down"></i>
                                             </a>

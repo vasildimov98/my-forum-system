@@ -118,6 +118,16 @@
                 endpoints =>
                     {
                         endpoints
+                          .MapControllerRoute(
+                              name: "user-username-page",
+                              pattern: "User/{username:required}/{id?}",
+                              defaults: new
+                              {
+                                  controller = "Profiles",
+                                  action = "ByUsername",
+                              });
+
+                        endpoints
                            .MapControllerRoute(
                                name: "post-id-title",
                                pattern: "Post/{id:min(1)}/{title:required}",

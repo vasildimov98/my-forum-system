@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Web.ViewModels.Profiles
 {
+    using System;
     using System.Collections.Generic;
 
     using ForumSystem.Data.Models;
@@ -13,6 +14,10 @@
         public int PostsCount { get; set; }
 
         public string ImageSrc { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public bool IsLoggedInUser { get; set; }
 
         public PaginationViewModel PaginationModel { get; set; }
 

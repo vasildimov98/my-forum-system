@@ -25,6 +25,8 @@
 
         public string UserUserName { get; set; }
 
+        public string ImageSrc { get; set; }
+
         public int PostId { get; set; }
 
         public int? ParentId { get; set; }
@@ -35,8 +37,14 @@
         {
             configuration
                     .CreateMap<Comment, PostCommentViewModel>()
-                    .ForMember(x => x.VoteTypeCount, y =>
-                            y.MapFrom(x => x.CommentVotes.Sum(z => (int)z.Type)));
+                    .ForMember(x => x.VoteTypeCount, opt =>
+                            opt.MapFrom(y => y.CommentVotes.Sum(z => (int)z.Type)));
+            configuration
+                .CreateMap<Comment, PostCommentViewModel>()
+                .ForMember(x => x.ImageSrc, opt =>
+                    opt.MapFrom(y => y.User.HasImage ?
+                        $"/profileImages/{y.User.ProfileImage.Id}{y.User.ProfileImage.Extention}" :
+                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"));
         }
     }
 }
