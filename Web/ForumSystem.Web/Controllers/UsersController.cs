@@ -101,24 +101,5 @@
 
             return this.Ok("/profileImages/" + profileImage.Id + profileImage.Extention);
         }
-
-        [HttpPost]
-        [Authorize]
-        [Route("username")]
-        public async Task<ActionResult<EditResponseModel>> Edit(EditUsernameInputModel input)
-        {
-            string username;
-            var user = await this.userManager.GetUserAsync(this.User);
-            try
-            {
-                username = await this.usersService.ChangeUsername(input.Username, user);
-            }
-            catch (InvalidOperationException ioe)
-            {
-                return new EditResponseModel { ErrorMessage = ioe.Message, Username = user.UserName };
-            }
-
-            return new EditResponseModel { Username = user.UserName };
-        }
     }
 }
