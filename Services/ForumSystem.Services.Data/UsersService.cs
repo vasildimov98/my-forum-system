@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Common.Repositories;
@@ -15,6 +16,8 @@
     public class UsersService : IUsersService
     {
         private readonly string[] validExtention = new[] { ".png", ".jpeg", "jpg" };
+        private readonly Regex usernameRegex = new("^(?=.{7,20}$)[a-zA-Z0-9]+$");
+
         private readonly IRepository<ProfileImage> profileImages;
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -28,6 +31,14 @@
 
         public async Task<string> ChangeUsername(string username, ApplicationUser user)
         {
+            if (!this.usernameRegex.IsMatch(username))
+            {
+                throw new InvalidOperationException("Invalid username." +
+                    " Only alphanumeric character." +
+                    " Min Length: 7." +
+                    " Max Length: 20");
+            }
+
             var userWithSameuserName = await this.userManager.Users
                 .Where(x => x.UserName == username
                     && x.Id != user.Id)

@@ -28,7 +28,7 @@
 
         setTimeout(function () {
             document.getElementById('my-alert-div').style.display = 'none';
-        }, 3000); // <-- time in milliseconds
+        }, 3000);
 
         input.value = "";
     };
@@ -57,7 +57,7 @@ async function editUsername(inputId) {
 
         setTimeout(function () {
             document.getElementById('my-alert-div').style.display = 'none';
-        }, 3000);
+        }, 5000);
 
         input.value = username;
     }
@@ -66,6 +66,12 @@ async function editUsername(inputId) {
         input.value = username;
         document.getElementById('dropdownMenuLink').textContent = "Hello " + username + "!";
     }
+
+    let newUrl = "/User/" + username + "/1";
+
+    document.getElementById("my-profile-link").href = newUrl;
+
+    history.replaceState(null, '', newUrl)
 }
 
 function createBootstrapDivAlertElement(text) {

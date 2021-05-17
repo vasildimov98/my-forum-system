@@ -39,6 +39,8 @@
 
         public int VoteTypeCount { get; set; }
 
+        public string PostCreatorHref => $"/User/{this.UserUserName}/1";
+
         public IEnumerable<PostCommentViewModel> Comments { get; set; }
 
         public void CreateMappings(IProfileExpression configuration)

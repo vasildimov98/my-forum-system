@@ -2,10 +2,8 @@
 {
     using System;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
 
-    using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Users;
@@ -14,7 +12,6 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     [ApiController]
     [Route("api/[controller]")]

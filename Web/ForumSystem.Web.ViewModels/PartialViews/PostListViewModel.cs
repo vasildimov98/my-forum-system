@@ -17,6 +17,8 @@
 
         public string Url => $"/Post/{this.Id}/{this.Title.ToLower().Replace(" ", "-")}";
 
+        public string PostCreatorHref => $"/User/{this.UserUserName}/1";
+
         public string Content { get; set; }
 
         public int CommentsCount { get; set; }
