@@ -138,6 +138,16 @@
                                });
 
                         endpoints
+                          .MapControllerRoute(
+                              name: "category-live-chat",
+                              pattern: "Category/LiveChat",
+                              defaults: new
+                              {
+                                  controller = "Categories",
+                                  action = "LiveChat",
+                              });
+
+                        endpoints
                            .MapControllerRoute(
                                name: "category-name-page",
                                pattern: "Category/{name:required}/{id?}",

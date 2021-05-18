@@ -12,9 +12,17 @@
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
 
-                        <div class="pull-left m-r-md">
-                            <img src="@this.Model.ImageUrl" width="100" />
+                        <div class="container">
+                            <div class="row justify-content-between">
+                                <div class="col-md-3 pull-left m-r-md">
+                                    <img src="@this.Model.ImageUrl" width="100" />
+                                </div>
+                                <div class="col-md-3 text-right">
+                                    <a asp-route="category-live-chat" class="btn btn-info">Start Live Chat</a>
+                                </div>
+                            </div>
                         </div>
+
 
                         <h2>@this.Model.Name</h2>
                         <p>@Html.Raw(this.Model.SanitizeDescription)</p>

@@ -25,6 +25,11 @@
             this.postsService = postsService;
         }
 
+        public IActionResult LiveChat()
+        {
+            return this.View();
+        }
+
         public async Task<IActionResult> All(int id)
         {
             var page = Math.Max(1, id);

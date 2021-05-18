@@ -10,6 +10,7 @@
         public Category()
         {
             this.Posts = new HashSet<Post>();
+            this.Messages = new HashSet<Message>();
         }
 
         [Required]
@@ -22,5 +23,7 @@
         public string ImageUrl { get; set; }
 
         public virtual ICollection<Post> Posts { get; set; }
+
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }
