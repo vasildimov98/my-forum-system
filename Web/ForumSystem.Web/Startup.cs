@@ -11,11 +11,13 @@
     using ForumSystem.Services.Data;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Services.Messaging;
+    using ForumSystem.Web.Hub;
     using ForumSystem.Web.ViewModels;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -51,13 +53,15 @@
             services.AddControllersWithViews(
                 options =>
                     {
-                        // options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                     }).AddRazorRuntimeCompilation();
 
             services.AddAntiforgery(options =>
             {
-                // options.HeaderName = "X-CSRF-TOKEN";
+                options.HeaderName = "X-CSRF-TOKEN";
             });
+
+            services.AddSignalR();
 
             services.AddRazorPages();
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -140,7 +144,7 @@
                         endpoints
                           .MapControllerRoute(
                               name: "category-live-chat",
-                              pattern: "Category/LiveChat",
+                              pattern: "Category/LiveChat/{id:min(1)}",
                               defaults: new
                               {
                                   controller = "Categories",
@@ -156,6 +160,9 @@
                                    controller = "Categories",
                                    action = "ByName",
                                });
+
+                        endpoints
+                            .MapHub<ChatHub>("/category-chat");
 
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Posts}/{id?}");

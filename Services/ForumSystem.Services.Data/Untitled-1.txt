@@ -1,0 +1,7 @@
+Project TODO list: 
+-ML category
+-Create user admin if doesn't exists
+
+-Singlar - Create WebSocket for live chating about category and post
+-Create crud admin panel for posts
+-Create user option for creating Category with admin aproaval

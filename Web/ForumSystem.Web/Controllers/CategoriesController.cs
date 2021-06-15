@@ -25,9 +25,12 @@
             this.postsService = postsService;
         }
 
-        public IActionResult LiveChat()
+        public async Task<IActionResult> LiveChat(int id)
         {
-            return this.View();
+            var viewModel = await this.categoriesService
+                .GetByIdAsync<CategoryLiveChatViewModel>(id);
+
+            return this.View(viewModel);
         }
 
         public async Task<IActionResult> All(int id)

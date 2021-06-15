@@ -18,7 +18,7 @@
                                     <img src="@this.Model.ImageUrl" width="100" />
                                 </div>
                                 <div class="col-md-3 text-right">
-                                    <a asp-route="category-live-chat" class="btn btn-info">Start Live Chat</a>
+                                    <a asp-route="category-live-chat" asp-route-id="@this.Model.Id" class="btn btn-info">Start Live Chat</a>
                                 </div>
                             </div>
                         </div>
