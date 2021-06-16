@@ -1,12 +1,13 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Services.Data;
-    using ForumSystem.Web.ViewModels.Categories;
+    using ForumSystem.Web.ViewModels.Chat;
     using ForumSystem.Web.ViewModels.PartialViews;
+
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class CategoriesController : BaseController
@@ -23,14 +24,6 @@
         {
             this.categoriesService = categoriesService;
             this.postsService = postsService;
-        }
-
-        public async Task<IActionResult> LiveChat(int id)
-        {
-            var viewModel = await this.categoriesService
-                .GetByIdAsync<CategoryLiveChatViewModel>(id);
-
-            return this.View(viewModel);
         }
 
         public async Task<IActionResult> All(int id)

@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Categories
+﻿namespace ForumSystem.Web.ViewModels.Chat
 {
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
@@ -7,7 +7,7 @@
     {
         public string Name { get; set; }
 
-        public string UrlName => this.Name.Replace(" ", "-");
+        public string RouteName => this.Name.Replace(" ", "-");
 
         public string ImageUrl { get; set; }
     }

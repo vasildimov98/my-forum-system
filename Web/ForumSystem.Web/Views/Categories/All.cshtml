@@ -1,4 +1,4 @@
-﻿@using ForumSystem.Web.ViewModels.Categories;
+﻿@using ForumSystem.Web.ViewModels.Chat;
 @model CategoryViewModelList
 
 @{
@@ -15,7 +15,7 @@
     {
         <div class="forum-item justify-content-lg-center">
             <div class="row align-items-center my-row ">
-                <a asp-action="ByName" asp-route-name="@category.UrlName" asp-route-id="1" class="text-dark">
+                <a asp-action="ByName" asp-route-name="@category.RouteName" asp-route-id="1" class="text-dark">
                     <div class="col-md-12 my-col">
                         <span>@(count++)</span>
                         <img src="@category.ImageUrl" width="60" class="ui-w-40 rounded-circle center-block" />

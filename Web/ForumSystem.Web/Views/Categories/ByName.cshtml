@@ -1,4 +1,4 @@
-﻿@using ForumSystem.Web.ViewModels.Categories;
+﻿@using ForumSystem.Web.ViewModels.Chat;
 @model CategoryPostsListModel
 @{
     this.ViewData["Title"] = "Category";
@@ -18,7 +18,7 @@
                                     <img src="@this.Model.ImageUrl" width="100" />
                                 </div>
                                 <div class="col-md-3 text-right">
-                                    <a asp-route="category-live-chat" asp-route-id="@this.Model.Id" class="btn btn-info">Start Live Chat</a>
+                                    <a href="@this.Model.ChatRoute" class="btn btn-info">Start Live Chat</a>
                                 </div>
                             </div>
                         </div>

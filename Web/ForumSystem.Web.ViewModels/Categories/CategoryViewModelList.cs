@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Categories
+﻿namespace ForumSystem.Web.ViewModels.Chat
 {
     using System.Collections.Generic;
 

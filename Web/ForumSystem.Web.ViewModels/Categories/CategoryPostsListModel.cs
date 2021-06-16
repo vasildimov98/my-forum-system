@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Categories
+﻿namespace ForumSystem.Web.ViewModels.Chat
 {
     using System.Collections.Generic;
 
@@ -12,6 +12,8 @@
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public string ChatRoute => $"/Chat/{this.Name.Replace(" ", "-")}";
 
         public string ImageUrl { get; set; }
 
