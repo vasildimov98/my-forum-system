@@ -57,10 +57,15 @@ function stoppedTyping() {
 
 function sendMessage(target) {
     target.preventDefault();
+
+    let locationParts = location.href.split("/");
+
+    let categoryName = locationParts[locationParts.length - 1];
+
     let message = messageInput.value;
 
     if (message != "") {
-        connection.invoke("Send", message);
+        connection.invoke("Send", message, categoryName);
         messageInput.value = "";
         sendBtn.disabled = true;
     }

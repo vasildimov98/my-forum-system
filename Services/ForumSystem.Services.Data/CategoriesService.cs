@@ -111,5 +111,11 @@
             => this.categories
                    .All()
                    .Count();
+
+        public bool ValidateCategoryName(string name)
+            => this.categories
+                   .All()
+                   .Where(x => x.Name == name)
+                   .Count() > 0;
     }
 }

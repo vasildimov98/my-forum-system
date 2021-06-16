@@ -21,6 +21,8 @@
 
         public Task<T> GetByNameAsync<T>(string name);
 
+        public bool ValidateCategoryName(string name);
+
         public int GetCount();
     }
 }
