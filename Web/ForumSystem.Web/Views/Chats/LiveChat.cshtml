@@ -1,5 +1,5 @@
 ﻿@using ForumSystem.Web.ViewModels.Chat;
-@model CategoryLiveChatViewModel
+@model LiveChatViewModel
 
 <div class="container">
     <header class="text-center">
@@ -8,7 +8,39 @@
 
     <div class="row rounded-lg overflow-hidden shadow">
         <div class="col-12 px-0">
-            <div id="messagesList" class="px-4 py-5 chat-box bg-white"></div>
+            <div id="messagesList" class="px-4 py-5 chat-box bg-white">
+                @foreach (var message in this.Model.Messages)
+                {
+                    if (this.User.Identity.Name == message.User)
+                    {
+                        <div class="media w-50 ml-auto mb-3">
+                            <div class="media-body">
+                                <div class="bg-primary rounded py-2 px-3 mb-2">
+                                    <p class="text-small mb-0 text-white">@message.Content</p>
+                                </div>
+                                <p class="small text-muted">
+                                    <time datetime="@message.CreatedOn.ToString("O")"></time>
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="media w-50 mb-3">
+                            <img src="@message.ImageSrc" alt="user" width="50" class="rounded-circle">
+                            <div class="media-body ml-3">
+                                <div class="bg-light rounded py-2 px-3 mb-2">
+                                    <p class="text-small mb-0 text-muted">@message.User</p>
+                                    <p class="text-small mb-0 text-muted">@message.Content</p>
+                                </div>
+                                <p class="small text-muted">
+                                    <time datetime="@message.CreatedOn.ToString("O")"></time>
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
 
             <div class="input-group">
                 <input id="messageInput" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">

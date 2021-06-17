@@ -1,9 +1,13 @@
 ﻿namespace ForumSystem.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IChatsService
     {
-        Task CreateMessageAsync(string categoryName, string userId, string content);
+        Task<DateTime> CreateMessageAsync(string categoryName, string userId, string content);
+
+        Task<IEnumerable<T>> GetAllMessagesByCategoryId<T>(int categoryId);
     }
 }

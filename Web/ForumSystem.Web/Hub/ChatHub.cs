@@ -29,7 +29,7 @@
             var userId = this.userManager
                 .GetUserId(this.Context.User);
 
-            await this.chatsSercvice
+            var createdOn = await this.chatsSercvice
                 .CreateMessageAsync(categoryName, userId, message);
 
             await this.Clients.All
@@ -39,6 +39,7 @@
                 {
                     User = this.Context.User.Identity.Name,
                     Content = message,
+                    CreatedOn = createdOn,
                 });
         }
     }

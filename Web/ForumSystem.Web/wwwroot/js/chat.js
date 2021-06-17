@@ -79,7 +79,9 @@ function createOtherUserChatInfo(messageObj) {
                                                     <p class="text-small mb-0 text-muted">${messageObj.user}</p>
                                                     <p class="text-small mb-0 text-muted">${escapeHtml(messageObj.content)}</p>
                                                 </div>
-                                                <p class="small text-muted">12:00 pm | aug 13</p>
+                                                <p class="small text-muted">
+                                                     <time datetime="${messageObj.createdOn.toISOString()}"></time>
+                                                </p>
                                             </div>
                                         </div>`
 
@@ -92,7 +94,9 @@ function createCurrUserChatInfo(messageObj) {
                                         <div class="bg-primary rounded py-2 px-3 mb-2">
                                             <p class="text-small mb-0 text-white">${escapeHtml(messageObj.content)}</p>
                                         </div>
-                                        <p class="small text-muted">12:00 PM | Aug 13</p>
+                                       <p class="small text-muted">
+                                            <time datetime="${messageObj.createdOn.toISOString()}"></time>
+                                       </p>
                                     </div>
                                 </div>`
 

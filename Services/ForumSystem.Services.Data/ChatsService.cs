@@ -1,11 +1,15 @@
 ﻿namespace ForumSystem.Services.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
+    using ForumSystem.Services.Mapping;
+
+    using Microsoft.EntityFrameworkCore;
 
     public class ChatsService : IChatsService
     {
@@ -20,7 +24,7 @@
             this.categoryRepository = categoryRepository;
         }
 
-        public async Task CreateMessageAsync(string categoryName, string userId, string content)
+        public async Task<DateTime> CreateMessageAsync(string categoryName, string userId, string content)
         {
             categoryName = categoryName
                 .Replace("-", " ");
@@ -45,6 +49,15 @@
 
             await this.messageRepository.AddAsync(message);
             await this.messageRepository.SaveChangesAsync();
+
+            return message.CreatedOn;
         }
+
+        public async Task<IEnumerable<T>> GetAllMessagesByCategoryId<T>(int categoryId)
+            => await this.messageRepository
+                .All()
+                .Where(x => x.CategoryId == categoryId)
+                .To<T>()
+                .ToListAsync();
     }
 }
