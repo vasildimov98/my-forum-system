@@ -19,7 +19,7 @@
                                     <p class="text-small mb-0 text-white">@message.Content</p>
                                 </div>
                                 <p class="small text-muted">
-                                    <time datetime="@message.CreatedOn.ToString("O")"></time>
+                                    <time datetime="@message.SendTime"></time>
                                 </p>
                             </div>
                         </div>
@@ -34,7 +34,7 @@
                                     <p class="text-small mb-0 text-muted">@message.Content</p>
                                 </div>
                                 <p class="small text-muted">
-                                    <time datetime="@message.CreatedOn.ToString("O")"></time>
+                                    <time datetime="@message.SendTime"></time>
                                 </p>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="input-group">
-                <input id="messageInput" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+                <input id="messageInput" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light" />
                 <div class="input-group-append">
                     <button id="sendButton" class="btn btn-link" disabled> <i class="fa fa-paper-plane"></i></button>
                 </div>
@@ -53,5 +53,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/chat.js"></script>
+    <script type="module" src="~/js/chat.js" asp-append-version="true"></script>
 }

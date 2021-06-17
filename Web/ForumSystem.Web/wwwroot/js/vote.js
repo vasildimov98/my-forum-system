@@ -1,6 +1,8 @@
 ﻿function sendVote(id, isUpVote, url) {
     var json = JSON.stringify({ id, isUpVote });
+
     var token = document.getElementsByName("__RequestVerificationToken")[0].value;
+
     fetch(url,
         {
             method: "Post",

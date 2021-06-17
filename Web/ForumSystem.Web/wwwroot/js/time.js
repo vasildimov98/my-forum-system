@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿export function changeTimeByCurrTimeZone() {
     $("time").each(function (_, e) {
         const dateTimeValue = $(e).attr("datetime");
         if (!dateTimeValue) {
@@ -9,4 +9,6 @@
         $(e).html(time.format("llll"));
         $(e).attr("title", $(e).attr("datetime"));
     });
-});
+}
+
+$(changeTimeByCurrTimeZone);

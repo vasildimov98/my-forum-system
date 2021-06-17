@@ -12,6 +12,8 @@
 
         public DateTime CreatedOn { get; set; }
 
+        public string SendTime => this.CreatedOn.ToString("O");
+
         public string User { get; set; }
 
         public string ImageSrc { get; set; }

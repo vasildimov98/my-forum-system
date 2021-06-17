@@ -1,18 +1,24 @@
 ﻿async function uploadImage(inputId) {
-    var input = document.getElementById(inputId);
-    var profileImage = input.files[0];
+    const input = document.getElementById(inputId);
+    const profileImage = input.files[0];
 
-    var formData = new FormData();
+    const token = document
+        .getElementsByName("__RequestVerificationToken")[0].value;
+
+    const formData = new FormData();
 
     formData.append("image", profileImage);
 
     const response = await fetch("/api/users/image", {
         method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': token,
+        },
         body: formData
     });
 
     if (response.ok) {
-        var src = await response.text();
+        let src = await response.text();
         document
             .getElementById('profile-image')
             .setAttribute('src', src);
@@ -21,7 +27,7 @@
     }
 
     if (!response.ok) {
-        var error = await response.text();
+        let error = await response.text();
         document
             .getElementById('my-container')
             .prepend(createBootstrapDivAlertElement(error));
@@ -35,20 +41,24 @@
 }
 
 async function editUsername(inputId) {
-    var input = document.getElementById(inputId);
-    var username = input.value;
-    var json = JSON.stringify({ username });
+    let input = document.getElementById(inputId);
+    let username = input.value;
+    let json = JSON.stringify({ username });
+
+    const token = document
+        .getElementsByName("__RequestVerificationToken")[0].value;
 
     const jsonResponse = await fetch('/api/users/username', {
         method: 'Post',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
         },
         body: json,
     }).then(res => res.json());
 
-    var username = jsonResponse['username'];
-    var errorMessage = jsonResponse['errorMessage'];
+    username = jsonResponse['username'];
+    let errorMessage = jsonResponse['errorMessage'];
 
     if (errorMessage) {
         document
@@ -75,7 +85,7 @@ async function editUsername(inputId) {
 }
 
 function createBootstrapDivAlertElement(text) {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
 
     div.id = 'my-alert-div';
 

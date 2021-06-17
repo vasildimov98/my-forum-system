@@ -1,4 +1,6 @@
-﻿const sendBtn = document
+﻿import { changeTimeByCurrTimeZone } from './time.js'
+
+const sendBtn = document
     .getElementById("sendButton");
 const messageInput = document
     .getElementById("messageInput");
@@ -24,6 +26,9 @@ connection.on("NewMessage",
         else chatInfo = createOtherUserChatInfo(messageObj);
 
         document.getElementById("messagesList").innerHTML += chatInfo;
+
+        changeTimeByCurrTimeZone();
+        updateScroll();
     });
 
 connection
@@ -73,14 +78,14 @@ function sendMessage(target) {
 
 function createOtherUserChatInfo(messageObj) {
     let element = `<div class="media w-50 mb-3">
-                                            <img src="/profileImages/12f9d30c-5b51-4cbf-8485-6cf725db73f0.png" alt="user" width="50" class="rounded-circle">
+                                            <img src="${messageObj.imageSrc}" alt="user" width="50" class="rounded-circle">
                                             <div class="media-body ml-3">
                                                 <div class="bg-light rounded py-2 px-3 mb-2">
                                                     <p class="text-small mb-0 text-muted">${messageObj.user}</p>
                                                     <p class="text-small mb-0 text-muted">${escapeHtml(messageObj.content)}</p>
                                                 </div>
                                                 <p class="small text-muted">
-                                                     <time datetime="${messageObj.createdOn.toISOString()}"></time>
+                                                    <time datetime=${messageObj.sendTime}></time>
                                                 </p>
                                             </div>
                                         </div>`
@@ -95,7 +100,7 @@ function createCurrUserChatInfo(messageObj) {
                                             <p class="text-small mb-0 text-white">${escapeHtml(messageObj.content)}</p>
                                         </div>
                                        <p class="small text-muted">
-                                            <time datetime="${messageObj.createdOn.toISOString()}"></time>
+                                           <time datetime=${messageObj.createdOn}></time>
                                        </p>
                                     </div>
                                 </div>`
@@ -111,3 +116,10 @@ function escapeHtml(unsafe) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
+
+function updateScroll() {
+    var element = document.getElementById("messagesList");
+    element.scrollTop = element.scrollHeight;
+}
+
+updateScroll();
