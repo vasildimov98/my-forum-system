@@ -15,6 +15,7 @@
 <script type="text/javascript">
     tinymce.init({
         selector: "textarea",
+        resize: false,
         plugins: [
             "image paste table link code media"
         ],
@@ -23,7 +24,7 @@
 
 <div class="container-fluid mt-100">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12 p-0">
             <div class="card mb-4">
                 <div class="card-header">
                     <div class="media flex-wrap w-100 align-items-center">
@@ -64,9 +65,9 @@
 
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-12">
-                                <div>
-                                    <span>Write a comment as @this.Model.LoggedInUserName</span>
+                            <div class="col-md-12 p-0">
+                                <div class="m-2 p-1">
+                                    <span>Write a comment as @this.Model.LoggedInUserName:</span>
                                 </div>
                             </div>
                         </div>
