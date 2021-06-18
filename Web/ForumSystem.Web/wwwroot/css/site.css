@@ -1,7 +1,6 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-/*home page forum posts*/
+﻿@import './global.css';
+@import './live-chat.css';
+@import './navbar.css';
 
 .no-border {
     border: 0;
@@ -17,16 +16,10 @@ div.content {
         position: absolute;
         top: 67%;
         right: 77%;
-        background-color: white
     }
 
 .fa-edit {
     color: green;
-}
-
-body {
-    margin-top: 20px;
-    background: #eee;
 }
 
 .white-bg {

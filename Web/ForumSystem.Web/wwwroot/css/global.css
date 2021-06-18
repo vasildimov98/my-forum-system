@@ -1,0 +1,22 @@
+﻿@font-face {
+    font-family: 'Dancing Script';
+    src: url('./fonts/DancingScript-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Forum';
+    src: url('./fonts/Forum-Regular.ttf') format('truetype');
+}
+
+
+h1, .site-brand {
+    font-family: 'Dancing Script';
+}
+
+body {
+    font-family: 'Forum';
+    font-size: 18px;
+    margin-top: 20px;
+    background: rgb(134,128,128);
+    background: linear-gradient(90deg, rgba(134,128,128,1) 0%, rgba(213,207,207,1) 0%);
+}

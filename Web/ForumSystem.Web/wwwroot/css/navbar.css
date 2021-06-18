@@ -1,0 +1,28 @@
+﻿header nav#navbar {
+    display: flex;
+    justify-content: right;
+    background: #fff;
+    margin: 20px auto;
+    padding-top: 18px;
+    padding-bottom: 18px;
+}
+
+.site-brand {
+    color: black;
+    font-size: 20px;
+    position: relative;
+    left: 436px;
+}
+
+.site-brand:hover {
+    text-decoration: none;
+}
+
+.navbar-links {
+    display: flex;
+    list-style-type: none;
+}
+
+.nav-item {
+    padding-right: 10px;
+}

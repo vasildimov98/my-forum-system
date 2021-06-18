@@ -1,16 +1,16 @@
 ﻿@using ForumSystem.Web.ViewModels.Components;
 @model MostPostsInCategoryListModel
 
-<div class="ibox-content forum-container text-center">
+<div class="ibox-content forum-container">
 
-    <div class="forum-title">
+    <div class="forum-title text-center">
         <h5>Famous Categories</h5>
     </div>
 
     @foreach (var category in this.Model.Categories)
     {
         <div class="forum-item active">
-            <div class="row align-items-center my-row ">
+            <div class="row my-row ">
                 <a href="@category.Url" class="text-dark">
                     <div class="col-md-12 my-col">
                         <img src="@category.ImageUrl" width="30" class="ui-w-40 rounded-circle center-block" />

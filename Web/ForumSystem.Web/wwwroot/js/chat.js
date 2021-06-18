@@ -82,7 +82,7 @@ function createOtherUserChatInfo(messageObj) {
                                             <div class="media-body ml-3">
                                                 <div class="bg-light rounded py-2 px-3 mb-2">
                                                     <p class="text-small mb-0 text-muted">${messageObj.user}</p>
-                                                    <p class="text-small mb-0 text-muted">${escapeHtml(messageObj.content)}</p>
+                                                    <p class="text-small mb-0 response-content">${escapeHtml(messageObj.content)}</p>
                                                 </div>
                                                 <p class="small text-muted">
                                                     <time datetime=${messageObj.sendTime}></time>
