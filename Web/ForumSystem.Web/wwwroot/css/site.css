@@ -2,6 +2,10 @@
 @import './live-chat.css';
 @import './navbar.css';
 
+.user-info-wrapper {
+    cursor: pointer;
+}
+
 .no-border {
     border: 0;
     box-shadow: none;
