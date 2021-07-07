@@ -4,9 +4,10 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+
     using Ganss.XSS;
 
-    public class CategoryViewModel : IMapFrom<Category>
+    public class CategoryEditModel : IMapFrom<Category>
     {
         public int Id { get; set; }
 

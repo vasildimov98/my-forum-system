@@ -66,7 +66,8 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            var category = await this.categorieService.GetByIdAsync<CategoryViewModel>(id);
+            var category = await this.categorieService
+                .GetByIdAsync<CategoryEditModel>(id);
 
             if (category == null)
             {
@@ -104,7 +105,7 @@
                 return this.NotFound();
             }
 
-            var category = await this.categorieService.GetByIdAsync<CategoryViewModel>((int)id);
+            var category = await this.categorieService.GetByIdAsync<CategoryEditModel>((int)id);
 
             if (category == null)
             {

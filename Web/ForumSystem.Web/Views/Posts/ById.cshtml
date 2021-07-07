@@ -79,6 +79,12 @@
                                 </form>
                             </div>
                         </div>
+
+                        <button type="button"
+                                class="btn btn-danger btn-floating btn-lg"
+                                id="btn-back-to-top">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -91,28 +97,4 @@
 @section Scripts {
     <script src="/js/post.js" asp-append-version="true"></script>
     <script src="~/js/vote.js" asp-append-version="true"></script>
-
-    <script>
-        const userInfoDivs = document
-            .querySelectorAll(".user-info-wrapper");
-
-        userInfoDivs
-            .forEach(x => x
-                .addEventListener("click", hideOrShowComment));
-
-        function hideOrShowComment() {
-            let cardBodyElement = this.parentNode.parentNode.childNodes[3];
-            let cardFooterElement = this.parentNode.parentNode.childNodes[5];
-
-            var displayOption = cardBodyElement.style.display;
-
-            if (displayOption === "none") {
-                cardBodyElement.style.display = "block";
-                cardFooterElement.style.display = "block";
-            } else {
-                cardBodyElement.style.display = "none";
-                cardFooterElement.style.display = "none";
-            }
-        }
-    </script>
 }
