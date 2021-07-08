@@ -60,6 +60,6 @@
     <hr />
     <div class="form-check float-md-right">
         <input type="submit" value="Edit" class="btn btn-success my-post-btn" /> |
-        <a asp-area="Administration" asp-controller="Posts" asp-action="Index" class="btn btn-primary">Go Back</a>
+        <a asp-area="Administration" asp-action="Index" asp-route-id="@this.Model.CurrentPage" class="btn btn-secondary">Back to List</a>
     </div>
 </form>

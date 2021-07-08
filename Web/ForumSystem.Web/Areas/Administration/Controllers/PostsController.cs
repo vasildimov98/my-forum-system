@@ -7,6 +7,7 @@
     using ForumSystem.Web.ViewModels.Administration.Posts;
     using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Posts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     public class PostsController : AdministrationController
@@ -27,6 +28,8 @@
         public async Task<IActionResult> Index(int id)
         {
             var page = Math.Max(1, id);
+
+            this.TempData["page"] = page;
 
             var posts = await this.postsService
                 .GetAllAsync<PostCrudModel>(PostsPerPage, (page - 1) * PostsPerPage);
@@ -63,6 +66,9 @@
             {
                 return this.NotFound();
             }
+
+            post.CurrentPage = Convert
+                .ToInt32(this.TempData["page"]);
 
             return this.View(post);
         }
@@ -107,6 +113,9 @@
             {
                 return this.NotFound();
             }
+
+            post.CurrentPage = Convert
+                .ToInt32(this.TempData["page"]);
 
             return this.View(post);
         }

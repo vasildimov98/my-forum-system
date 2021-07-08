@@ -33,5 +33,7 @@
         public string ImageUrl { get; set; }
 
         public int? PostsCount { get; set; }
+
+        public int CurrentPage { get; set; }
     }
 }

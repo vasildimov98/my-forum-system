@@ -24,6 +24,8 @@
         {
             var page = Math.Max(1, id);
 
+            this.TempData["page"] = page;
+
             var categories = await this.categorieService
                 .GetAllAsync<CategoryCrudModel>(CategoryPerPage, (page - 1) * CategoryPerPage);
 
@@ -47,7 +49,13 @@
 
         public IActionResult Create()
         {
-            return this.View();
+            var viewModel = new CategoryInputModel
+            {
+                CurrentPage = Convert
+                    .ToInt32(this.TempData["page"]),
+            };
+
+            return this.View(viewModel);
         }
 
         [HttpPost]
@@ -74,6 +82,9 @@
                 return this.NotFound();
             }
 
+            category.CurrentPage = Convert
+                .ToInt32(this.TempData["page"]);
+
             return this.View(category);
         }
 
@@ -88,7 +99,8 @@
 
             try
             {
-                await this.categorieService.EditAsync(id, input);
+                await this.categorieService
+                    .EditAsync(id, input);
             }
             catch
             {
@@ -105,12 +117,16 @@
                 return this.NotFound();
             }
 
-            var category = await this.categorieService.GetByIdAsync<CategoryEditModel>((int)id);
+            var category = await this.categorieService
+                .GetByIdAsync<CategoryEditModel>((int)id);
 
             if (category == null)
             {
                 return this.NotFound();
             }
+
+            category.CurrentPage = Convert
+                .ToInt32(this.TempData["page"]);
 
             return this.View(category);
         }

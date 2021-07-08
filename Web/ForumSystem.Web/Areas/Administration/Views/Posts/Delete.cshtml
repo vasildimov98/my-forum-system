@@ -27,6 +27,6 @@
     <form asp-action="Delete" class="float-md-right">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index" class="btn btn-primary">Back to List</a>
+        <a asp-area="Administration" asp-action="Index" asp-route-id="@this.Model.CurrentPage" class="btn btn-secondary">Back to List</a>
     </form>
 </div>
