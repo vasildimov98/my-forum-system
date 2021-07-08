@@ -24,6 +24,10 @@
 
         public string CategoryName { get; set; }
 
+        public string CategoryImageUrl { get; set; }
+
+        public int CommentsCount { get; set; }
+
         public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
     }
 }

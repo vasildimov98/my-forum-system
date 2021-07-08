@@ -13,11 +13,14 @@
     public class PostsService : IPostsService
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
+        private readonly IDeletableEntityRepository<Comment> commentsRepository;
 
         public PostsService(
-            IDeletableEntityRepository<Post> postsRepository)
+            IDeletableEntityRepository<Post> postsRepository,
+            IDeletableEntityRepository<Comment> commentsRepository)
         {
             this.postsRepository = postsRepository;
+            this.commentsRepository = commentsRepository;
         }
 
         public async Task<int> CreateAsync(string title, string content, int categoryId, string userId)
@@ -34,6 +37,31 @@
             await this.postsRepository.SaveChangesAsync();
 
             return post.Id;
+        }
+
+        public async Task DeleteAsync(int postId)
+        {
+            var post = await this.postsRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.Id == postId);
+
+            if (post == null)
+            {
+                throw new InvalidOperationException("Post doesn't exits");
+            }
+
+            var comments = await this.commentsRepository.All()
+                   .Where(x => x.PostId == post.Id)
+                   .ToListAsync();
+
+            foreach (var comment in comments)
+            {
+                this.commentsRepository.Delete(comment);
+            }
+
+            this.postsRepository.Delete(post);
+
+            await this.postsRepository.SaveChangesAsync();
         }
 
         public async Task EditAsync(int postId, string title, string content, int categoryId)

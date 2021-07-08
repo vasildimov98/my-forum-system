@@ -9,15 +9,23 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Administration.Categories;
+
     using Microsoft.EntityFrameworkCore;
 
     public class CategoriesService : ICategoriesService
     {
-        private readonly IDeletableEntityRepository<Category> categories;
+        private readonly IDeletableEntityRepository<Category> categoriesRepository;
+        private readonly IDeletableEntityRepository<Post> postsRepository;
+        private readonly IDeletableEntityRepository<Comment> commentsRepository;
 
-        public CategoriesService(IDeletableEntityRepository<Category> categories)
+        public CategoriesService(
+            IDeletableEntityRepository<Category> categoriesRepository,
+            IDeletableEntityRepository<Post> postsRepository, 
+            IDeletableEntityRepository<Comment> commentRepository)
         {
-            this.categories = categories;
+            this.categoriesRepository = categoriesRepository;
+            this.postsRepository = postsRepository;
+            this.commentsRepository = commentRepository;
         }
 
         public async Task AddAsync(CategoryInputModel input)
@@ -29,13 +37,13 @@
                 ImageUrl = input.ImageUrl,
             };
 
-            await this.categories.AddAsync(category);
-            await this.categories.SaveChangesAsync();
+            await this.categoriesRepository.AddAsync(category);
+            await this.categoriesRepository.SaveChangesAsync();
         }
 
         public async Task EditAsync(int id, CategoryInputModel input)
         {
-            var categoryToEdit = this.categories
+            var categoryToEdit = this.categoriesRepository
                 .All()
                 .FirstOrDefault(x => x.Id == id);
 
@@ -48,13 +56,13 @@
             categoryToEdit.Description = input.Description;
             categoryToEdit.ImageUrl = input.ImageUrl;
 
-            this.categories.Update(categoryToEdit);
-            await this.categories.SaveChangesAsync();
+            this.categoriesRepository.Update(categoryToEdit);
+            await this.categoriesRepository.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
         {
-            var categoryToDelete = this.categories
+            var categoryToDelete = this.categoriesRepository
                 .All()
                 .FirstOrDefault(x => x.Id == id);
 
@@ -63,13 +71,32 @@
                 throw new ArgumentNullException(nameof(categoryToDelete));
             }
 
-            this.categories.Delete(categoryToDelete);
-            await this.categories.SaveChangesAsync();
+            var posts = this.postsRepository
+                .All()
+                .Where(x => x.CategoryId == categoryToDelete.Id)
+                .ToList();
+
+            foreach (var post in posts)
+            {
+                this.postsRepository.Delete(post);
+
+                var comments = this.commentsRepository.All()
+                    .Where(x => x.PostId == post.Id)
+                    .ToList();
+
+                foreach (var comment in comments)
+                {
+                    this.commentsRepository.Delete(comment);
+                }
+            }
+
+            this.categoriesRepository.Delete(categoryToDelete);
+            await this.categoriesRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
         {
-            var query = this.categories
+            var query = this.categoriesRepository
                 .All()
                 .OrderByDescending(x => x.Posts.Count)
                 .Skip(skip);
@@ -86,14 +113,14 @@
         }
 
         public async Task<T> GetByIdAsync<T>(int id)
-            => await this.categories
+            => await this.categoriesRepository
                 .All()
                 .Where(x => x.Id == id)
                 .To<T>()
                 .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<T>> GetMostPostsCategories<T>(int take = 5)
-            => await this.categories
+            => await this.categoriesRepository
                 .All()
                 .OrderByDescending(x => x.Posts.Count())
                 .Take(take)
@@ -101,19 +128,19 @@
                 .ToListAsync();
 
         public async Task<T> GetByNameAsync<T>(string name)
-            => await this.categories
+            => await this.categoriesRepository
             .All()
             .Where(x => x.Name == name)
             .To<T>()
             .FirstOrDefaultAsync();
 
         public int GetCount()
-            => this.categories
+            => this.categoriesRepository
                    .All()
                    .Count();
 
         public int GetIdCategoryIdByName(string name)
-            => this.categories.All()
+            => this.categoriesRepository.All()
                 .Where(x => x.Name == name)
                 .Select(x => x.Id)
                 .FirstOrDefault();

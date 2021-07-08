@@ -92,5 +92,40 @@
 
             return this.RedirectToAction(nameof(this.Index));
         }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var post = await this.postsService
+                .GetByIdAsync<PostEditModel>(id.Value);
+
+            if (post == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(post);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                await this.postsService.DeleteAsync(id);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction(nameof(this.Index));
+        }
     }
 }
