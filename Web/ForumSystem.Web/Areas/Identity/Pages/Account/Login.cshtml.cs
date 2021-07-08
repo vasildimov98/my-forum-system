@@ -82,6 +82,12 @@
             {
                 var user = await this.userManager.FindByEmailAsync(this.Input.Email);
 
+                if (user == null)
+                {
+                    this.ModelState.AddModelError(string.Empty, $"There is no user with this email '{this.Input.Email}'");
+                    return this.Page();
+                }
+
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await this.signInManager.PasswordSignInAsync(user.UserName, this.Input.Password, this.Input.RememberMe, lockoutOnFailure: false);
