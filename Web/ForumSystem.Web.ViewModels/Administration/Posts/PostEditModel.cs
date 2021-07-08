@@ -7,8 +7,6 @@
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Posts;
 
-    using Ganss.XSS;
-
     public class PostEditModel : IMapFrom<Post>
     {
         public int Id { get; set; }
@@ -18,16 +16,14 @@
         public string Title { get; set; }
 
         [Required]
-        [MinLength(100, ErrorMessage = "Content is way to short. Tell me more.")]
+        [MinLength(50, ErrorMessage = "Content is way to short. Tell me more.")]
         public string Content { get; set; }
-
-        public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
 
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
-        public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
+        public string CategoryName { get; set; }
 
-        public string Selected { get; set; }
+        public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
     }
 }

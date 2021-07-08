@@ -1,6 +1,6 @@
 ﻿@using ForumSystem.Web.ViewModels.Administration.Posts;
 @model PostEditModel
- 
+
 @{
     this.ViewData["Title"] = "Edit Post";
 
@@ -8,21 +8,17 @@
         .Select(x => new SelectListItem(x.Name, x.Id.ToString()))
         .ToList();
 
-
-    if (this.Model.Selected != null)
+    for (int i = 0; i < categories.Count; i++)
     {
-        for (int i = 0; i < categories.Count; i++)
+        var category = categories[i];
+
+        category.Selected = false;
+
+        if (category.Text == this.Model.CategoryName)
         {
-            var category = categories[i];
-
-            category.Selected = false;
-
-            if (category.Text == this.Model.Selected)
-            {
-                var temp = categories[0];
-                categories[0] = category;
-                categories[i] = temp;
-            }
+            var temp = categories[0];
+            categories[0] = category;
+            categories[i] = temp;
         }
     }
 }
@@ -43,15 +39,15 @@
 <form asp-area="Administration" asp-controller="Posts" asp-action="Edit" asp-route-id="@this.Model.Id" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-check">
+    <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" placeholder="@this.Model.Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
-    <div class="form-check">
+    <div class="form-group">
         <label asp-for="Content"></label>
-        <textarea asp-for="Content" name="Content" value="@Html.Raw(this.Model.SanitizeContent)" class="form-control"></textarea>
+        <textarea asp-for="Content" name="Content" class="form-control"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
@@ -62,17 +58,8 @@
     </div>
 
     <hr />
-    <div class="form-check">
-        <input id="myPostCommentBtn" type="submit" value="Edit" class="btn btn-success" /> |
+    <div class="form-check float-md-right">
+        <input type="submit" value="Edit" class="btn btn-success my-post-btn" /> |
         <a asp-area="Administration" asp-controller="Posts" asp-action="Index" class="btn btn-primary">Go Back</a>
     </div>
 </form>
-
-<script>
-    $.validator.setDefaults({ ignore: "" });
-
-    $('#myPostCommentBtn').click(function () {
-        tinyMCE.triggerSave();
-    });
-
-</script>

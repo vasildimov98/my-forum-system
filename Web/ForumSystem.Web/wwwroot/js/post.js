@@ -1,10 +1,4 @@
-﻿$('#myPostCommentBtn').click(function () {
-    tinyMCE.triggerSave();
-});
-
-$.validator.setDefaults({ ignore: "" });
-
-let mybutton = document.getElementById("btn-back-to-top");
+﻿let mybutton = document.getElementById("btn-back-to-top");
 
 // When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function () {
@@ -28,7 +22,6 @@ function backToTop() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
-
 
 const userInfoDivs = document
     .querySelectorAll(".user-info-wrapper");

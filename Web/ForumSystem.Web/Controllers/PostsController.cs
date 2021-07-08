@@ -30,7 +30,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Create(string selected)
+        public async Task<IActionResult> Create(string selected = null)
         {
             var categories = await this.categoriesService
                 .GetAllAsync<CategoryDropDownViewModel>();

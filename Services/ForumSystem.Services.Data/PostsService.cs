@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Services.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -33,6 +34,25 @@
             await this.postsRepository.SaveChangesAsync();
 
             return post.Id;
+        }
+
+        public async Task EditAsync(int postId, string title, string content, int categoryId)
+        {
+            var postToEdit = await this.postsRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.Id == postId);
+
+            if (postToEdit == null)
+            {
+                throw new ArgumentNullException(nameof(postToEdit));
+            }
+
+            postToEdit.Title = title;
+            postToEdit.Content = content;
+            postToEdit.CategoryId = categoryId;
+
+            this.postsRepository.Update(postToEdit);
+            await this.postsRepository.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
@@ -99,11 +119,8 @@
                 .FirstOrDefaultAsync();
 
         public int GetCount()
-        {
-            return this
-                .postsRepository
+            => this.postsRepository
                 .All()
                 .Count();
-        }
     }
 }

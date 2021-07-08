@@ -38,17 +38,8 @@
     </div>
 
     <hr />
-    <div class="form-check">
-        <input id="myPostCommentBtn" type="submit" value="Edit" class="btn btn-success" /> |
+    <div class="form-check float-md-right">
+        <input type="submit" value="Edit" class="btn btn-success my-post-btn" /> |
         <a asp-area="Administration" asp-action="Index" class="btn btn-primary">Back to List</a>
     </div>
 </form>
-
-<script>
-    $.validator.setDefaults({ ignore: "" });
-
-    $('#myPostCommentBtn').click(function () {
-        tinyMCE.triggerSave();
-    });
-
-</script>

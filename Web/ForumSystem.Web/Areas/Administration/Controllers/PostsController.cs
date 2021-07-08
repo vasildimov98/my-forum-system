@@ -14,10 +14,14 @@
         private const int PostsPerPage = 5;
 
         private readonly IPostsService postsService;
+        private readonly ICategoriesService categoriesService;
 
-        public PostsController(IPostsService postsService)
+        public PostsController(
+            IPostsService postsService,
+            ICategoriesService categoriesService)
         {
             this.postsService = postsService;
+            this.categoriesService = categoriesService;
         }
 
         public async Task<IActionResult> Index(int id)
@@ -47,7 +51,13 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            var post = await this.postsService.GetByIdAsync<PostEditModel>(id);
+            var post = await this.postsService
+                .GetByIdAsync<PostEditModel>(id);
+
+            var categories = await this.categoriesService
+                .GetAllAsync<CategoryDropDownViewModel>();
+
+            post.Categories = categories;
 
             if (post == null)
             {
@@ -55,6 +65,32 @@
             }
 
             return this.View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(PostEditModel editModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.RedirectToAction(nameof(this.Edit), new { editModel.Id });
+            }
+
+            try
+            {
+                await this.postsService
+                .EditAsync(
+                    editModel.Id,
+                    editModel.Title,
+                    editModel.Content,
+                    editModel.CategoryId);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction(nameof(this.Index));
         }
     }
 }
