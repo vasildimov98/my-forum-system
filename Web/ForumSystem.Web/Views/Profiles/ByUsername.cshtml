@@ -9,41 +9,52 @@
         <div class="col-md-12">
             <div class="card mb-4">
                 <div class="card-header">
-                    <div class="media flex-wrap w-100 align-items-center">
-                        <div class="px-4 pt-3">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="media flex-wrap w-100">
+                                    <div class="px-4 pt-3">
 
-                            <form method="post" id="xssForm"></form>
+                                        <form method="post" id="xssForm"></form>
 
-                            @if (this.Model.IsLoggedInUser)
-                            {
-                                <form method="post">
-                                    <input onchange="uploadImage('my-input')" id="my-input" type="file" hidden />
-                                </form>
-                            }
+                                        @if (this.Model.IsLoggedInUser)
+                                        {
+                                            <form method="post">
+                                                <input onchange="uploadImage('my-input')" id="my-input" type="file" hidden />
+                                            </form>
+                                        }
 
-                            <div>
-                                <img id="profile-image" src="@this.Model.ImageSrc" width="170" height="150">
-                                @if (this.Model.IsLoggedInUser)
-                                {
-                                    <a onclick="$('#my-input').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit"></i></a>
-                                }
+                                        <div class="image_wrapper">
+                                            <img id="profile-image" src="@this.Model.ImageSrc">
+                                            @if (this.Model.IsLoggedInUser)
+                                            {
+                                                <a onclick="$('#my-input').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit"></i></a>
+                                            }
+                                        </div>
+
+                                        <div class="form-inline">
+                                            @if (this.Model.IsLoggedInUser)
+                                            {
+                                                <div class="form-group">
+                                                    <strong class="pr-2">Username:</strong>
+                                                    <input onchange="editUsername('my-username-input')" id="my-username-input" class="no-border d-inline" type="text" name="username" value="@this.Model.UserName" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <strong class="pr-2">Username: </strong> @this.Model.UserName
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div>
-                                @if (this.Model.IsLoggedInUser)
-                                {
-                                    <strong>Username:</strong> <input onchange="editUsername('my-username-input')" id="my-username-input" class="no-border" type="text" name="username" value="@this.Model.UserName" />
-                                }
-                                else
-                                {
-                                    <strong>Username:</strong> @this.Model.UserName
-                                }
+                            <div class="col-md-6">
+                                <div class="text-muted small float-right">
+                                    <div>Member since <strong>@this.Model.CreatedOn.Date.ToString("d")</strong></div>
+                                    <div class="float-sm-right"><strong>@this.Model.PostsCount</strong> posts</div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="text-muted small ml-3 float-lg-right">
-                            <div>Member since <strong>@this.Model.CreatedOn.Date.ToString("d")</strong></div>
-                            <div class="float-sm-right"><strong>@this.Model.PostsCount</strong> posts</div>
                         </div>
                     </div>
                 </div>
