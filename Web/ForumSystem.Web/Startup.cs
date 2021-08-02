@@ -93,7 +93,7 @@
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
-                new ApplicationDbContextSeeder()
+                new ApplicationDbContextSeeder(this.configuration)
                     .SeedAsync(dbContext, serviceScope.ServiceProvider)
                     .GetAwaiter()
                     .GetResult();
