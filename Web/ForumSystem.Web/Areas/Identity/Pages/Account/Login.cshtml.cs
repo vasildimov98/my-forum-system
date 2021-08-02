@@ -34,8 +34,6 @@
         [BindProperty]
         public InputModel Input { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
         public string ReturnUrl { get; set; }
 
         [TempData]
@@ -67,8 +65,6 @@
             // Clear the existing external cookie to ensure a clean login process
             await this.HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             this.ReturnUrl = returnUrl;
         }
 
@@ -76,15 +72,13 @@
         {
             returnUrl ??= this.Url.Content("~/");
 
-            this.ExternalLogins = (await this.signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             if (this.ModelState.IsValid)
             {
                 var user = await this.userManager.FindByEmailAsync(this.Input.Email);
 
                 if (user == null)
                 {
-                    this.ModelState.AddModelError(string.Empty, $"There is no user with this email '{this.Input.Email}'");
+                    this.ModelState.AddModelError(string.Empty, "Invalid credential!");
                     return this.Page();
                 }
 

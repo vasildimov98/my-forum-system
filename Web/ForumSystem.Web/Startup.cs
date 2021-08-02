@@ -152,7 +152,6 @@
                                    action = "ByName",
                                });
 
-
                         endpoints
                          .MapControllerRoute(
                              name: "category-live-chat",

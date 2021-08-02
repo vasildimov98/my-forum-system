@@ -15,13 +15,13 @@
 
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersApiController : ControllerBase
     {
         private readonly IWebHostEnvironment environment;
         private readonly IUsersService usersService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public UsersController(
+        public UsersApiController(
             IWebHostEnvironment environment,
             IUsersService usersService,
             UserManager<ApplicationUser> userManager)
