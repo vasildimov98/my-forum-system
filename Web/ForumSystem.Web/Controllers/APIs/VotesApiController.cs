@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.Controllers
+﻿namespace ForumSystem.Web.Controllers.APIs
 {
     using System.Threading.Tasks;
 
@@ -12,12 +12,12 @@
 
     [ApiController]
     [Route("api/[controller]")]
-    public class VotesController : ControllerBase
+    public class VotesApiController : ControllerBase
     {
         private readonly IVotesService votesService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public VotesController(
+        public VotesApiController(
             IVotesService votesService,
             UserManager<ApplicationUser> userManager)
         {

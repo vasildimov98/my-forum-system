@@ -27,8 +27,8 @@
         <div class="col-md-12 p-0">
             <div class="card">
                 <div class="card-header">
-                    <div class="media flex-wrap w-100 align-items-center">
-                        <div class="px-4 pt-3">
+                    <div class="media flex-wrap w-100">
+                        <div class="px-4 pt-3 mt-2">
                             <form method="post" id="xssForm"></form>
                             <div>
                                 <a href="javascript:;" onclick="sendVote(@this.Model.Id, true, '/api/votes')">
@@ -45,17 +45,27 @@
                             </div>
                         </div>
 
-                        <img src="@this.Model.CategoryImageUrl" width="100" class="d-sm-block ui-w-40 rounded-circle">
+                        <img src="@this.Model.CategoryImageUrl" width="100" class="d-sm-block ui-w-40 rounded-circle mt-4 mb-3">
 
                         <div class="media-body ml-3">
                             <h3>@this.Model.Title</h3>
                             <a href="@this.Model.PostCreatorHref" class="text-secondary" data-abc="true">Created by @this.Model.UserUserName</a>
                             <div class="text-muted small">@createdDaysAgo</div>
                         </div>
-                        <div class="text-muted small ml-3">
+                        <div class="text-muted small ml-3 p-0">
                             <div>Member since <strong>@this.Model.UserCreatedOn.Date.ToString("d")</strong></div>
                             <div class="float-sm-right"><strong>@this.Model.UserPostsCount</strong> posts</div>
                         </div>
+
+                        <ul class="list-inline mt-5">
+                            <li class="list-inline-item">
+                                <a class="btn btn-success btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="btn btn-danger btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                            </li>
+                        </ul>
+
                     </div>
                 </div>
                 <div class="card-body">

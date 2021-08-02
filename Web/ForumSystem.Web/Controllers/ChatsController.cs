@@ -1,13 +1,14 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
+    using System.Threading.Tasks;
+
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Chat;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using System.Threading.Tasks;
 
-    public class ChatsController : Controller
+    public class ChatsController : BaseController
     {
         private readonly ICategoriesService categoriesService;
         private readonly IChatsService chatsService;

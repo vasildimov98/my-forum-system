@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.Controllers
+﻿namespace ForumSystem.Web.Controllers.APIs
 {
     using System;
     using System.IO;
