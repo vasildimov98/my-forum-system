@@ -2,9 +2,11 @@
 {
     using System.Threading.Tasks;
 
+    using ForumSystem.Web.ViewModels.Posts;
+
     public interface ICommentsServer
     {
-        public Task AddAsync(int postId, string userId, string content, int? parentId);
+        public Task<PostCommentViewModel> AddAsync(int postId, string userId, string content, int? parentId);
 
         public Task<bool> IsInPostIdAsync(int commentId, int postId);
     }

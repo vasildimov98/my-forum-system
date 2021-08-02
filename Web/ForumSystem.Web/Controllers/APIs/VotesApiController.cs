@@ -11,7 +11,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/votes")]
     public class VotesApiController : ControllerBase
     {
         private readonly IVotesService votesService;

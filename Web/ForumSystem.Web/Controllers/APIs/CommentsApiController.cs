@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.Controllers
+﻿namespace ForumSystem.Web.Controllers.APIs
 {
     using System.Threading.Tasks;
 
@@ -10,12 +10,14 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
-    public class CommentsController : ControllerBase
+    [ApiController]
+    [Route("api/comments")]
+    public class CommentsApiController : BaseController
     {
         private readonly ICommentsServer commentsServer;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public CommentsController(
+        public CommentsApiController(
             ICommentsServer commentsServer,
             UserManager<ApplicationUser> userManager)
         {
@@ -25,7 +27,7 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<CommentInputModel>> Create(CommentInputModel input)
+        public async Task<ActionResult> PostCommentAsync(CommentInputModel input)
         {
             var parentId = input.ParentId == 0 ?
                 null :
@@ -41,9 +43,9 @@
 
             var userId = this.userManager.GetUserId(this.User);
 
-            await this.commentsServer.AddAsync(input.PostId, userId, input.Content, parentId);
+            var commentViewModel = await this.commentsServer.AddAsync(input.PostId, userId, input.Content, parentId);
 
-            return this.RedirectToAction("ById", "Posts", new { id = input.PostId });
+            return this.Ok(commentViewModel);
         }
     }
 }

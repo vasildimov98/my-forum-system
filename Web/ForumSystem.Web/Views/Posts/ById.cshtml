@@ -22,7 +22,7 @@
     });
 </script>
 
-<div class="container-fluid mt-100 mb-3">
+<div class="container mt-100 mb-3">
     <div class="row">
         <div class="col-md-12 p-0">
             <div class="card">
@@ -68,12 +68,14 @@
 
                     </div>
                 </div>
+
                 <div class="card-body">
                     @Html.Raw(this.Model.SanitizeContent)
                 </div>
-                <div class="card-footer align-items-md-start px-0 pt-0 pb-3">
 
-                    <div class="container">
+                <div class="post card-footer align-items-md-start px-0 pt-0 pb-3">
+
+                    <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-12 p-0">
                                 <div class="m-2 p-1">
@@ -95,14 +97,14 @@
                                 id="btn-back-to-top">
                             <i class="fas fa-arrow-up"></i>
                         </button>
+
+                        <partial name="_ShowComments" model="this.Model.Comments" />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<partial name="_ShowComments" model="this.Model.Comments" />
 
 @section Scripts {
     <script src="/js/post.js" asp-append-version="true"></script>

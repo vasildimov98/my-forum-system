@@ -5,6 +5,21 @@ window.onscroll = function () {
     scrollFunction();
 };
 
+const allCommentsDivElements = document
+    .getElementsByClassName("container-fluid");
+
+console.log(allCommentsDivElements);
+
+for (var i = 0; i < allCommentsDivElements.length; i++) {
+    const postCommentSection = allCommentsDivElements[i];
+
+    postCommentSection
+        .addEventListener("click", commentOnPost);
+}
+
+postCommentSection
+    .addEventListener("click", commentOnPost);
+
 function scrollFunction() {
     if (
         document.body.scrollTop > 20 ||
@@ -56,9 +71,7 @@ function textCounter(field, field2, maxlimit) {
 }
 
 function chageCommentBox(commentBox, parentId) {
-    commentBox.querySelector("input[name='ParentId']").value = parentId;
-
-    console.log(commentBox.querySelector("input[name='ParentId']"));
+    commentBox.querySelector("input[name='parentId']").value = parentId;
 
     var commentBoxDisplay = commentBox.style.display;
 
@@ -68,4 +81,98 @@ function chageCommentBox(commentBox, parentId) {
     }
 
     commentBox.style.display = 'none';
+}
+
+async function commentOnPost(event) {
+    var targetElement = event.target;
+
+    console.log(event.currentTarget);
+    console.log(event.target);
+
+    if (!targetElement
+        || !targetElement.className.includes("my-post-comment-btn"))
+        return;
+
+    const formNode = targetElement
+        .parentNode
+        .parentNode;
+
+    const token = document
+        .getElementsByName("__RequestVerificationToken")[0].value;
+
+    const postId = formNode.querySelector("input[name=postId]").value;
+    const parentId = formNode.querySelector("input[name=parentId]").value;
+    const content = tinyMCE.activeEditor.getContent();
+
+    const json = JSON.stringify({
+        postId,
+        parentId,
+        content,
+    });
+
+    var jsonResponse = await fetch("/api/comments", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
+        },
+        body: json
+    }).then(res => res.json());
+
+    const id = jsonResponse["id"];
+    const imageSrc = jsonResponse["imageSrc"];
+    const username = jsonResponse["userUserName"];
+    const sanitizeContent = jsonResponse["sanitizeContent"];
+    const voteTypeCount = jsonResponse["voteTypeCount"];
+    const votesCountId = jsonResponse["votesCountId"];
+    const formCommentId = jsonResponse["formCommentId"];
+
+    let commentDivSection = `<div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 p-0">
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <div class="user-info-wrapper media flex-wrap w-100 align-items-center">
+                                    <img src=${imageSrc} width="20" class="d-sm-block ui-w-40 rounded-circle">
+
+                                    <div class="media-body ml-3">
+                                        <h6>${username}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                ${sanitizeContent}
+                            </div>
+                            <div class="card-footer">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12 flex-row">
+                                            <a class="btn mb-2" href="javascript:;" onclick="sendVote(${id}, true, '/api/votes/comment')">
+                                                <i class="fa fa-arrow-up"></i>
+                                            </a>
+                                            <div class="d-inline mb-lg-5" id=${votesCountId}>${voteTypeCount}</div>
+                                            <a class="btn mb-2" href="javascript:;" onclick="sendVote(${id}, false, '/api/votes/comment')">
+                                                <i class="fa fa-arrow-down"></i>
+                                            </a>
+                                            <button class="btn mb-2" onclick="chageCommentBox(${formCommentId}, ${id})">
+                                                <i class="fa fa-comment-dots"></i>
+                                                Reply
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="row m-0">
+                                        <div class="col-md-12 m-0">
+                                            <form id=${formCommentId} asp-controller="Comments" asp-action="Create" method="post" style="display: none">
+                                                <partial name="_AddCommentInputs" model="new CommentInputModel() { PostId = comment.PostId }" />
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 }

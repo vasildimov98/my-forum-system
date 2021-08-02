@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using System.Runtime.Intrinsics.Arm;
     using System.Security.Cryptography;
     using System.Threading.Tasks;
 

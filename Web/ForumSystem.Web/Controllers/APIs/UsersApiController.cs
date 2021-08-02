@@ -14,7 +14,7 @@
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/users")]
     public class UsersApiController : ControllerBase
     {
         private readonly IWebHostEnvironment environment;
