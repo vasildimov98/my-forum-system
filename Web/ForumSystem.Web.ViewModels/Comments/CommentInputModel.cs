@@ -9,6 +9,7 @@
         public int? ParentId { get; set; }
 
         [Required]
+        [MinLength(3)]
         public string Content { get; set; }
     }
 }

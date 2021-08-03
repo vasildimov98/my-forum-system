@@ -8,7 +8,7 @@
     using AutoMapper;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-
+    using ForumSystem.Web.ViewModels.Comments;
     using Ganss.XSS;
 
     public class PostViewModel : IMapFrom<Post>, IHaveCustomMappings

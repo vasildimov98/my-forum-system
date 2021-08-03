@@ -33,7 +33,7 @@
                                 @Html.Raw(comment.SanitizeContent)
                             </div>
                             <div class="card-footer">
-                                <div class="container">
+                                <div>
                                     <div class="row">
                                         <div class="col-md-12 flex-row">
                                             <a class="btn mb-2" href="javascript:;" onclick="sendVote(@comment.Id, true, '/api/votes/comment')">
@@ -43,7 +43,7 @@
                                             <a class="btn mb-2" href="javascript:;" onclick="sendVote(@comment.Id, false, '/api/votes/comment')">
                                                 <i class="fa fa-arrow-down"></i>
                                             </a>
-                                            <button class="btn mb-2" onclick="chageCommentBox(@comment.FormCommentId, @comment.Id)">
+                                            <button class="btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
                                                 <i class="fa fa-comment-dots"></i>
                                                 Reply
                                             </button>
@@ -52,18 +52,17 @@
 
                                     <div class="row m-0">
                                         <div class="col-md-12 m-0">
-                                            <form id=@comment.FormCommentId asp-controller="Comments" asp-action="Create" method="post" style="display: none">
+                                            <form id=@comment.FormCommentId class="comment-form" asp-controller="Comments" asp-action="Create" method="post" style="display: none">
                                                 <partial name="_AddCommentInputs" model="new CommentInputModel() { PostId = comment.PostId }" />
                                             </form>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            @{await DisplayComments(comment.Id);}
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-12 comments-section">
+                                        @{await DisplayComments(comment.Id);}
                                     </div>
-
                                 </div>
                             </div>
                         </div>

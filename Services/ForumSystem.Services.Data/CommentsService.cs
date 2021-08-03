@@ -8,7 +8,7 @@
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-    using ForumSystem.Web.ViewModels.Posts;
+    using ForumSystem.Web.ViewModels.Comments;
     using Microsoft.EntityFrameworkCore;
 
     public class CommentsService : ICommentsServer

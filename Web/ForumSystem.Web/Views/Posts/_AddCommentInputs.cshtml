@@ -1,13 +1,15 @@
 ﻿@model ForumSystem.Web.ViewModels.Comments.CommentInputModel
-<form method="post">
-    <input type="hidden" name="postId" value="@this.Model.PostId" />
-    <input type="hidden" name="parentId" value="0" />
-    <div class="form-group">
-        <textarea asp-for="Content" name="content" class="form-control"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
+<input type="hidden" name="postId" value="@this.Model.PostId" />
+<input type="hidden" name="parentId" value="0" />
+<div class="form-group">
+    <textarea asp-for="Content" name="content" class="form-control"></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+</div>
 
-    <div class="float-right">
-        <input type="button" class="btn btn-primary mb-3 my-post-comment-btn my-post-btn" value="Comment" />
-    </div>
-</form>
+<div class="alert alert-danger" style="display: none" role="alert">
+    Content is required!
+</div>
+
+<div class="float-right">
+    <input type="button" class="btn btn-primary mb-3 my-post-comment-btn my-post-btn" value="Comment" />
+</div>

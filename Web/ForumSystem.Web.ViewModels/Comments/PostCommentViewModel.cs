@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Posts
+﻿namespace ForumSystem.Web.ViewModels.Comments
 {
     using System;
     using System.Linq;

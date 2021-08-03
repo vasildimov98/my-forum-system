@@ -1,8 +1,7 @@
 ﻿namespace ForumSystem.Services.Data
 {
     using System.Threading.Tasks;
-
-    using ForumSystem.Web.ViewModels.Posts;
+    using ForumSystem.Web.ViewModels.Comments;
 
     public interface ICommentsServer
     {
