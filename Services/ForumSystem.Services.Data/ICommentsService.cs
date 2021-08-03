@@ -8,6 +8,8 @@
     {
         public Task<PostCommentViewModel> AddAsync(int postId, string userId, string content, int? parentId);
 
+        public Task<EditCommentViewModel> EditCommetAsync(int commentId, string content);
+
         public Task<bool> IsInPostIdAsync(int commentId, int postId);
 
         public bool IsSignInUserTheOwenerOfComment(int commentId, string userId);

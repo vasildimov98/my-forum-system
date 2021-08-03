@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Services.Data
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -41,6 +42,28 @@
                 .FirstOrDefault();
 
             return commentViewModel;
+        }
+
+        public async Task<EditCommentViewModel> EditCommetAsync(int commentId, string content)
+        {
+            var commentToEdit = await this.comments
+                .All()
+                .Where(x => x.Id == commentId)
+                .FirstOrDefaultAsync();
+
+            if (commentToEdit == null)
+            {
+                throw new InvalidOperationException("CommentId is invalid!");
+            }
+
+            commentToEdit.Content = content;
+
+            await this.comments.SaveChangesAsync();
+
+            return new EditCommentViewModel
+            {
+                Content = commentToEdit.Content,
+            };
         }
 
         public async Task<bool> IsInPostIdAsync(int commentId, int postId)

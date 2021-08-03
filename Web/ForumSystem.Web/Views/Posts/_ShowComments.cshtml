@@ -30,7 +30,9 @@
                                 </div>
                             </div>
                             <div id="@comment.CommentContentSectionId" class="card-body">
-                                @Html.Raw(comment.SanitizeContent)
+                                <div>
+                                    @Html.Raw(comment.SanitizeContent)
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <div>
@@ -49,7 +51,7 @@
                                             </button>
 
                                             @if (comment.IsSignInUserTheOwnerOfComment
-                                                || this.User.IsInRole(AdministratorRoleName))
+                                             || this.User.IsInRole(AdministratorRoleName))
                                             {
                                                 <button class="btn mb-2" onclick="showTextAreaForEditingComment(@comment.CommentContentSectionId, @comment.Id)">
                                                     <i class="far fa-edit"></i>

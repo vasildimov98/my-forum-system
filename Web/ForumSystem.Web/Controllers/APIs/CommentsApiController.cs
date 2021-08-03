@@ -47,5 +47,21 @@
 
             return this.Ok(commentViewModel);
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> PutCommentAsync(int commentId, string content)
+        {
+            try
+            {
+                var editViewModel = await this.commentsServer.EditCommetAsync(commentId, content);
+
+                return this.Ok(editViewModel);
+            }
+            catch (System.Exception)
+            {
+                return this.BadRequest();
+            }
+        }
     }
 }

@@ -1,19 +1,15 @@
-﻿function showTextAreaForEditingComment(commentContentSectionId, commentId) {
-    const commentContentSection = document
-        .getElementById(commentContentSectionId);
+﻿function showTextAreaForEditingComment(commentContentSection, commentId) {
+    let firstChild = commentContentSection.querySelector("div");
+    let contentAsHtml = firstChild.innerHTML;
 
-    let contentNode = commentContentSection.firstChild;
-    let content = contentNode.innerHtml;
-
-    console.log(content);
-
-    if (contentNode.nodeType == "div") {
+    if (commentContentSection.tagName == "DIV") {
         let textArea = document.createElement("textarea");
 
         textArea.classList.add("form-control");
-        textArea.innerHTML = content;
 
-        commentContentSection.firstChild = textArea;
+        commentContentSection.removeChild(firstChild);
+
+        commentContentSection.append(textArea);
 
         tinymce.init({
             selector: "textarea",
@@ -27,5 +23,9 @@
                 });
             }
         });
+
+        tinymce.activeEditor.setContent(contentAsHtml);
+
+        return;
     }
 }
