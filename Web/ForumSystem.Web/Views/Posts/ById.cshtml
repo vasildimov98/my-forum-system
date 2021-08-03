@@ -23,7 +23,7 @@
                         <div class="px-4 pt-3 mt-2">
                             <form method="post" id="xssForm"></form>
                             <div>
-                                <a href="javascript:;" onclick="sendVote(@this.Model.Id, true, '/api/votes')">
+                                <a href="javascript:;" onclick="sendVote(@this.Model.Id, true, '/api/votes', @this.Model.VotesCountId)">
                                     <i class="fa fa-arrow-up"></i>
                                 </a>
                             </div>
@@ -31,7 +31,7 @@
                             <div id=@this.Model.VotesCountId>@this.Model.VoteTypeCount</div>
 
                             <div>
-                                <a href="javascript:;" onclick="sendVote(@this.Model.Id, false, '/api/votes')">
+                                <a href="javascript:;" onclick="sendVote(@this.Model.Id, false, '/api/votes', @this.Model.VotesCountId)">
                                     <i class="fa fa-arrow-down"></i>
                                 </a>
                             </div>
@@ -104,5 +104,7 @@
     <script src="/js/post.js" asp-append-version="true"></script>
     <script src="~/js/vote.js" asp-append-version="true"></script>
     <script src="~/js/toggle-comments.js" asp-append-version="true"></script>
+    <script src="~/js/edit-delete-comment.js" asp-append-version="true"></script>
     <script src="~/js/comments.js" asp-append-version="true"></script>
+    <script src="~/js/scroll-to-top-btn.js" asp-append-version="true"></script>
 }

@@ -14,11 +14,11 @@
     [Route("api/comments")]
     public class CommentsApiController : BaseController
     {
-        private readonly ICommentsServer commentsServer;
+        private readonly ICommentsService commentsServer;
         private readonly UserManager<ApplicationUser> userManager;
 
         public CommentsApiController(
-            ICommentsServer commentsServer,
+            ICommentsService commentsServer,
             UserManager<ApplicationUser> userManager)
         {
             this.commentsServer = commentsServer;

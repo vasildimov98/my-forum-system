@@ -7,6 +7,7 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+
     using Ganss.XSS;
 
     public class PostCommentViewModel : IMapFrom<Comment>, IHaveCustomMappings
@@ -15,13 +16,7 @@
 
         public string Content { get; set; }
 
-        public string VotesCountId => $"votesCount{this.Id}";
-
-        public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
-
         public DateTime CreatedOn { get; set; }
-
-        public string FormCommentId => $"commentBox{this.Id}";
 
         public string UserUserName { get; set; }
 
@@ -32,6 +27,16 @@
         public int? ParentId { get; set; }
 
         public int VoteTypeCount { get; set; }
+
+        public bool IsSignInUserTheOwnerOfComment { get; set; }
+
+        public string VotesCountId => $"votesCount{this.Id}";
+
+        public string FormCommentId => $"commentBox{this.Id}";
+
+        public string CommentContentSectionId => $"commentContentSection{this.Id}";
+
+        public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
 
         public void CreateMappings(IProfileExpression configuration)
         {

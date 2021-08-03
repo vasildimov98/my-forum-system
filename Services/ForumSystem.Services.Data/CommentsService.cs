@@ -11,7 +11,7 @@
     using ForumSystem.Web.ViewModels.Comments;
     using Microsoft.EntityFrameworkCore;
 
-    public class CommentsService : ICommentsServer
+    public class CommentsService : ICommentsService
     {
         private readonly IDeletableEntityRepository<Comment> comments;
 
@@ -53,5 +53,10 @@
 
             return commentPostId == postId;
         }
+
+        public bool IsSignInUserTheOwenerOfComment(int commentId, string userId)
+            => this.comments
+                .All()
+                .Any(x => x.Id == commentId && x.UserId == userId);
     }
 }

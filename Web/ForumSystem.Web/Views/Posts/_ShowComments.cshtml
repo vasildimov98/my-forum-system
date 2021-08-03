@@ -1,5 +1,5 @@
 ﻿@using ForumSystem.Web.ViewModels.Comments;
-@using ForumSystem.Web.ViewModels.Posts;
+@using static ForumSystem.Common.GlobalConstants;
 @model IEnumerable<PostCommentViewModel>
 
 @{
@@ -29,24 +29,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-body">
+                            <div id="@comment.CommentContentSectionId" class="card-body">
                                 @Html.Raw(comment.SanitizeContent)
                             </div>
                             <div class="card-footer">
                                 <div>
                                     <div class="row">
                                         <div class="col-md-12 flex-row">
-                                            <a class="btn mb-2" href="javascript:;" onclick="sendVote(@comment.Id, true, '/api/votes/comment')">
+                                            <a class="btn mb-2" href="javascript:;" onclick="sendVote(@comment.Id, true, '/api/votes/comment', @comment.VotesCountId)">
                                                 <i class="fa fa-arrow-up"></i>
                                             </a>
-                                            <div class="d-inline mb-lg-5" id=@comment.VotesCountId>@comment.VoteTypeCount</div>
-                                            <a class="btn mb-2" href="javascript:;" onclick="sendVote(@comment.Id, false, '/api/votes/comment')">
+                                            <div id=@comment.VotesCountId class="d-inline mb-lg-5">@comment.VoteTypeCount</div>
+                                            <a class="btn mb-2" href="javascript:;" onclick="sendVote(@comment.Id, false, '/api/votes/comment', @comment.VotesCountId)">
                                                 <i class="fa fa-arrow-down"></i>
                                             </a>
                                             <button class="btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
                                                 <i class="fa fa-comment-dots"></i>
                                                 Reply
                                             </button>
+
+                                            @if (comment.IsSignInUserTheOwnerOfComment
+                                                || this.User.IsInRole(AdministratorRoleName))
+                                            {
+                                                <button class="btn mb-2" onclick="showTextAreaForEditingComment(@comment.CommentContentSectionId, @comment.Id)">
+                                                    <i class="far fa-edit"></i>
+                                                    Edit
+                                                </button>
+
+                                                <button class="btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
+                                                    <i class="fa fa-trash alert-danger"></i>
+                                                    Delete
+                                                </button>
+                                            }
                                         </div>
                                     </div>
 

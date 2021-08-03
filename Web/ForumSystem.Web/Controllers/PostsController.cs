@@ -17,15 +17,18 @@
     {
         private readonly ICategoriesService categoriesService;
         private readonly IPostsService postsService;
+        private readonly ICommentsService commentsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public PostsController(
             ICategoriesService categoriesService,
             IPostsService postsService,
+            ICommentsService commentsService,
             UserManager<ApplicationUser> userManager)
         {
             this.categoriesService = categoriesService;
             this.postsService = postsService;
+            this.commentsService = commentsService;
             this.userManager = userManager;
         }
 
@@ -66,14 +69,20 @@
             var post = await this.postsService
                 .GetByIdAsync<PostViewModel>(id);
 
-            post.Comments = post.Comments;
-
-            post.LoggedInUserName = user.UserName;
-
             if (post == null)
             {
                 return this.NotFound();
             }
+
+            foreach (var comment in post.Comments)
+            {
+                comment.IsSignInUserTheOwnerOfComment = this.commentsService
+                    .IsSignInUserTheOwenerOfComment(comment.Id, user.Id);
+            }
+
+            post.Comments = post.Comments;
+
+            post.LoggedInUserName = user.UserName;
 
             return this.View(post);
         }
