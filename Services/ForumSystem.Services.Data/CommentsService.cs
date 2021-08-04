@@ -44,6 +44,27 @@
             return commentViewModel;
         }
 
+        public async Task<string> DeleteCommentAsync(int commentId)
+        {
+            var comment = this.comments
+                .All()
+                .Where(x => x.Id == commentId)
+                .FirstOrDefault();
+
+            if (comment == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            this.RemoveSubCommentsComment(comment);
+            this.comments
+                .Delete(comment);
+
+            await this.comments.SaveChangesAsync();
+
+            return "Delete is successfull";
+        }
+
         public async Task<EditCommentViewModel> EditCommetAsync(int commentId, string content)
         {
             var commentToEdit = await this.comments
@@ -66,6 +87,13 @@
             };
         }
 
+        public string GetCommentContent(int commentId)
+            => this.comments
+                .All()
+                .Where(x => x.Id == commentId)
+                .Select(x => x.Content)
+                .FirstOrDefault();
+
         public async Task<bool> IsInPostIdAsync(int commentId, int postId)
         {
             var commentPostId = await this.comments
@@ -81,5 +109,20 @@
             => this.comments
                 .All()
                 .Any(x => x.Id == commentId && x.UserId == userId);
+
+        private void RemoveSubCommentsComment(Comment comment)
+        {
+            if (comment.SubComments.Count > 0)
+            {
+                foreach (var subComment in comment.SubComments)
+                {
+                    this.RemoveSubCommentsComment(subComment);
+                }
+            }
+            else
+            {
+                this.comments.Delete(comment);
+            }
+        }
     }
 }

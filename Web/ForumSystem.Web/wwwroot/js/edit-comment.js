@@ -1,16 +1,18 @@
-﻿async function showTextAreaForEditingComment(commentContentSection, commentId) {
+﻿function showTextAreaForEditingComment(commentContentSection, commentId) {
+    const uniqueTinyMceTextAreaId = `tinyMce${commentId}`;
+
     let commentSection = commentContentSection
         .querySelector(".comment-section");
 
-    const uniqueTinyMceTextAreaId = `tinyMce${commentId}`;
+    var currContentAsHtml;
 
-    const token = document
-        .getElementsByName("__RequestVerificationToken")[0].value;
+    if (commentSection) {
+        currContentAsHtml = commentSection
+            .innerHTML;
+    }
 
     if (commentSection) {
         let textArea = document.createElement("textarea");
-        let contentAsHtml = commentSection
-            .innerHTML;
 
         textArea.setAttribute("id", uniqueTinyMceTextAreaId);
 
@@ -33,10 +35,47 @@
 
         tinymce
             .get(uniqueTinyMceTextAreaId)
-            .setContent(contentAsHtml);
+            .setContent(currContentAsHtml);
 
         return;
     }
+
+    Swal.fire({
+        title: 'Do you want to save the changes?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Save`,
+        denyButtonText: `Don't save`,
+    }).then(async (result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            Swal.fire('Saved!', '', 'success');
+            saveEditComment(uniqueTinyMceTextAreaId, commentId, commentContentSection);
+        } else if (result.isDenied) {
+            Swal.fire('Changes are not saved', '', 'info');
+            let contentAsHtml = await getCurrCommentContent(commentId);
+            let content = createElementFromHTML(contentAsHtml);
+            showCommentOutsideTextArea(content, commentContentSection);
+        }
+    })
+}
+
+async function getCurrCommentContent(commentId) {
+    const token = document
+        .getElementsByName("__RequestVerificationToken")[0].value;
+
+    return await fetch(`/api/comments?commentId=${commentId}`, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': token,
+        },
+    }).then(res => res.text());
+}
+
+async function saveEditComment(uniqueTinyMceTextAreaId, commentId, commentContentSection) {
+    const token = document
+        .getElementsByName("__RequestVerificationToken")[0].value;
 
     let editContent = tinymce
         .get(uniqueTinyMceTextAreaId)
@@ -47,9 +86,6 @@
         editContent,
     });
 
-    let textAreaWithContent = document
-        .getElementById(uniqueTinyMceTextAreaId);
-
     let jsonResponse = await fetch("/api/comments/edit", {
         method: "POST",
         headers: {
@@ -59,16 +95,17 @@
         body: json
     }).then(res => res.json());
 
-    commentContentSection.removeChild(textAreaWithContent);
+    let content = createElementFromHTML(jsonResponse["sanitizeContent"]);
+    showCommentOutsideTextArea(content, commentContentSection);
+}
 
-    commentSection = document.createElement("div");
+function showCommentOutsideTextArea(content, commentContentSection) {
+    let commentSection = document.createElement("div");
     commentSection.classList.add("comment-section");
-    commentSection.append(createElementFromHTML(jsonResponse["sanitizeContent"]));
+    commentSection.append(content);
 
     let wrap = document.createElement("div");
     wrap.appendChild(commentSection.cloneNode(true));
-    
-    console.log(wrap.innerHTML);
 
     commentContentSection.innerHTML = wrap.innerHTML;
 }

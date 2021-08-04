@@ -26,6 +26,21 @@
             this.userManager = userManager;
         }
 
+        [HttpGet]
+        [Authorize]
+        public ActionResult GetCommentContent([FromQuery] int commentId)
+        {
+            var content = this.commentsServer
+                   .GetCommentContent(commentId);
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return this.NotFound();
+            }
+
+            return this.Ok(content);
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<ActionResult> PostCommentAsync(CommentInputModel input)
@@ -60,6 +75,24 @@
                     .EditCommetAsync(editedInput.CommentId, editedInput.EditContent);
 
                 return this.Ok(editViewModel);
+            }
+            catch
+            {
+                return this.BadRequest();
+            }
+        }
+
+        [HttpDelete]
+        [Authorize]
+        [Route("delete")]
+        public async Task<ActionResult> DeleteCommentAsync(DeleteCommentRequestModel requestModel)
+        {
+            try
+            {
+                var text = await this.commentsServer
+                    .DeleteCommentAsync(requestModel.CommentId);
+
+                return this.Ok(text);
             }
             catch
             {

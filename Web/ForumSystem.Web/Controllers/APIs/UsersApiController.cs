@@ -69,6 +69,7 @@
                 var userId = this.userManager.GetUserId(this.User);
 
                 var filePath = Path.Combine(this.environment.WebRootPath, "profileImages");
+
                 Directory.CreateDirectory(filePath);
 
                 imagePath = await this.usersService.UploadProfileImage(image, userId, filePath);

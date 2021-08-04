@@ -75,10 +75,19 @@ async function commentOnCurrSection(event) {
 
     tinyMCE.activeEditor.setContent('');
     formNode.querySelector("textarea[name=content]").value = "";
-    formNode.style.display = 'none';
+
+    if (!currentTarget.className.includes("comment-on-post")) {
+        formNode.style.display = 'none';
+    }
 
     newCommentNode
         .addEventListener("click", commentOnCurrSection);
+
+    let deleteBtn = newCommentNode
+        .querySelector(".delete-btn");
+
+    deleteBtn
+        .addEventListener("click", showSweetAlertDialog);
 
     tinymce.init({
         selector: "textarea",
@@ -145,12 +154,14 @@ function getCommentDivSectionFromResponse(jsonResponse) {
                                             <i class="fa fa-comment-dots"></i>
                                             Reply
                                         </button>
+
                                         <button class="btn mb-2" onclick="showTextAreaForEditingComment(${commentContentSectionId}, ${id})">
                                             <i class="far fa-edit"></i>
                                             Edit
                                         </button>
 
-                                        <button class="btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
+                                        <input type="hidden" name="commentId" value="${id}"/>
+                                        <button class="delete-btn btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
                                             <i class="fa fa-trash alert-danger"></i>
                                             Delete
                                         </button>

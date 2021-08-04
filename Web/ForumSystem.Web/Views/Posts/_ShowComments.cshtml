@@ -58,7 +58,8 @@
                                                     Edit
                                                 </button>
 
-                                                <button class="btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
+                                                <input type="hidden" name="commentId" value="@comment.Id"/>
+                                                <button class="delete-btn btn mb-2">
                                                     <i class="fa fa-trash alert-danger"></i>
                                                     Delete
                                                 </button>

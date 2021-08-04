@@ -13,5 +13,9 @@
         public Task<bool> IsInPostIdAsync(int commentId, int postId);
 
         public bool IsSignInUserTheOwenerOfComment(int commentId, string userId);
+
+        string GetCommentContent(int commentId);
+
+        Task<string> DeleteCommentAsync(int commentId);
     }
 }

@@ -48,7 +48,6 @@
         <main role="main" class="pb-1">
             <div class="container">
                 <div class="row">
-
                     <div class="col-md-9 p-1">
                         @this.RenderBody()
                     </div>
@@ -90,6 +89,7 @@
     <script src="~/lib/moment/min/moment-with-locales.min.js" asp-append-version="true"></script>
     <script src="~/js/tiny-mce.js" asp-append-version="true"></script>
     <script type="module" src="~/js/time.js" asp-append-version="true"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11" asp-append-version="true"></script>
     @await this.RenderSectionAsync("Scripts", required: false)
 
 </body>

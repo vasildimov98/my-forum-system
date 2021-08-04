@@ -15,7 +15,7 @@
 
     public class UsersService : IUsersService
     {
-        private readonly string[] validExtention = new[] { ".png", ".jpeg", "jpg" };
+        private readonly string[] validExtention = new[] { ".png", ".jpeg", ".jpg" };
         private readonly Regex usernameRegex = new("^(?=.{7,20}$)[a-zA-Z0-9]+$");
 
         private readonly IRepository<ProfileImage> profileImages;

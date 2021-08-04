@@ -10,6 +10,7 @@
         public Comment()
         {
             this.CommentVotes = new HashSet<CommentVote>();
+            this.SubComments = new HashSet<Comment>();
         }
 
         [Required]
@@ -29,5 +30,7 @@
         public virtual ApplicationUser User { get; set; }
 
         public virtual ICollection<CommentVote> CommentVotes { get; set; }
+
+        public virtual ICollection<Comment> SubComments { get; set; }
     }
 }
