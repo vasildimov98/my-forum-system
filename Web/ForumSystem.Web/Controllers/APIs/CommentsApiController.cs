@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Web.Controllers.APIs
 {
+    using System;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
@@ -50,15 +51,17 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> PutCommentAsync(int commentId, string content)
+        [Route("edit")]
+        public async Task<ActionResult> PutCommentAsync(EditCommentJsonModel editedInput)
         {
             try
             {
-                var editViewModel = await this.commentsServer.EditCommetAsync(commentId, content);
+                var editViewModel = await this.commentsServer
+                    .EditCommetAsync(editedInput.CommentId, editedInput.EditContent);
 
                 return this.Ok(editViewModel);
             }
-            catch (System.Exception)
+            catch
             {
                 return this.BadRequest();
             }

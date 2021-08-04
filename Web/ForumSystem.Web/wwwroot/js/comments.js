@@ -110,6 +110,7 @@ function getCommentDivSectionFromResponse(jsonResponse) {
     const voteTypeCount = jsonResponse["voteTypeCount"];
     const votesCountId = jsonResponse["votesCountId"];
     const formCommentId = jsonResponse["formCommentId"];
+    const commentContentSectionId = jsonResponse["commentContentSectionId"];
 
     let commentAsHtmlString = `<div class="container-fluid">
             <div class="row">
@@ -124,9 +125,11 @@ function getCommentDivSectionFromResponse(jsonResponse) {
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            ${sanitizeContent}
-                        </div>
+                        <div id="${commentContentSectionId}" class="card-body">
+                                <div class="comment-section">
+                                    ${sanitizeContent}
+                                </div>
+                            </div>
                         <div class="card-footer">
                             <div>
                                 <div class="row">
@@ -141,6 +144,15 @@ function getCommentDivSectionFromResponse(jsonResponse) {
                                         <button class="btn mb-2" onclick="toggleCommentBoxEditor(${formCommentId}, ${id})">
                                             <i class="fa fa-comment-dots"></i>
                                             Reply
+                                        </button>
+                                        <button class="btn mb-2" onclick="showTextAreaForEditingComment(${commentContentSectionId}, ${id})">
+                                            <i class="far fa-edit"></i>
+                                            Edit
+                                        </button>
+
+                                        <button class="btn mb-2" onclick="toggleCommentBoxEditor(@comment.FormCommentId, @comment.Id)">
+                                            <i class="fa fa-trash alert-danger"></i>
+                                            Delete
                                         </button>
                                     </div>
                                 </div>
