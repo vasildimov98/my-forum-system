@@ -4,8 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using AutoMapper;
-
+    using ForumSystem.Data;
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
@@ -14,10 +13,10 @@
 
     public class CommentsService : ICommentsService
     {
-        private readonly IDeletableEntityRepository<Comment> comments;
+        private readonly IRepository<Comment> comments;
 
         public CommentsService(
-            IDeletableEntityRepository<Comment> comments)
+            IRepository<Comment> comments)
         {
             this.comments = comments;
         }
@@ -48,6 +47,7 @@
         {
             var comment = this.comments
                 .All()
+                .Include(x => x.SubComments)
                 .Where(x => x.Id == commentId)
                 .FirstOrDefault();
 
@@ -112,17 +112,22 @@
 
         private void RemoveSubCommentsComment(Comment comment)
         {
-            if (comment.SubComments.Count > 0)
-            {
-                foreach (var subComment in comment.SubComments)
-                {
-                    this.RemoveSubCommentsComment(subComment);
-                }
-            }
-            else
+            if (comment.SubComments.Count == 0)
             {
                 this.comments.Delete(comment);
+                return;
             }
+
+            foreach (var subComment in comment.SubComments)
+            {
+                var includedSubComments = this.comments.All()
+                    .Include(x => x.SubComments)
+                    .FirstOrDefault(x => x.Id == subComment.Id);
+
+                this.RemoveSubCommentsComment(includedSubComments);
+            }
+
+            this.comments.Delete(comment);
         }
     }
 }

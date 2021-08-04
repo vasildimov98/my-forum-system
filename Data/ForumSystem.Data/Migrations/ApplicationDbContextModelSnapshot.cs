@@ -199,12 +199,6 @@ namespace ForumSystem.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -219,8 +213,6 @@ namespace ForumSystem.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("ParentId");
 
@@ -511,7 +503,7 @@ namespace ForumSystem.Data.Migrations
             modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.Comment", "Parent")
-                        .WithMany()
+                        .WithMany("SubComments")
                         .HasForeignKey("ParentId");
 
                     b.HasOne("ForumSystem.Data.Models.Post", "Post")
@@ -696,6 +688,8 @@ namespace ForumSystem.Data.Migrations
             modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
                 {
                     b.Navigation("CommentVotes");
+
+                    b.Navigation("SubComments");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.Post", b =>

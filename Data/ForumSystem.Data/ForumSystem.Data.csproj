@@ -44,4 +44,8 @@
     <ProjectReference Include="..\ForumSystem.Data.Models\ForumSystem.Data.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

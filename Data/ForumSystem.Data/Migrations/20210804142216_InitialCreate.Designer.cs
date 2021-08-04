@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ForumSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210506131519_AddCommentModel")]
-    partial class AddCommentModel
+    [Migration("20210804142216_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,6 +87,9 @@ namespace ForumSystem.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("HasImage")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -116,6 +119,9 @@ namespace ForumSystem.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfileImageId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -138,6 +144,8 @@ namespace ForumSystem.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("ProfileImageId");
+
                     b.ToTable("AspNetUsers");
                 });
 
@@ -158,7 +166,7 @@ namespace ForumSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -193,12 +201,6 @@ namespace ForumSystem.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
 
@@ -214,15 +216,76 @@ namespace ForumSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IsDeleted");
-
                     b.HasIndex("ParentId");
 
                     b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.CommentVote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommentVotes");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.Post", b =>
@@ -268,6 +331,30 @@ namespace ForumSystem.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.ProfileImage", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Extention")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ProfileImages");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.Vote", b =>
@@ -406,10 +493,19 @@ namespace ForumSystem.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("ForumSystem.Data.Models.ApplicationUser", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.ProfileImage", "ProfileImage")
+                        .WithMany()
+                        .HasForeignKey("ProfileImageId");
+
+                    b.Navigation("ProfileImage");
+                });
+
             modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.Comment", "Parent")
-                        .WithMany()
+                        .WithMany("SubComments")
                         .HasForeignKey("ParentId");
 
                     b.HasOne("ForumSystem.Data.Models.Post", "Post")
@@ -431,6 +527,42 @@ namespace ForumSystem.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ForumSystem.Data.Models.CommentVote", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.Comment", "Comment")
+                        .WithMany("CommentVotes")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "User")
+                        .WithMany("CommentVotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.Message", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.Category", "Category")
+                        .WithMany("Messages")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ForumSystem.Data.Models.Post", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.Category", "Category")
@@ -446,6 +578,15 @@ namespace ForumSystem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.ProfileImage", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -526,7 +667,11 @@ namespace ForumSystem.Data.Migrations
 
                     b.Navigation("Comments");
 
+                    b.Navigation("CommentVotes");
+
                     b.Navigation("Logins");
+
+                    b.Navigation("Messages");
 
                     b.Navigation("Posts");
 
@@ -537,7 +682,16 @@ namespace ForumSystem.Data.Migrations
 
             modelBuilder.Entity("ForumSystem.Data.Models.Category", b =>
                 {
+                    b.Navigation("Messages");
+
                     b.Navigation("Posts");
+                });
+
+            modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
+                {
+                    b.Navigation("CommentVotes");
+
+                    b.Navigation("SubComments");
                 });
 
             modelBuilder.Entity("ForumSystem.Data.Models.Post", b =>

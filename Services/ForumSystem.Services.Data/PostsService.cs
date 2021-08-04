@@ -13,11 +13,11 @@
     public class PostsService : IPostsService
     {
         private readonly IDeletableEntityRepository<Post> postsRepository;
-        private readonly IDeletableEntityRepository<Comment> commentsRepository;
+        private readonly IRepository<Comment> commentsRepository;
 
         public PostsService(
             IDeletableEntityRepository<Post> postsRepository,
-            IDeletableEntityRepository<Comment> commentsRepository)
+            IRepository<Comment> commentsRepository)
         {
             this.postsRepository = postsRepository;
             this.commentsRepository = commentsRepository;

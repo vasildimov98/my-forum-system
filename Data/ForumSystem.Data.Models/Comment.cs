@@ -5,7 +5,7 @@
 
     using ForumSystem.Data.Common.Models;
 
-    public class Comment : BaseDeletableModel<int>
+    public class Comment : BaseModel<int>
     {
         public Comment()
         {

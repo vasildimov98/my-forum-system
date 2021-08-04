@@ -16,12 +16,12 @@
     {
         private readonly IDeletableEntityRepository<Category> categoriesRepository;
         private readonly IDeletableEntityRepository<Post> postsRepository;
-        private readonly IDeletableEntityRepository<Comment> commentsRepository;
+        private readonly IRepository<Comment> commentsRepository;
 
         public CategoriesService(
             IDeletableEntityRepository<Category> categoriesRepository,
-            IDeletableEntityRepository<Post> postsRepository, 
-            IDeletableEntityRepository<Comment> commentRepository)
+            IDeletableEntityRepository<Post> postsRepository,
+            IRepository<Comment> commentRepository)
         {
             this.categoriesRepository = categoriesRepository;
             this.postsRepository = postsRepository;
