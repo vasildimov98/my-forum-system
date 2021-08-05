@@ -22,6 +22,7 @@ namespace ForumSystem.Data.Models
             this.Comments = new HashSet<Comment>();
             this.CommentVotes = new HashSet<CommentVote>();
             this.Messages = new HashSet<Message>();
+            this.Categories = new HashSet<Category>();
         }
 
         public bool HasImage { get; set; }
@@ -56,5 +57,7 @@ namespace ForumSystem.Data.Models
         public virtual ICollection<CommentVote> CommentVotes { get; set; }
 
         public virtual ICollection<Message> Messages { get; set; }
+
+        public virtual ICollection<Category> Categories { get; set; }
     }
 }

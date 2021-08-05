@@ -7,6 +7,11 @@
 
     using ForumSystem.Data.Models;
 
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.DependencyInjection;
+
+    using static ForumSystem.Common.GlobalConstants;
+
     public class CategoriesSeeder : ISeeder
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
@@ -15,6 +20,10 @@
             {
                 return;
             }
+
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            var administrator = await userManager.FindByNameAsync("VasilDimov98");
 
             var categories = new List<Category>
             {
@@ -79,6 +88,11 @@
                     ImageUrl = "https://phantom-marca.unidadeditorial.es/7703d5206d58c4e2696f4a93f0060605/resize/1320/f/jpg/assets/multimedia/imagenes/2020/12/23/16087305805597.jpg",
                 },
             };
+
+            foreach (var category in categories)
+            {
+                category.OwnerId = administrator.Id;
+            }
 
             await dbContext.Categories.AddRangeAsync(categories);
             await dbContext.SaveChangesAsync();

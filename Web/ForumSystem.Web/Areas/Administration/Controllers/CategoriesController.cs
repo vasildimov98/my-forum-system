@@ -28,8 +28,6 @@
         {
             var page = Math.Max(1, id);
 
-            this.TempData["page"] = page;
-
             var categories = await this.categorieService
                 .GetAllAsync<CategoryCrudModel>(CategoryPerPage, (page - 1) * CategoryPerPage);
 
@@ -87,9 +85,6 @@
                 return this.NotFound();
             }
 
-            category.CurrentPage = Convert
-                .ToInt32(this.TempData["page"]);
-
             return this.View(category);
         }
 
@@ -113,7 +108,7 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction("ByName", "Categories", new { area = string.Empty, name = input.Name, id = 1 });
         }
 
         [Authorize]
@@ -132,9 +127,6 @@
                 return this.NotFound();
             }
 
-            category.CurrentPage = Convert
-                .ToInt32(this.TempData["page"]);
-
             return this.View(category);
         }
 
@@ -152,7 +144,7 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction("All", "Categories", new { area = string.Empty, id = 1 });
         }
     }
 }

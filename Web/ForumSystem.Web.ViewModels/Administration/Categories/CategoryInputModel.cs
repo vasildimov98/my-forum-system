@@ -13,7 +13,7 @@
         public string Name { get; set; }
 
         [Required]
-        [MinLength(30, ErrorMessage = "Description is not enough.")]
+        [MaxLength(350, ErrorMessage = "Description is way too long. Only 350 letters allowed")]
         public string Description { get; set; }
 
         [Required]

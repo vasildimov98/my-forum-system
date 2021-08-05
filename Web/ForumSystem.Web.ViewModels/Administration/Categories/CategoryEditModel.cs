@@ -20,7 +20,7 @@
         public string Name { get; set; }
 
         [Required]
-        [MinLength(50)]
+        [MaxLength(350, ErrorMessage = "Description way too long. Only 350 letters allowed!")]
         public string Description { get; set; }
 
         public string SanitizeDescription => new HtmlSanitizer().Sanitize(this.Description);
@@ -33,7 +33,5 @@
         public string ImageUrl { get; set; }
 
         public int? PostsCount { get; set; }
-
-        public int CurrentPage { get; set; }
     }
 }

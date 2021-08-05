@@ -5,7 +5,7 @@
     var count = ((this.Model.PaginationModel.CurrentPage - 1) * 10) + 1;
 }
 
-<div class="ibox-content forum-container text-center mb-3">
+<div class="ibox-content forum-container mb-3">
 
     <div class="forum-title">
         <h3>All Categories</h3>
@@ -13,13 +13,26 @@
 
     @foreach (var category in this.Model.Categories)
     {
-        <div class="forum-item justify-content-lg-center">
-            <div class="row align-items-center my-row ">
+        <div class="forum-item">
+            <div class="row">
                 <a asp-action="ByName" asp-route-name="@category.RouteName" asp-route-id="1" class="text-dark">
                     <div class="col-md-12 p-0 my-col">
                         <span>@(count++)</span>
                         <img src="@category.ImageUrl" width="60" class="ui-w-40 rounded-circle center-block" />
                         <span>@category.Name</span>
+
+                        @if (category.IsSignInUserTheOwner
+                            || this.User.IsInRole(AdministratorRoleName))
+                        {
+                            <ul class="list-inline m-0 float-right">
+                                <li class="list-inline-item">
+                                    <a asp-area="Administration" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a asp-area="Administration" asp-controller="Categories" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                                </li>
+                            </ul>
+                        }
                     </div>
                 </a>
             </div>

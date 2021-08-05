@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ForumSystem.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210804142216_InitialCreate")]
+    [Migration("20210805130055_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -180,9 +180,15 @@ namespace ForumSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Categories");
                 });
@@ -502,6 +508,17 @@ namespace ForumSystem.Data.Migrations
                     b.Navigation("ProfileImage");
                 });
 
+            modelBuilder.Entity("ForumSystem.Data.Models.Category", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "Owner")
+                        .WithMany("Categories")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.Comment", "Parent")
@@ -663,6 +680,8 @@ namespace ForumSystem.Data.Migrations
 
             modelBuilder.Entity("ForumSystem.Data.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Claims");
 
                     b.Navigation("Comments");

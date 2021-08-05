@@ -167,6 +167,28 @@
                              });
 
                         endpoints
+                          .MapControllerRoute(
+                              name: "category-edit-page",
+                              pattern: "Category/Edit/{id:min(1)}",
+                              defaults: new
+                              {
+                                  area = "Administration",
+                                  controller = "Categories",
+                                  action = "Edit",
+                              });
+
+                        endpoints
+                         .MapControllerRoute(
+                             name: "category-delete-page",
+                             pattern: "Category/Delete/{id:min(1)}",
+                             defaults: new
+                             {
+                                 area = "Administration",
+                                 controller = "Categories",
+                                 action = "Delete",
+                             });
+
+                        endpoints
                            .MapControllerRoute(
                                name: "category-name-page",
                                pattern: "Category/{name:required}/{id?}",

@@ -168,9 +168,6 @@ namespace ForumSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsAdminApproved")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -181,9 +178,15 @@ namespace ForumSystem.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("IsDeleted");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Categories");
                 });
@@ -503,6 +506,17 @@ namespace ForumSystem.Data.Migrations
                     b.Navigation("ProfileImage");
                 });
 
+            modelBuilder.Entity("ForumSystem.Data.Models.Category", b =>
+                {
+                    b.HasOne("ForumSystem.Data.Models.ApplicationUser", "Owner")
+                        .WithMany("Categories")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
             modelBuilder.Entity("ForumSystem.Data.Models.Comment", b =>
                 {
                     b.HasOne("ForumSystem.Data.Models.Comment", "Parent")
@@ -664,6 +678,8 @@ namespace ForumSystem.Data.Migrations
 
             modelBuilder.Entity("ForumSystem.Data.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Categories");
+
                     b.Navigation("Claims");
 
                     b.Navigation("Comments");
