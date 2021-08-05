@@ -212,7 +212,7 @@
                             .MapHub<ChatHub>("/category-chat");
 
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                        endpoints.MapControllerRoute("default", "{controller=Home}/{action=Posts}/{id?}");
+                        endpoints.MapControllerRoute("default", "{controller=Posts}/{action=All}/{id?}");
                         endpoints.MapRazorPages();
                     });
         }

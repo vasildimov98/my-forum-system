@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.PartialViews
+﻿namespace ForumSystem.Web.ViewModels.Posts
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,6 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-    using ForumSystem.Web.ViewModels.Posts;
 
     public class PostListViewModel : IMapFrom<Post>
     {
@@ -15,9 +14,9 @@
 
         public string Title { get; set; }
 
-        public string Url => $"/Post/{this.Id}/{this.Title.ToLower().Replace(" ", "-")}";
+        public string Url => $"/Post/{Id}/{Title.ToLower().Replace(" ", "-")}";
 
-        public string PostCreatorHref => $"/User/{this.UserUserName}/1";
+        public string PostCreatorHref => $"/User/{UserUserName}/1";
 
         public string Content { get; set; }
 
@@ -27,10 +26,10 @@
         {
             get
             {
-                var content = WebUtility.HtmlDecode(Regex.Replace(this.Content, @"<[^>]*>", string.Empty));
+                var content = WebUtility.HtmlDecode(Regex.Replace(Content, @"<[^>]*>", string.Empty));
                 return content.Length > 400
-                        ? content.Substring(0, 400) + $"... <a href={this.Url} class=\"text-secondary\">read more</a>"
-                        : content + $"... <a href={this.Url} class=\"text-secondary\">read more</a>";
+                        ? content.Substring(0, 400) + $"... <a href={Url} class=\"text-secondary\">read more</a>"
+                        : content + $"... <a href={Url} class=\"text-secondary\">read more</a>";
             }
         }
 

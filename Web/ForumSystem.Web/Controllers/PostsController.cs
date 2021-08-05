@@ -1,20 +1,21 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
+    using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Posts;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
     public class PostsController : BaseController
     {
+        private const int PostsPerPage = 5;
+
         private readonly ICategoriesService categoriesService;
         private readonly IPostsService postsService;
         private readonly ICommentsService commentsService;
@@ -30,6 +31,30 @@
             this.postsService = postsService;
             this.commentsService = commentsService;
             this.userManager = userManager;
+        }
+
+        public async Task<IActionResult> All(int id = 1)
+        {
+            var page = id;
+
+            var posts = await this.postsService
+                .GetAllAsync<PostListViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
+
+            var count = this.postsService.GetCount();
+            var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
+            var postsList = new PostsAllViewModel
+            {
+                PostsCount = count,
+                Posts = posts,
+                PaginationModel = new PaginationViewModel
+                {
+                    CurrentPage = page,
+                    PagesCount = pagesCount,
+                    RouteName = "default",
+                },
+            };
+
+            return this.View(postsList);
         }
 
         [Authorize]
@@ -67,7 +92,7 @@
         {
             var user = await this.userManager.GetUserAsync(this.User);
             var post = await this.postsService
-                .GetByIdAsync<PostViewModel>(id);
+                .GetByIdAsync<ViewModels.Posts.PostViewModel>(id);
 
             if (post == null)
             {

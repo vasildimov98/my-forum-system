@@ -7,6 +7,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.PartialViews;
+    using ForumSystem.Web.ViewModels.Posts;
     using ForumSystem.Web.ViewModels.Profiles;
 
     using Microsoft.AspNetCore.Authorization;

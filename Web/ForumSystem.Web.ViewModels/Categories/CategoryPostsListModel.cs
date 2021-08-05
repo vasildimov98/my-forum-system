@@ -5,6 +5,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.PartialViews;
+    using ForumSystem.Web.ViewModels.Posts;
     using Ganss.XSS;
 
     public class CategoryPostsListModel : IMapFrom<Category>

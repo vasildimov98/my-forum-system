@@ -1,6 +1,5 @@
-﻿@using ForumSystem.Common;
-@using ForumSystem.Web.ViewModels.Home;
-@model HomePostsListViewModel
+﻿@using ForumSystem.Web.ViewModels.Posts;
+@model PostsAllViewModel
 @{
     this.ViewData["Title"] = "Posts";
 }
@@ -12,7 +11,7 @@
 
                 <div class="ibox-content m-b-sm border-bottom">
                     <div class="p-xs">
-                        <h1>Welcome to @GlobalConstants.SystemName</h1>
+                        <h1>Browse posts in @SystemName</h1>
 
                         <div class="pull-right forum-desc">
                             <samll>Total posts: @this.Model.PostsCount</samll>

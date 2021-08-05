@@ -1,10 +1,10 @@
-﻿namespace ForumSystem.Web.ViewModels.Home
+﻿namespace ForumSystem.Web.ViewModels.Posts
 {
     using System.Collections.Generic;
 
     using ForumSystem.Web.ViewModels.PartialViews;
 
-    public class HomePostsListViewModel
+    public class PostsAllViewModel
     {
         public int PostsCount { get; set; }
 

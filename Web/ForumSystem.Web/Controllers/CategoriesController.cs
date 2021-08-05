@@ -7,7 +7,7 @@
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Chat;
     using ForumSystem.Web.ViewModels.PartialViews;
-
+    using ForumSystem.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 

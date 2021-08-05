@@ -6,6 +6,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.PartialViews;
+    using ForumSystem.Web.ViewModels.Posts;
 
     public class ProfileViewModel : IMapFrom<ApplicationUser>
     {
