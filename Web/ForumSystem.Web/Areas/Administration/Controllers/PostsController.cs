@@ -129,7 +129,7 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction("Posts", "Home", new { area = string.Empty });
+            return this.RedirectToAction("All", "Posts", new { area = string.Empty });
         }
     }
 }

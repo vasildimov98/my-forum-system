@@ -10,7 +10,7 @@
         public string Title { get; set; }
 
         [Required]
-        [MinLength(100, ErrorMessage ="Content is way to short. Tell me more.")]
+        [MinLength(20, ErrorMessage ="Content is way to short. Tell me more.")]
         public string Content { get; set; }
 
         [Display(Name = "Category")]

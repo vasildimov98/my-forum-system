@@ -28,7 +28,7 @@
 
                     @if (this.User.Identity.IsAuthenticated)
                     {
-                        <a class="navbar-brand text-dark" asp-area="" asp-controller="Posts" asp-action="Create" title="Create Post"><i class="fas fa-pen"></i> Create Post</a>
+                        <a class="navbar-brand text-dark " asp-area="" asp-controller="Posts" asp-action="Create" title="Create Post"><i class="fas fa-pen"></i> Create Post</a>
                     }
                 </div>
             </div>
@@ -54,7 +54,7 @@
                     }
 
                     @if (!this.User.Identity.IsAuthenticated
-                    && viewPath.Contains("Home/Posts"))
+                    && viewPath.Contains("Posts/All"))
                     {
                         <aside class="col-md-3 p-1">
                             <vc:most-posts-categories></vc:most-posts-categories>
