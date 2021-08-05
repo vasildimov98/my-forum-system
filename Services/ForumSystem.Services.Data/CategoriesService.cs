@@ -119,7 +119,7 @@
                 .To<T>()
                 .FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<T>> GetMostPostsCategories<T>(int take = 5)
+        public async Task<IEnumerable<T>> GetMostFamousCategories<T>(int take = 5)
             => await this.categoriesRepository
                 .All()
                 .OrderByDescending(x => x.Posts.Count())

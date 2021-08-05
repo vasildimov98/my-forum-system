@@ -13,35 +13,29 @@
                     <div class="p-xs">
 
                         <div class="container">
-                            <div class="row justify-content-between">
-                                <div class="col-md-3 pull-left m-r-md">
+                            <div class="row">
+                                <div class="col-md-3 m-r-md">
                                     <img src="@this.Model.ImageUrl" width="100" />
                                 </div>
-                                <div class="col-md-3 text-right">
-                                    <a href="@this.Model.ChatRoute" class="btn btn-info">Start Live Chat</a>
+                                <div class="col-md-3">
+                                    <a href="@this.Model.ChatRoute" class="btn btn-info btn-block">Start Live Chat</a>
                                 </div>
-                            </div>
-                        </div>
-
-
-                        <h2>@this.Model.Name</h2>
-                        <p>@Html.Raw(this.Model.SanitizeDescription)</p>
-
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-primary">
-                                        Write a Post about @this.Model.Name
+                                <div class="col-md-3">
+                                    <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-primary btn-block">
+                                        Write a post
                                     </a>
                                 </div>
-
-                                <div class="col-md-6">
-                                    <a asp-action="All" asp-route-id="1" class="btn btn-danger float-right">
-                                        Go Back To Categories
+                                <div class="col-md-3">
+                                    <a asp-action="All" asp-route-id="1" class="btn btn-secondary btn-block">
+                                        Go Back
                                     </a>
                                 </div>
                             </div>
                         </div>
+
+
+                        <h2><strong>@this.Model.Name</strong></h2>
+                        <p class="justify-content-center">@Html.Raw(this.Model.SanitizeDescription)</p>
                     </div>
                 </div>
 
@@ -59,7 +53,7 @@
                         </div>
 
                         <a asp-controller="Posts" asp-action="Create" asp-route-selected="@this.Model.Name" class="btn btn-block btn-primary">
-                            Write a Post about @this.Model.Name
+                            Write a Post
                         </a>
                     }
                     else

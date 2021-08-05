@@ -4,6 +4,6 @@
 
     public class MostPostsInCategoryListModel
     {
-        public IEnumerable<MostPostsInCategoryViewModel> Categories { get; set; }
+        public IEnumerable<FamousCategoryViewModel> Categories { get; set; }
     }
 }
