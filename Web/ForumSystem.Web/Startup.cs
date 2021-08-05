@@ -146,6 +146,28 @@
 
                         endpoints
                            .MapControllerRoute(
+                               name: "post-edit-page",
+                               pattern: "Post/Edit/{id:min(1)}",
+                               defaults: new
+                               {
+                                   area = "Administration",
+                                   controller = "Posts",
+                                   action = "Edit",
+                               });
+
+                        endpoints
+                         .MapControllerRoute(
+                             name: "post-delete-page",
+                             pattern: "Post/Delete/{id:min(1)}",
+                             defaults: new
+                             {
+                                 area = "Administration",
+                                 controller = "Posts",
+                                 action = "Delete",
+                             });
+
+                        endpoints
+                           .MapControllerRoute(
                                name: "category-name-page",
                                pattern: "Category/{name:required}/{id?}",
                                defaults: new

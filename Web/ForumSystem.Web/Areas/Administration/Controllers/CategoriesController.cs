@@ -7,7 +7,10 @@
     using ForumSystem.Web.ViewModels.Administration.Categories;
     using ForumSystem.Web.ViewModels.PartialViews;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
+    using static ForumSystem.Common.GlobalConstants;
 
     public class CategoriesController : AdministrationController
     {
@@ -20,6 +23,7 @@
             this.categorieService = categoriesService;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public async Task<IActionResult> Index(int id)
         {
             var page = Math.Max(1, id);
@@ -47,19 +51,12 @@
             return this.View(viewModel);
         }
 
+        [Authorize]
         public IActionResult Create()
-        {
-            var viewModel = new CategoryInputModel
-            {
-                CurrentPage = Convert
-                    .ToInt32(this.TempData["page"]),
-            };
-
-            return this.View(viewModel);
-        }
+            => this.View();
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create(CategoryInputModel input)
         {
             if (!this.ModelState.IsValid)
@@ -67,11 +64,19 @@
                 return this.View();
             }
 
-            await this.categorieService.AddAsync(input);
+            var isCategoryCreated = await this.categorieService
+                .CreateAsync(input);
 
-            return this.RedirectToAction(nameof(this.Index));
+            if (!isCategoryCreated)
+            {
+                this.TempData["InvalidMessage"] = "Category name is taken, please try another one.";
+                return this.View();
+            }
+
+            return this.RedirectToAction("ByName", "Categories", new { area = string.Empty, name = input.Name, id = 1 });
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var category = await this.categorieService
@@ -89,6 +94,7 @@
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryInputModel input)
         {
@@ -110,6 +116,7 @@
             return this.RedirectToAction(nameof(this.Index));
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,8 +139,8 @@
         }
 
         [HttpPost]
+        [Authorize]
         [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try

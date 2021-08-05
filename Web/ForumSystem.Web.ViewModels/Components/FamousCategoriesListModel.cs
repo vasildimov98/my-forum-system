@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class MostPostsInCategoryListModel
+    public class FamousCategoriesListModel
     {
         public IEnumerable<FamousCategoryViewModel> Categories { get; set; }
     }

@@ -7,7 +7,7 @@
 
     public interface ICategoriesService
     {
-        public Task AddAsync(CategoryInputModel input);
+        public Task<bool> CreateAsync(CategoryInputModel input);
 
         public Task EditAsync(int id, CategoryInputModel input);
 

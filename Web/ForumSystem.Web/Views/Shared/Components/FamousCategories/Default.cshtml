@@ -1,5 +1,5 @@
 ﻿@using ForumSystem.Web.ViewModels.Components;
-@model MostPostsInCategoryListModel
+@model FamousCategoriesListModel
 
 <div class="ibox-content forum-container mb-3">
 
@@ -22,4 +22,12 @@
     }
 
     <a asp-controller="Categories" asp-action="All" asp-route-id="1" class="btn btn-block btn-primary">View All Categories</a>
+</div>
+
+<div class="ibox-content forum-container mb-3">
+    <div class="forum-title text-center">
+        <span>Have an idea for category? Start a community:</span>
+    </div>
+
+    <a asp-area="Administration" asp-controller="Categories" asp-action="Create" class="btn btn-primary btn-block">Create Category</a>
 </div>

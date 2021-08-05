@@ -10,12 +10,12 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
 
-    public class MostPostsCategoriesViewComponent : ViewComponent
+    public class FamousCategoriesViewComponent : ViewComponent
     {
         private readonly ICategoriesService categoriesService;
         private readonly IMemoryCache cache;
 
-        public MostPostsCategoriesViewComponent(
+        public FamousCategoriesViewComponent(
             ICategoriesService categoriesService,
             IMemoryCache cache)
         {
@@ -42,7 +42,7 @@
                     .Set(famousCategoriesKey, famousCategories, options);
             }
 
-            var viewModel = new MostPostsInCategoryListModel
+            var viewModel = new FamousCategoriesListModel
             {
                 Categories = famousCategories,
             };

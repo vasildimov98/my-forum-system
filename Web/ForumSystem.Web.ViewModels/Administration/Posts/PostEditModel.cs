@@ -28,8 +28,6 @@
 
         public int CommentsCount { get; set; }
 
-        public int CurrentPage { get; set; }
-
         public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
     }
 }

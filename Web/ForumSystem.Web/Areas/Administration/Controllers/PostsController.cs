@@ -10,6 +10,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using static ForumSystem.Common.GlobalConstants;
+
     public class PostsController : AdministrationController
     {
         private const int PostsPerPage = 5;
@@ -25,11 +27,10 @@
             this.categoriesService = categoriesService;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public async Task<IActionResult> Index(int id)
         {
             var page = Math.Max(1, id);
-
-            this.TempData["page"] = page;
 
             var posts = await this.postsService
                 .GetAllAsync<PostCrudModel>(PostsPerPage, (page - 1) * PostsPerPage);
@@ -66,9 +67,6 @@
             {
                 return this.NotFound();
             }
-
-            post.CurrentPage = Convert
-                .ToInt32(this.TempData["page"]);
 
             return this.View(post);
         }
@@ -113,9 +111,6 @@
             {
                 return this.NotFound();
             }
-
-            post.CurrentPage = Convert
-                .ToInt32(this.TempData["page"]);
 
             return this.View(post);
         }

@@ -127,6 +127,10 @@ div.content {
     color: #999;
 }
 
+.forum-sub-title {
+    word-wrap: break-word;
+}
+
 .forum-title {
     margin: 15px 0 15px 0;
 }

@@ -1,4 +1,5 @@
-﻿@model ForumSystem.Web.ViewModels.Administration.Categories.CategoryInputModel
+﻿@using ForumSystem.Web.ViewModels.Administration.Categories;
+@model CategoryInputModel
 @{
     this.ViewData["Title"] = "Create Category";
 }
@@ -18,6 +19,13 @@
 
 <form asp-area="Administration" asp-controller="Categories" asp-action="Create" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
+
+    @if (this.TempData.ContainsKey("InvalidMessage"))
+    {
+        <div class="text-danger">
+            @this.TempData["InvalidMessage"]
+        </div>
+    }
 
     <div class="form-check">
         <label asp-for="Name"></label>
@@ -41,7 +49,6 @@
 
     <hr />
     <div class="form-check float-md-right">
-        <input type="submit" value="Submit" class="btn btn-success my-post-btn" /> |
-        <a asp-area="Administration" asp-action="Index" asp-route-id="@this.Model.CurrentPage" class="btn btn-secondary">Back to List</a>
+        <input type="submit" value="Submit" class="btn btn-success my-post-btn" />
     </div>
 </form>

@@ -28,8 +28,17 @@
             this.commentsRepository = commentRepository;
         }
 
-        public async Task AddAsync(CategoryInputModel input)
+        public async Task<bool> CreateAsync(CategoryInputModel input)
         {
+            var isCategoryNameTaken = this.categoriesRepository
+                .All()
+                .Any(x => x.Name == input.Name);
+
+            if (isCategoryNameTaken)
+            {
+                return false;
+            }
+
             var category = new Category
             {
                 Name = input.Name,
@@ -39,6 +48,8 @@
 
             await this.categoriesRepository.AddAsync(category);
             await this.categoriesRepository.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task EditAsync(int id, CategoryInputModel input)
