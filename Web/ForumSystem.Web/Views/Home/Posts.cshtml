@@ -22,19 +22,30 @@
                     </div>
                 </div>
 
-                <div class="ibox-content forum-container">
+                @if (this.Model.PostsCount == 0)
+                {
+                    <div class="ibox-content forum-container">
 
-                    <div class="forum-title">
-                        <h3>Posts: </h3>
+                        <div class="forum-title">
+                            <h3>There are no posts. :( You can be the first one to write one. :)</h3>
+                        </div>
                     </div>
+                }
+                else
+                {
+                    <div class="ibox-content forum-container">
+                        <div class="forum-title">
+                            <h3>Posts: </h3>
+                        </div>
 
-                    @foreach (var post in this.Model.Posts)
-                    {
-                        <partial name="~/Views/PartialViews/_Post.cshtml" model="post" />
-                    }
+                        @foreach (var post in this.Model.Posts)
+                        {
+                            <partial name="~/Views/PartialViews/_Post.cshtml" model="post" />
+                        }
 
-                    <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel" />
-                </div>
+                        <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel" />
+                    </div>
+                }
             </div>
         </div>
     </div>

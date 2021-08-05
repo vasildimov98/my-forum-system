@@ -1,4 +1,5 @@
 ﻿@using ForumSystem.Web.ViewModels.Comments;
+@using static ForumSystem.Common.GlobalConstants;
 @model ForumSystem.Web.ViewModels.Posts.PostViewModel;
 
 @{
@@ -37,27 +38,28 @@
                             </div>
                         </div>
 
-                        <img src="@this.Model.CategoryImageUrl" width="100" class="d-sm-block ui-w-40 rounded-circle mt-4 mb-3">
+                        <img src="@this.Model.CategoryImageUrl" width="100" class="d-sm-block ui-w-40 rounded-circle mt-4 mb-4">
 
-                        <div class="media-body ml-3">
+                        <div class="media-body ml-3 flex">
                             <h3>@this.Model.Title</h3>
                             <a href="@this.Model.PostCreatorHref" class="text-secondary" data-abc="true">Created by @this.Model.UserUserName</a>
                             <div class="text-muted small">@createdDaysAgo</div>
                         </div>
-                        <div class="text-muted small ml-3 p-0">
-                            <div>Member since <strong>@this.Model.UserCreatedOn.Date.ToString("d")</strong></div>
-                            <div class="float-sm-right"><strong>@this.Model.UserPostsCount</strong> posts</div>
-                        </div>
 
-                        <ul class="list-inline mt-5">
-                            <li class="list-inline-item">
-                                <a class="btn btn-success btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="btn btn-danger btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
-                            </li>
-                        </ul>
-
+                        @if (this.Model.IsSignInUserTheOwnerOfThePost
+                          || this.User.IsInRole(AdministratorRoleName))
+                        {
+                            <div class="text-muted small ml-3 p-0">
+                                <ul class="list-inline float-right">
+                                    <li class="list-inline-item">
+                                        <a asp-area="Administration" asp-controller="Posts" asp-action="Edit" asp-route-id="@this.Model.Id" class="btn btn-success btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a asp-area="Administration" asp-controller="Posts" asp-action="Delete" asp-route-id="@this.Model.Id" class="btn btn-danger btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
                     </div>
                 </div>
 

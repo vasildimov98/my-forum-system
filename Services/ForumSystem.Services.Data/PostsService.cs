@@ -39,6 +39,25 @@
             return post.Id;
         }
 
+        public async Task EditAsync(int postId, string title, string content, int categoryId)
+        {
+            var postToEdit = await this.postsRepository
+                .All()
+                .FirstOrDefaultAsync(x => x.Id == postId);
+
+            if (postToEdit == null)
+            {
+                throw new ArgumentNullException(nameof(postToEdit));
+            }
+
+            postToEdit.Title = title;
+            postToEdit.Content = content;
+            postToEdit.CategoryId = categoryId;
+
+            this.postsRepository.Update(postToEdit);
+            await this.postsRepository.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(int postId)
         {
             var post = await this.postsRepository
@@ -61,25 +80,6 @@
 
             this.postsRepository.Delete(post);
 
-            await this.postsRepository.SaveChangesAsync();
-        }
-
-        public async Task EditAsync(int postId, string title, string content, int categoryId)
-        {
-            var postToEdit = await this.postsRepository
-                .All()
-                .FirstOrDefaultAsync(x => x.Id == postId);
-
-            if (postToEdit == null)
-            {
-                throw new ArgumentNullException(nameof(postToEdit));
-            }
-
-            postToEdit.Title = title;
-            postToEdit.Content = content;
-            postToEdit.CategoryId = categoryId;
-
-            this.postsRepository.Update(postToEdit);
             await this.postsRepository.SaveChangesAsync();
         }
 

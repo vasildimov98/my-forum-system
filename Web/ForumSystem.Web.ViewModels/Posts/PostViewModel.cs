@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     using AutoMapper;
@@ -19,8 +18,6 @@
 
         public string Content { get; set; }
 
-        public string VotesCountId => $"votesCount{this.Id}";
-
         public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
 
         public string CategoryName { get; set; }
@@ -31,15 +28,15 @@
 
         public string LoggedInUserName { get; set; }
 
-        public DateTime UserCreatedOn { get; set; }
-
-        public int UserPostsCount { get; set; }
-
         public string CategoryImageUrl { get; set; }
 
         public int VoteTypeCount { get; set; }
 
         public string PostCreatorHref => $"/User/{this.UserUserName}/1";
+
+        public string VotesCountId => $"votesCount{this.Id}";
+
+        public bool IsSignInUserTheOwnerOfThePost { get; set; }
 
         public IEnumerable<PostCommentViewModel> Comments { get; set; }
 

@@ -96,7 +96,7 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction("ById", "Posts", new { editModel.Id, area = string.Empty });
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -134,7 +134,7 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction("Posts", "Home", new { area = string.Empty });
         }
     }
 }

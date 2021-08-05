@@ -74,6 +74,8 @@
                 return this.NotFound();
             }
 
+            post.IsSignInUserTheOwnerOfThePost = user.UserName == post.UserUserName;
+
             foreach (var comment in post.Comments)
             {
                 comment.IsSignInUserTheOwnerOfComment = this.commentsService
