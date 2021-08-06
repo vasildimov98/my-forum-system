@@ -1,6 +1,6 @@
 ﻿namespace ForumSystem.Web.ViewModels.Votes
 {
-    public class VoteInpuModel
+    public class VoteOnCommentInputModel
     {
         public int Id { get; set; }
 

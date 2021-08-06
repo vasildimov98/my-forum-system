@@ -27,7 +27,7 @@
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<VoteResponseModel>> Post(VoteInpuModel input)
+        public async Task<ActionResult<VoteResponseModel>> PostPostVote(VoteOnPostInpuModel input)
         {
             var userId = this.userManager.GetUserId(this.User);
             await this.votesService.VoteAsync(input.Id, userId, input.IsUpVote);
@@ -38,7 +38,7 @@
         [HttpPost]
         [Authorize]
         [Route("comment")]
-        public async Task<ActionResult<VoteResponseModel>> Post(VoteCommentInputModel input)
+        public async Task<ActionResult<VoteResponseModel>> PostCommentVote(VoteOnCommentInputModel input)
         {
             var userId = this.userManager.GetUserId(this.User);
             await this.votesService.VoteCommentAsync(input.Id, userId, input.IsUpVote);

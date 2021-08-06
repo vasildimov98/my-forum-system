@@ -1,0 +1,11 @@
+﻿{
+  "AdminCredentials": {
+    "Username": "VasilDimov98",
+    "Email": "vasil.dimov91@gmail.com",
+    "Password": "123456"
+  },
+  "ConnectionStrings": {
+    "DefaultConnection": "My Fake Connection String"
+  },
+  "AllowedHosts": "*"
+}

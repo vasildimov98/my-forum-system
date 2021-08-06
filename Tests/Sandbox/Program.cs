@@ -14,7 +14,6 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Data.Repositories;
     using ForumSystem.Data.Seeding;
-    using ForumSystem.Services.Data;
     using ForumSystem.Services.Messaging;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -31,12 +30,13 @@
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(true);
 
             // Seed data on application startup
-            using (var serviceScope = serviceProvider.CreateScope())
-            {
-                var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                dbContext.Database.Migrate();
-                new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
-            }
+            //using (var serviceScope = serviceProvider.CreateScope())
+            //{
+            //    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            //    dbContext.Database.Migrate();
+            //    new ApplicationDbContextSeeder()
+            //        .SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
+            //}
 
             using (var serviceScope = serviceProvider.CreateScope())
             {

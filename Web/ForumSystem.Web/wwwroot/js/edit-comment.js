@@ -87,7 +87,7 @@ async function saveEditComment(uniqueTinyMceTextAreaId, commentId, commentConten
     });
 
     let jsonResponse = await fetch("/api/comments/edit", {
-        method: "POST",
+        method: "PUT",
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': token,

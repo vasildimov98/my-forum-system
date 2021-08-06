@@ -1,6 +1,5 @@
 ﻿namespace ForumSystem.Web.Controllers.APIs
 {
-    using System;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
@@ -64,7 +63,7 @@
             return this.Ok(commentViewModel);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize]
         [Route("edit")]
         public async Task<ActionResult> PutCommentAsync(EditCommentJsonModel editedInput)
