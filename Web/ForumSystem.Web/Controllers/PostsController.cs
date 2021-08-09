@@ -38,7 +38,7 @@
             var page = id;
 
             var posts = await this.postsService
-                .GetAllAsync<PostListViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
+                    .GetAllAsync<PostListViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
 
             var count = this.postsService.GetCount();
             var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
@@ -58,7 +58,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Create(string selected = null)
+        public async Task<IActionResult> Create(string selected)
         {
             var categories = await this.categoriesService
                 .GetAllAsync<CategoryDropDownViewModel>();
@@ -76,13 +76,15 @@
         [Authorize]
         public async Task<IActionResult> Create(PostInputModel input)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
+            var userId = this.userManager
+                .GetUserId(this.User);
+
             if (!this.ModelState.IsValid)
             {
                 return this.View(input);
             }
 
-            var id = await this.postsService.CreateAsync(input.Title, input.Content, input.CategoryId, user.Id);
+            var id = await this.postsService.CreateAsync(input.Title, input.Content, input.CategoryId, userId);
 
             return this.RedirectToAction(nameof(this.ById), new { id });
         }
@@ -91,8 +93,8 @@
         public async Task<IActionResult> ById(int id)
         {
             var user = await this.userManager.GetUserAsync(this.User);
-            var post = await this.postsService
-                .GetByIdAsync<ViewModels.Posts.PostViewModel>(id);
+            var post = this.postsService
+                .GetById<PostViewModel>(id);
 
             if (post == null)
             {

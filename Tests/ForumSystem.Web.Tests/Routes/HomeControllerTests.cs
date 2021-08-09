@@ -13,5 +13,12 @@
                     .Configuration()
                     .ShouldMap("/Home/Privacy")
                     .To<HomeController>(c => c.Privacy());
+
+        [Fact]
+        public void GetErrorShouldBeRoutedCorrectly()
+            => MyRouting
+                    .Configuration()
+                    .ShouldMap("/Home/Error")
+                    .To<HomeController>(c => c.Error());
     }
 }

@@ -139,12 +139,12 @@
                 .ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync<T>(int id)
-            => await this.postsRepository
+        public T GetById<T>(int id)
+            => this.postsRepository
                 .All()
                 .Where(x => x.Id == id)
                 .To<T>()
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
         public int GetCount()
             => this.postsRepository

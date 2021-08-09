@@ -8,6 +8,7 @@
     using ForumSystem.Web.ViewModels.Chat;
     using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Posts;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,7 @@
             this.postsService = postsService;
         }
 
+        [Authorize]
         public async Task<IActionResult> All(int id)
         {
             var userId = this.userManager.GetUserId(this.User);
@@ -66,6 +68,7 @@
             return this.View(viewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> ByName(string name, int id)
         {
             var page = id;

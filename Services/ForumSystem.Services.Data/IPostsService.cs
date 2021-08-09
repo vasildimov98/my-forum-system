@@ -17,7 +17,7 @@
 
         public Task<IEnumerable<T>> GetAllByUserIdAsync<T>(string userId, int? take = null, int skip = 0);
 
-        public Task<T> GetByIdAsync<T>(int id);
+        public T GetById<T>(int id);
 
         int GetCount();
     }

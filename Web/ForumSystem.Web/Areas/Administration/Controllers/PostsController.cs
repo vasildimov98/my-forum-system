@@ -55,8 +55,8 @@
 
         public async Task<IActionResult> Edit(int id)
         {
-            var post = await this.postsService
-                .GetByIdAsync<PostEditModel>(id);
+            var post = this.postsService
+                .GetById<PostEditModel>(id);
 
             var categories = await this.categoriesService
                 .GetAllAsync<CategoryDropDownViewModel>();
@@ -97,15 +97,15 @@
             return this.RedirectToAction("ById", "Posts", new { editModel.Id, area = string.Empty });
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return this.NotFound();
             }
 
-            var post = await this.postsService
-                .GetByIdAsync<PostEditModel>(id.Value);
+            var post = this.postsService
+                .GetById<PostEditModel>(id.Value);
 
             if (post == null)
             {

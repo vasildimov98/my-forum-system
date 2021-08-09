@@ -23,7 +23,8 @@
 
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-            var administrator = await userManager.FindByNameAsync("VasilDimov98");
+            var administrator = await userManager
+                .FindByNameAsync("VasilDimov98");
 
             var categories = new List<Category>
             {
