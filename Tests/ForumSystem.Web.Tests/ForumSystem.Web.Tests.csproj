@@ -33,4 +33,10 @@
 	    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
 </ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Data\TestFiles\test-image.jpg">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@
 
         public int NextPage => this.CurrentPage + 1;
 
-        public int PagesCount { get; set; }
+        public int TotalPages { get; set; }
 
         public string RouteName { get; set; }
     }

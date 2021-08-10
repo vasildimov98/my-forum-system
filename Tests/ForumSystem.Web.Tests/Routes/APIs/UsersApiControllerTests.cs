@@ -13,13 +13,14 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap(request => request
-                    .WithMethod(HttpMethod.Post)
+                    .WithMethod(HttpMethod.Put)
                     .WithLocation("/api/users/username")
                     .WithJsonBody(new
                     {
                         username = "Username-test",
                     }))
-                .To<UsersApiController>(c => c.EditUsername(new EditUsernameInputModel
+                .To<UsersApiController>(c => c
+                    .EditUsername(new EditUsernameInputModel
                 {
                     Username = "Username-test",
                 }));

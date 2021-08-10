@@ -52,7 +52,7 @@
             return true;
         }
 
-        public async Task EditAsync(int id, CategoryInputModel input)
+        public async Task EditAsync(int id, CategoryEditModel input)
         {
             var categoryToEdit = this.categoriesRepository
                 .All()

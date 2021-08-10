@@ -17,23 +17,25 @@
                 UserName = TestUser.Username,
             };
 
-            var categories = Enumerable
-                   .Range(1, count)
-                   .Select(i => new Category
-                   {
-                       Id = i,
-                       Name = $"TestedName{i}",
-                       Description = $"TestDescription{i}",
-                       ImageUrl = "TestImageURl",
-                       Owner = user,
-                       Messages = Enumerable
+            var messages = Enumerable
                             .Range(1, 5)
                             .Select(j => new Message
                             {
                                 Id = j,
                                 User = user,
                                 Content = $"TestContent{j}",
-                            }).ToList(),
+                            }).ToList();
+
+            var categories = Enumerable
+                   .Range(1, count)
+                   .Select(i => new Category
+                   {
+                       Id = i,
+                       Name = $"TestName{i}",
+                       Description = $"TestDescription{i}",
+                       ImageUrl = "TestImageURl",
+                       Owner = user,
+                       Messages = messages,
                    }).ToList();
 
             return categories;

@@ -49,7 +49,7 @@ async function editUsername(inputId) {
         .getElementsByName("__RequestVerificationToken")[0].value;
 
     const jsonResponse = await fetch('/api/users/username', {
-        method: 'Post',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': token,

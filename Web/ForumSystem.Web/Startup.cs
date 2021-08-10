@@ -169,6 +169,17 @@
                         endpoints
                           .MapControllerRoute(
                               name: "category-edit-page",
+                              pattern: "Category/Create",
+                              defaults: new
+                              {
+                                  area = "Administration",
+                                  controller = "Categories",
+                                  action = "Create",
+                              });
+
+                        endpoints
+                          .MapControllerRoute(
+                              name: "category-edit-page",
                               pattern: "Category/Edit/{id:min(1)}",
                               defaults: new
                               {

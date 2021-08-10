@@ -1,7 +1,7 @@
 ﻿@using ForumSystem.Web.ViewModels.PartialViews;
 @model PaginationViewModel
 
-@if (this.Model.PagesCount == 1) return;
+@if (this.Model.TotalPages == 1) return;
 
 <nav>
     <ul class="pagination justify-content-center">
@@ -33,7 +33,7 @@
                 pagesToShow.Add(i);
             }
 
-            for (var i = this.Model.PagesCount - MorePagesToShow + 1; i <= this.Model.PagesCount; i++)
+            for (var i = this.Model.TotalPages - MorePagesToShow + 1; i <= this.Model.TotalPages; i++)
             {
                 if (i <= 0)
                 {
@@ -43,7 +43,7 @@
                 pagesToShow.Add(i);
             }
 
-            pagesToShow = pagesToShow.Where(x => x <= this.Model.PagesCount).Distinct().OrderBy(x => x).ToList();
+            pagesToShow = pagesToShow.Where(x => x <= this.Model.TotalPages).Distinct().OrderBy(x => x).ToList();
         }
 
         @for (var i = 0; i < pagesToShow.Count; i++)
@@ -72,7 +72,7 @@
             </li>
         }
 
-        @if (this.Model.CurrentPage < this.Model.PagesCount)
+        @if (this.Model.CurrentPage < this.Model.TotalPages)
         {
             <li class="page-item">
                 <a class="page-link" asp-route="@this.Model.RouteName" asp-route-id="@this.Model.NextPage">

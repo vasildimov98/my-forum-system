@@ -1,7 +1,7 @@
 ﻿namespace ForumSystem.Web.Tests.Routes.Admin
 {
     using ForumSystem.Web.Areas.Administration.Controllers;
-
+    using ForumSystem.Web.ViewModels.Administration.Categories;
     using MyTested.AspNetCore.Mvc;
     using Xunit;
 
@@ -13,6 +13,22 @@
                 .Configuration()
                 .ShouldMap("Administration/Categories/Index")
                 .To<CategoriesController>(c => c.Index(With.Value<int>(1)));
+
+        [Fact]
+        public void GetCreateShouldBeRoutedCorrectly()
+           => MyRouting
+               .Configuration()
+               .ShouldMap("Category/Create")
+               .To<CategoriesController>(c => c
+                            .Create());
+
+        [Fact]
+        public void PostCreateShouldBeRoutedCorrectly()
+         => MyRouting
+             .Configuration()
+             .ShouldMap("Category/Create")
+             .To<CategoriesController>(c => c
+                            .Create(With.Any<CategoryInputModel>()));
 
         [Fact]
         public void GetEditShouldBeRoutedCorrectly()

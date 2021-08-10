@@ -24,7 +24,7 @@
         }
 
         [Authorize(Roles = AdministratorRoleName)]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id = 1)
         {
             var page = Math.Max(1, id);
 
@@ -41,7 +41,7 @@
                 PaginationModel = new PaginationViewModel
                 {
                     CurrentPage = page,
-                    PagesCount = pagesCount,
+                    TotalPages = pagesCount,
                     RouteName = "areaRoute",
                 },
             };
@@ -62,12 +62,12 @@
                 return this.View();
             }
 
-            var isCategoryCreated = await this.categorieService
+            var isCategoryNameTaken = await this.categorieService
                 .CreateAsync(input);
 
-            if (!isCategoryCreated)
+            if (!isCategoryNameTaken)
             {
-                this.TempData["InvalidMessage"] = "Category name is taken, please try another one.";
+                this.TempData[InvalidMessageKey] = "Category name is taken, please try another one.";
                 return this.View();
             }
 
@@ -91,7 +91,7 @@
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CategoryInputModel input)
+        public async Task<IActionResult> Edit(int id, CategoryEditModel input)
         {
             if (!this.ModelState.IsValid)
             {

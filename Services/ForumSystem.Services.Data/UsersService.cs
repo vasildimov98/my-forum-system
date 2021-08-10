@@ -39,10 +39,10 @@
                     " Max Length: 20");
             }
 
-            var userWithSameuserName = await this.userManager.Users
+            var userWithSameuserName = this.userManager.Users
                 .Where(x => x.UserName == username
                     && x.Id != user.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if (userWithSameuserName != null)
             {
@@ -107,7 +107,7 @@
 
             var physicalPath = Path.Combine(path, filePathName);
 
-            using var fs = new FileStream(physicalPath, FileMode.Create);
+            using var fs = new FileStream(physicalPath, FileMode.OpenOrCreate);
 
             await image.CopyToAsync(fs);
             await fs.FlushAsync();

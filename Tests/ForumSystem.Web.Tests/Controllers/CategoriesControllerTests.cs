@@ -29,7 +29,7 @@
                     {
                         categoriesViewModel.Categories.Count().ShouldBe(10);
                         categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(1);
-                        categoriesViewModel.PaginationModel.PagesCount.ShouldBe(2);
+                        categoriesViewModel.PaginationModel.TotalPages.ShouldBe(2);
                     }));
     }
 }

@@ -31,7 +31,7 @@
             this.userManager = userManager;
         }
 
-        [HttpPost]
+        [HttpPut]
         [Authorize]
         [Route("username")]
         public async Task<ActionResult<EditResponseModel>> EditUsername(EditUsernameInputModel input)
@@ -41,7 +41,8 @@
 
             try
             {
-                username = await this.usersService.ChangeUsername(input.Username, user);
+                username = await this.usersService
+                    .ChangeUsername(input.Username, user);
             }
             catch (InvalidOperationException ioe)
             {
@@ -72,7 +73,9 @@
 
                 Directory.CreateDirectory(filePath);
 
-                imagePath = await this.usersService.UploadProfileImage(image, userId, filePath);
+                imagePath = await this
+                    .usersService
+                    .UploadProfileImage(image, userId, filePath);
             }
             catch (InvalidOperationException ioe)
             {

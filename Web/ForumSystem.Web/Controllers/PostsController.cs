@@ -49,7 +49,7 @@
                 PaginationModel = new PaginationViewModel
                 {
                     CurrentPage = page,
-                    PagesCount = pagesCount,
+                    TotalPages = pagesCount,
                     RouteName = "default",
                 },
             };

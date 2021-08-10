@@ -9,7 +9,7 @@
     {
         public Task<bool> CreateAsync(CategoryInputModel input);
 
-        public Task EditAsync(int id, CategoryInputModel input);
+        public Task EditAsync(int id, CategoryEditModel input);
 
         public Task DeleteAsync(int id);
 

@@ -1,10 +1,12 @@
 ﻿namespace ForumSystem.Web.Tests.Controllers
 {
+    using System.Linq;
+
     using ForumSystem.Web.Controllers;
     using ForumSystem.Web.ViewModels.Chat;
+
     using MyTested.AspNetCore.Mvc;
     using Shouldly;
-    using System.Linq;
     using Xunit;
 
     using static ForumSystem.Web.Tests.Data.CategoiresTestData;
@@ -16,7 +18,7 @@
             => MyController<ChatsController>
                 .Instance(instance => instance
                     .WithData(GetCategories(1)))
-                .Calling(c => c.LiveChat("TestedName1"))
+                .Calling(c => c.LiveChat("TestName1"))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
