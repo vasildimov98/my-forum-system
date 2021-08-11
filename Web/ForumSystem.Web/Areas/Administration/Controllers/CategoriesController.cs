@@ -91,17 +91,17 @@
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, CategoryEditModel input)
+        public async Task<IActionResult> Edit(CategoryEditModel input)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.RedirectToAction(nameof(this.Edit), new { id });
+                return this.View(input.Id);
             }
 
             try
             {
                 await this.categorieService
-                    .EditAsync(id, input);
+                    .EditAsync(input.Id, input);
             }
             catch
             {
@@ -137,7 +137,8 @@
         {
             try
             {
-                await this.categorieService.DeleteAsync(id);
+                await this.categorieService
+                    .DeleteAsync(id);
             }
             catch
             {

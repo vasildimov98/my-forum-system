@@ -76,13 +76,13 @@
         [Authorize]
         public async Task<IActionResult> Create(PostInputModel input)
         {
-            var userId = this.userManager
-                .GetUserId(this.User);
-
             if (!this.ModelState.IsValid)
             {
                 return this.View(input);
             }
+
+            var userId = this.userManager
+                .GetUserId(this.User);
 
             var id = await this.postsService.CreateAsync(input.Title, input.Content, input.CategoryId, userId);
 

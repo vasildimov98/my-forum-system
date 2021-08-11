@@ -13,13 +13,16 @@
 
     public class CommentsApiControllerTests
     {
-        [Fact]
-        public void GetCommentsContentShouldBeAuthorizeAndItShouldReturnCorrectResult()
+        [Theory]
+        [InlineData(2, "TestContent2")]
+        public void GetCommentsContentShouldBeAuthorizeAndItShouldReturnCorrectResult(
+            int commentId,
+            string content)
             => MyController<CommentsApiController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetComments(2)))
-                .Calling(c => c.GetCommentContent(2))
+                    .WithData(GetComments(commentId)))
+                .Calling(c => c.GetCommentContent(commentId))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -27,7 +30,24 @@
                 .ShouldReturn()
                 .Ok(ok => ok
                     .WithModelOfType<string>()
-                    .Passing(text => text.ShouldBe("TestContent2")));
+                    .Passing(text => text.ShouldBe(content)));
+
+        [Theory]
+        [InlineData(1, 2)]
+        public void GetCommentsContentShouldBeAuthorizeAndReturnNotFoundIfThereIsNoSuchComment(
+            int commentId,
+            int invalidCommentId)
+            => MyController<CommentsApiController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetComments(commentId)))
+                .Calling(c => c.GetCommentContent(invalidCommentId))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .NotFound();
 
         [Theory]
         [InlineData(1, "<p>EditedContent<p>")]
@@ -38,7 +58,7 @@
             => MyController<CommentsApiController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetComments(2)))
+                    .WithData(GetComments(commentId)))
                 .Calling(c => c.PutCommentAsync(new EditCommentJsonModel
                 {
                     CommentId = commentId,
@@ -70,7 +90,7 @@
            => MyController<CommentsApiController>
                .Instance(instance => instance
                    .WithUser()
-                   .WithData(GetComments(2)))
+                   .WithData(GetComments(commentId)))
                .Calling(c => c.PutCommentAsync(new EditCommentJsonModel
                {
                    CommentId = commentId,
@@ -94,6 +114,34 @@
                    }));
 
         [Theory]
+        [InlineData(0, 1, "<script>alert(EditedContent)</script>")]
+        [InlineData(2, 3, "<script>EditedContent</script>")]
+        public void PutCommentsShouldBeAuthorizeAndItShouldReturnNotFoundIfThereIsNoSuchComment(
+          int commentId,
+          int invalidCommentId,
+          string editContent)
+          => MyController<CommentsApiController>
+              .Instance(instance => instance
+                  .WithUser()
+                  .WithData(GetComments(commentId)))
+              .Calling(c => c.PutCommentAsync(new EditCommentJsonModel
+              {
+                  CommentId = invalidCommentId,
+                  EditContent = editContent,
+              }))
+              .ShouldHave()
+              .ActionAttributes(attrs => attrs
+                  .RestrictingForAuthorizedRequests()
+                  .RestrictingForHttpMethod(HttpMethod.Put))
+              .Data(data => data
+                   .WithSet<Comment>(comment => !comment
+                       .Any(c => c.Id == commentId &&
+                           c.Content == editContent)))
+              .AndAlso()
+              .ShouldReturn()
+              .NotFound();
+
+        [Theory]
         [InlineData(1)]
         [InlineData(2)]
         public void DeleteCommentsShouldBeAuthorizeAndItShouldReturnCorrectResult(
@@ -102,14 +150,14 @@
                .Instance(instance => instance
                    .WithUser()
                    .WithData(GetComments(2)))
-               .Calling(c => c.DeleteCommentAsync(new DeleteCommentRequestModel
+               .Calling(c => c.DeleteCommentAsync(new DeleteCommentJsonModel
                {
                    CommentId = commentId,
                }))
                .ShouldHave()
                .ActionAttributes(attrs => attrs
-                   .RestrictingForAuthorizedRequests()
-                   .RestrictingForHttpMethod(HttpMethod.Delete))
+                   .RestrictingForHttpMethod(HttpMethod.Delete)
+                   .RestrictingForAuthorizedRequests())
                .Data(data => data
                     .WithSet<Comment>(comment => comment
                         .Any(c => !(c.Id == commentId))))
@@ -121,5 +169,32 @@
                    {
                        text.ShouldBe("Delete is successfull");
                    }));
+
+        [Theory]
+        [InlineData(1, 2, "TestContent1")]
+        [InlineData(2, 3, "TestContent2")]
+        public void DeleteCommentsShouldBeAuthorizeAndItShouldReturnNotFoundIfThereIsNoSuchComment(
+          int commentId,
+          int invalidCommentId,
+          string content)
+          => MyController<CommentsApiController>
+              .Instance(instance => instance
+                  .WithUser()
+                  .WithData(GetComments(commentId)))
+              .Calling(c => c.DeleteCommentAsync(new DeleteCommentJsonModel
+              {
+                  CommentId = invalidCommentId,
+              }))
+              .ShouldHave()
+              .ActionAttributes(attrs => attrs
+                  .RestrictingForHttpMethod(HttpMethod.Delete)
+                  .RestrictingForAuthorizedRequests())
+              .Data(data => data
+                   .WithSet<Comment>(comment => comment
+                       .Any(c => c.Id == commentId &&
+                           c.Content == content)))
+              .AndAlso()
+              .ShouldReturn()
+              .NotFound();
     }
 }

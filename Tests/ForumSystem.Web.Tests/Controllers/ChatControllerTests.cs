@@ -13,12 +13,15 @@
 
     public class ChatControllerTests
     {
-        [Fact]
-        public void GetLiveChatShouldBeOnluForAuthorizeUserAndReturnCorrectMessageViewModel()
+        [Theory]
+        [InlineData("TestName1", 5)]
+        public void GetLiveChatShouldBeOnlyForAuthorizeUserAndReturnCorrectMessageViewModel(
+            string categoryName,
+            int count)
             => MyController<ChatsController>
                 .Instance(instance => instance
                     .WithData(GetCategories(1)))
-                .Calling(c => c.LiveChat("TestName1"))
+                .Calling(c => c.LiveChat(categoryName))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -30,7 +33,22 @@
                     {
                         liveChatViewModel.Messages
                         .Count()
-                        .ShouldBe(5);
+                        .ShouldBe(count);
                     }));
+
+        [Theory]
+        [InlineData("InvalidTestName")]
+        public void GetLiveChatShouldReturnNotFoundIfThereIsNoSuchCatetegory(
+            string invalidName)
+            => MyController<ChatsController>
+                .Instance(instance => instance
+                    .WithData(GetCategories(1)))
+                .Calling(c => c.LiveChat(invalidName))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .NotFound();
     }
 }

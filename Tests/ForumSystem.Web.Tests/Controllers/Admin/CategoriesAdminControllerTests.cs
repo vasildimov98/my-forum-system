@@ -84,6 +84,7 @@
                         .Any(c => c.Name == name &&
                                   c.Description == description &&
                                   c.ImageUrl == imageUrl)))
+                .ValidModelState()
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
@@ -172,7 +173,7 @@
                     .WithUser()
                     .WithData(GetCategories(categoryId)))
                 .Calling(c => c
-                    .Edit(categoryId, new CategoryEditModel
+                    .Edit(new CategoryEditModel
                     {
                         Id = categoryId,
                         Name = editName,
@@ -181,6 +182,7 @@
                     }))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
+                    .RestrictingForHttpMethod(HttpMethod.Post)
                     .RestrictingForAuthorizedRequests())
                 .Data(data => data
                     .WithSet<Category>(categories => categories
@@ -188,9 +190,154 @@
                                   c.Name == editName &&
                                   c.Description == editDescription &&
                                   c.ImageUrl == editImageUrl)))
+                .ValidModelState()
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
                     .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByName(editName, categoryId)));
+
+        [Theory]
+        [InlineData(1, "EditName", "EditDesctiption", "EditImage.jpg")]
+        public void PostEditShouldBeOnlyForAuthorizeUsersAndShouldReturnNotFountIfDoesntExists(
+           int categoryId,
+           string editName,
+           string editDescription,
+           string editImageUrl)
+           => MyController<CategoriesController>
+               .Instance()
+               .Calling(c => c
+                    .Edit(new CategoryEditModel
+                    {
+                        Id = categoryId,
+                        Name = editName,
+                        Description = editDescription,
+                        ImageUrl = editImageUrl,
+                    }))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForHttpMethod(HttpMethod.Post)
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .NotFound();
+
+        [Theory]
+        [InlineData(1, "editName", "EditDesctiption", "EditImage.jpg")]
+        public void PostEditShouldReturnToSameViewIfStateOfNameNotValid(
+           int categoryId,
+           string invalidName,
+           string editDescription,
+           string editImageUrl)
+           => MyController<CategoriesController>
+               .Instance()
+               .Calling(c => c
+                    .Edit(new CategoryEditModel
+                    {
+                        Id = categoryId,
+                        Name = invalidName,
+                        Description = editDescription,
+                        ImageUrl = editImageUrl,
+                    }))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForHttpMethod(HttpMethod.Post)
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .View(view => view
+                    .WithModelOfType<int>()
+                    .Passing(id => id.ShouldBe(categoryId)));
+
+        [Theory]
+        [InlineData(1, "TestName1", "TestDescription1")]
+        public void GetDeleteShouldReturnCorrectViewIfIdIsCorrect(
+            int categoryId,
+            string name,
+            string description)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetCategories(categoryId)))
+                .Calling(c => c.Delete(categoryId))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .View(view => view
+                    .WithModelOfType<CategoryEditModel>()
+                    .Passing(model =>
+                    {
+                        model.Name.ShouldBe(name);
+                        model.Description.ShouldBe(description);
+                    }));
+
+        [Theory]
+        [InlineData(null)]
+        public void GetDeleteShouldReturnNotFoundIfIdIsNull(
+            int? categoryId)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetCategories(1)))
+                .Calling(c => c.Delete(categoryId))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .NotFound();
+
+        [Theory]
+        [InlineData(1)]
+        public void GetDeleteShouldReturnNotFoundIfCategoryDoesntExits(
+            int categoryId)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser())
+                .Calling(c => c.Delete(categoryId))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .NotFound();
+
+        [Theory]
+        [InlineData(1, 1)]
+        public void PostDeleteShouldRedirectIfSuccessfullyDeletesCategory(
+            int categoryId,
+            int page)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetCategories(categoryId)))
+                .Calling(c => c.DeleteConfirmed(categoryId))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForHttpMethod(HttpMethod.Post)
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(redirect => redirect
+                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.All(page)));
+
+        [Theory]
+        [InlineData(1, 2)]
+        public void PostDeleteShouldReturnNotFoundIfCategoryDoesntExists(
+            int categoryId,
+            int invalidCategoryId)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetCategories(categoryId)))
+                .Calling(c => c.DeleteConfirmed(invalidCategoryId))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForHttpMethod(HttpMethod.Post)
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .NotFound();
     }
 }

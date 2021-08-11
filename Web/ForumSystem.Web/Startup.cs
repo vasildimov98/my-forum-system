@@ -168,8 +168,8 @@
 
                         endpoints
                           .MapControllerRoute(
-                              name: "category-edit-page",
-                              pattern: "Category/Create",
+                              name: "category-create-page",
+                              pattern: "Category/Create/{id?}",
                               defaults: new
                               {
                                   area = "Administration",

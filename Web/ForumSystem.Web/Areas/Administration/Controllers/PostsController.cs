@@ -53,31 +53,33 @@
             return this.View(viewModel);
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var post = this.postsService
                 .GetById<PostEditModel>(id);
-
-            var categories = await this.categoriesService
-                .GetAllAsync<CategoryDropDownViewModel>();
-
-            post.Categories = categories;
 
             if (post == null)
             {
                 return this.NotFound();
             }
 
+            var categories = await this.categoriesService
+                .GetAllAsync<CategoryDropDownViewModel>();
+
+            post.Categories = categories;
+
+
             return this.View(post);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(PostEditModel editModel)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.RedirectToAction(nameof(this.Edit), new { editModel.Id });
+                return this.View(editModel.Id);
             }
 
             try
@@ -97,6 +99,7 @@
             return this.RedirectToAction("ById", "Posts", new { editModel.Id, area = string.Empty });
         }
 
+        [Authorize]
         public IActionResult Delete(int? id)
         {
             if (id == null)
@@ -117,7 +120,7 @@
 
         [HttpPost]
         [ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
@@ -129,7 +132,7 @@
                 return this.NotFound();
             }
 
-            return this.RedirectToAction("All", "Posts", new { area = string.Empty });
+            return this.RedirectToAction("All", "Posts", new { area = string.Empty, id = 1 });
         }
     }
 }

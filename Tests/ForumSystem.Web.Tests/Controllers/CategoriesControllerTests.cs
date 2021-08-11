@@ -12,12 +12,16 @@
 
     public class CategoriesControllerTests
     {
-        [Fact]
-        public void GetAllShouldReturnCorrectViewModel()
+        [Theory]
+        [InlineData(10, 1, 2)]
+        public void GetAllShouldReturnCorrectViewModel(
+            int categoriesCount,
+            int page,
+            int totalPages)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(20)))
-                .Calling(c => c.All(1))
+                    .WithData(GetCategories(12)))
+                .Calling(c => c.All(page))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
                     .RestrictingForAuthorizedRequests())
@@ -27,9 +31,9 @@
                     .WithModelOfType<CategoryViewModelList>()
                     .Passing(categoriesViewModel =>
                     {
-                        categoriesViewModel.Categories.Count().ShouldBe(10);
-                        categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(1);
-                        categoriesViewModel.PaginationModel.TotalPages.ShouldBe(2);
+                        categoriesViewModel.Categories.Count().ShouldBe(categoriesCount);
+                        categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(page);
+                        categoriesViewModel.PaginationModel.TotalPages.ShouldBe(totalPages);
                     }));
     }
 }

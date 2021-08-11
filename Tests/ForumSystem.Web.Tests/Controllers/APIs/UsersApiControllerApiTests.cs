@@ -10,6 +10,7 @@
     using Shouldly;
     using Xunit;
 
+    using static ForumSystem.Common.GlobalConstants;
     using static ForumSystem.Web.Tests.Data.FilesTestData;
     using static ForumSystem.Web.Tests.Data.UsersTestData;
 
@@ -123,6 +124,50 @@
                 .AndAlso()
                 .ShouldReturn()
                 .BadRequest(badRequest => badRequest
-                    .WithErrorMessage());
+                    .WithErrorMessage("File is missing or its too big! Allowed length is 10MB"));
+
+        [Theory]
+        [InlineData(".jpg")]
+        public void PostUploadImageShouldBeAuthorizeAndShouldReturnBadRequestIfFileLengthIsTooLong(
+           string extention)
+           => MyController<UsersApiController>
+               .Instance(instance => instance
+                   .WithData(GetUsers(1))
+                   .WithUser())
+               .Calling(c => c
+                   .UploadImage(GetToLongFile()))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForHttpMethod(HttpMethod.Post)
+                   .RestrictingForAuthorizedRequests())
+               .Data(data => data
+                   .WithSet<ProfileImage>(profileImage => !profileImage
+                       .Any(img => img.Extention == extention)))
+               .AndAlso()
+               .ShouldReturn()
+               .BadRequest(badRequest => badRequest
+                   .WithErrorMessage(InvalidFileImageLength));
+
+        [Theory]
+        [InlineData(".tif")]
+        public void PostUploadImageShouldBeAuthorizeAndShouldReturnBadRequestIfFileExtentionIsInvalid(
+           string invalidExtention)
+           => MyController<UsersApiController>
+               .Instance(instance => instance
+                   .WithData(GetUsers(1))
+                   .WithUser())
+               .Calling(c => c
+                   .UploadImage(GetFileWithInvalidExtention()))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForHttpMethod(HttpMethod.Post)
+                   .RestrictingForAuthorizedRequests())
+               .Data(data => data
+                   .WithSet<ProfileImage>(profileImage => !profileImage
+                       .Any(img => img.Extention == invalidExtention)))
+               .AndAlso()
+               .ShouldReturn()
+               .BadRequest(badRequest => badRequest
+                   .WithErrorMessage(InvalidFileImageExtention));
     }
 }

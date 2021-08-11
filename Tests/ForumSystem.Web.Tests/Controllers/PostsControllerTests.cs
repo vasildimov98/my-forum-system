@@ -44,8 +44,8 @@
                 .Calling(c => c.Create(new PostInputModel
                 {
                     Title = title,
-                    CategoryId = categoryId,
                     Content = content,
+                    CategoryId = categoryId,
                 }))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
@@ -62,5 +62,42 @@
                 .ShouldReturn()
                 .Redirect(redirect => redirect
                     .To<PostsController>(c => c.ById(With.Any<int>())));
+
+        [Theory]
+        [InlineData("Test", "Test", 1)]
+        public void PostCreateShouldReturnTheSameViewIfModelStateIsIncorrect(
+            string title,
+            string invalidContent,
+            int categoryId)
+            => MyController<PostsController>
+                .Instance(instance => instance
+                    .WithUser())
+                .Calling(c => c.Create(new PostInputModel
+                {
+                    Title = title,
+                    Content = invalidContent,
+                    CategoryId = categoryId,
+                }))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests()
+                    .RestrictingForHttpMethod(HttpMethod.Post))
+                .InvalidModelState()
+                .Data(data => data
+                    .WithSet<Post>(posts => !posts
+                        .Any(p =>
+                             p.Title == title &&
+                             p.CategoryId == categoryId &&
+                             p.Content == invalidContent)))
+                .AndAlso()
+                .ShouldReturn()
+                .View(view => view
+                    .WithModelOfType<PostInputModel>()
+                    .Passing(model =>
+                    {
+                        model.Title.ShouldBe(title);
+                        model.Content.ShouldBe(invalidContent);
+                        model.CategoryId.ShouldBe(categoryId);
+                    }));
     }
 }

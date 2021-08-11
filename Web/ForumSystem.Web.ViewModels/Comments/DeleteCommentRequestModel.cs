@@ -1,6 +1,6 @@
 ﻿namespace ForumSystem.Web.ViewModels.Comments
 {
-    public class DeleteCommentRequestModel
+    public class DeleteCommentJsonModel
     {
         public int CommentId { get; set; }
     }

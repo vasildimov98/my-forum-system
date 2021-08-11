@@ -64,7 +64,7 @@
                     {
                         commentId = 1,
                     }))
-                .To<CommentsApiController>(c => c.DeleteCommentAsync(new DeleteCommentRequestModel
+                .To<CommentsApiController>(c => c.DeleteCommentAsync(new DeleteCommentJsonModel
                 {
                     CommentId = 1,
                 }));

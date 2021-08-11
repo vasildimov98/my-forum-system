@@ -24,6 +24,10 @@
                         Id = i,
                         Title = $"TestTitle{i}",
                         Content = $"TestContent{i}",
+                        Category = new Category
+                        {
+                            Id = i,
+                        },
                     }).ToList();
 
             return posts;

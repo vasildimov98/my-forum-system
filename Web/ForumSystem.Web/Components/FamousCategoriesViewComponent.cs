@@ -10,6 +10,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Caching.Memory;
 
+    using static ForumSystem.Common.GlobalConstants;
+
     public class FamousCategoriesViewComponent : ViewComponent
     {
         private readonly ICategoriesService categoriesService;
@@ -25,10 +27,8 @@
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            const string famousCategoriesKey = "famousCategories";
-
             var famousCategories = this.cache
-                .Get<IEnumerable<FamousCategoryViewModel>>(famousCategoriesKey);
+                .Get<IEnumerable<FamousCategoryViewModel>>(FamousCategoriesKey);
 
             if (famousCategories == null)
             {
@@ -39,7 +39,7 @@
                     .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
 
                 this.cache
-                    .Set(famousCategoriesKey, famousCategories, options);
+                    .Set(FamousCategoriesKey, famousCategories, options);
             }
 
             var viewModel = new FamousCategoriesListModel

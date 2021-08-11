@@ -77,14 +77,14 @@
             }
             catch
             {
-                return this.BadRequest();
+                return this.NotFound();
             }
         }
 
         [HttpDelete]
         [Authorize]
         [Route("delete")]
-        public async Task<ActionResult> DeleteCommentAsync(DeleteCommentRequestModel requestModel)
+        public async Task<ActionResult> DeleteCommentAsync(DeleteCommentJsonModel requestModel)
         {
             try
             {
@@ -95,7 +95,7 @@
             }
             catch
             {
-                return this.BadRequest();
+                return this.NotFound();
             }
         }
     }

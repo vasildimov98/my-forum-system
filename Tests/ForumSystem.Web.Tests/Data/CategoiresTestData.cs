@@ -40,5 +40,32 @@
 
             return categories;
         }
+
+        public static List<Category> GetFamousCategories(int count = 10)
+        {
+            var categories = Enumerable
+                .Range(1, count)
+                .Select(index =>
+                {
+                    var posts = new List<Post>();
+
+                    for (int i = count; i < index; i++)
+                    {
+                        posts.Add(new Post { Id = (i + index) * index });
+                    }
+
+                    var category = new Category
+                    {
+                        Id = index,
+                        Name = $"TestName{index}",
+                        ImageUrl = $"TestImage{index}",
+                        Posts = posts,
+                    };
+
+                    return category;
+                }).ToList();
+
+            return categories;
+        }
     }
 }

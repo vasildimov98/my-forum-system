@@ -15,6 +15,9 @@
 
     public class UsersService : IUsersService
     {
+        public const string InvalidFileImageLength = "File is missing or its too big! Allowed length is 10MB";
+        public const string InvalidFileImageExtention = "Invalid file extention. Only png, jpeg, jpg are allowed";
+
         private readonly string[] validExtention = new[] { ".png", ".jpeg", ".jpg" };
         private readonly Regex usernameRegex = new("^(?=.{7,20}$)[a-zA-Z0-9]+$");
 
@@ -61,7 +64,7 @@
             if (image == null
                 || image.Length > 10 * 1024 * 1024)
             {
-                throw new InvalidOperationException("File is missing or its too big! Allowed length is 10MB");
+                throw new InvalidOperationException(InvalidFileImageLength);
             }
 
             var fileName = image.FileName;
@@ -69,7 +72,7 @@
 
             if (!this.validExtention.Contains(fileExtension))
             {
-                throw new InvalidOperationException("Invalid file extention. Only png, jpeg, jpg are allowed");
+                throw new InvalidOperationException(InvalidFileImageExtention);
             }
 
             var user = await this.userManager.Users
