@@ -58,6 +58,33 @@
         }
 
         [Authorize]
+        public async Task<IActionResult> ById(int id)
+        {
+            var user = await this.userManager.GetUserAsync(this.User);
+            var post = this.postsService
+                .GetById<PostViewModel>(id);
+
+            if (post == null)
+            {
+                return this.NotFound();
+            }
+
+            post.IsSignInUserTheOwnerOfThePost = user.UserName == post.UserUserName;
+
+            foreach (var comment in post.Comments)
+            {
+                comment.IsSignInUserTheOwnerOfComment = this.commentsService
+                    .IsSignInUserTheOwenerOfComment(comment.Id, user.Id);
+            }
+
+            post.Comments = post.Comments;
+
+            post.LoggedInUserName = user.UserName;
+
+            return this.View(post);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Create(string selected)
         {
             var categories = await this.categoriesService
@@ -90,30 +117,85 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> ById(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var user = await this.userManager.GetUserAsync(this.User);
             var post = this.postsService
-                .GetById<PostViewModel>(id);
+                .GetById<PostEditModel>(id);
 
             if (post == null)
             {
                 return this.NotFound();
             }
 
-            post.IsSignInUserTheOwnerOfThePost = user.UserName == post.UserUserName;
+            var categories = await this.categoriesService
+                .GetAllAsync<CategoryDropDownViewModel>();
 
-            foreach (var comment in post.Comments)
-            {
-                comment.IsSignInUserTheOwnerOfComment = this.commentsService
-                    .IsSignInUserTheOwenerOfComment(comment.Id, user.Id);
-            }
+            post.Categories = categories;
 
-            post.Comments = post.Comments;
-
-            post.LoggedInUserName = user.UserName;
 
             return this.View(post);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(PostEditModel editModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(editModel.Id);
+            }
+
+            try
+            {
+                await this.postsService
+                .EditAsync(
+                    editModel.Id,
+                    editModel.Title,
+                    editModel.Content,
+                    editModel.CategoryId);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("ById", "Posts", new { editModel.Id, area = string.Empty });
+        }
+
+        [Authorize]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var post = this.postsService
+                .GetById<PostEditModel>(id.Value);
+
+            if (post == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(post);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [Authorize]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                await this.postsService.DeleteAsync(id);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("All", "Posts", new { area = string.Empty, id = 1 });
         }
     }
 }

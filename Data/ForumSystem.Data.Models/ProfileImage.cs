@@ -14,9 +14,9 @@
 
         public string Extention { get; set; }
 
-        [ForeignKey(nameof(User))]
         public string UserId { get; set; }
 
+        [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; }
     }
 }

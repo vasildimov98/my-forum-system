@@ -1,0 +1,43 @@
+﻿@using ForumSystem.Web.ViewModels.Posts;
+
+@model PostEditModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="ibox-content m-b-sm border-bottom">
+    <div class="p-xs">
+        <h1>Delete</h1>
+
+        <h2 class="text-danger">Are you sure you want to delete this post?</h2>
+        <h2 class="text-danger">All post's comments will be deleted also!</h2>
+    </div>
+</div>
+
+<div class="container card border">
+    <h3><strong>Title:</strong> @this.Model.Title</h3>
+    <h3><strong>Number of Comments:</strong> @this.Model.CommentsCount</h3>
+    <span><strong>Category:</strong> @this.Model.CategoryName</span>
+    <hr />
+    <div class="row">
+        <div class="col-sm-5">
+            <img src="@this.Model.CategoryImageUrl" width="340" />
+        </div>
+        <div class="col-sm-7">
+            <div class="wrap-word-content">
+                @Html.Raw(this.Model.Content)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="Delete" class="float-md-right p-2">
+                <input type="hidden" asp-for="Id" />
+                <input type="submit" value="Delete" class="btn btn-danger" /> |
+                <a asp-controller="Posts" asp-action="ById" asp-route-id="@this.Model.Id" class="btn btn-secondary">Go to Post</a>
+            </form>
+        </div>
+    </div>
+</div>

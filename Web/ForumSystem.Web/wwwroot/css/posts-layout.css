@@ -1,4 +1,8 @@
-﻿#btn-back-to-top {
+﻿.wrap-word-content {
+    word-break: break-word;
+}
+
+#btn-back-to-top {
     position: fixed;
     bottom: 76px;
     right: 20px;

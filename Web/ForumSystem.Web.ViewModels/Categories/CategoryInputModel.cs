@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Administration.Categories
+﻿namespace ForumSystem.Web.ViewModels.Categories
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -6,7 +6,7 @@
     {
         [Required]
         [MinLength(3)]
-        [MaxLength(35)]
+        [MaxLength(40)]
         [RegularExpression(
             @"[A-Z](.*){2,}",
             ErrorMessage = "Name should start with upper case letter!")]

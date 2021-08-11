@@ -1,16 +1,19 @@
-﻿@using ForumSystem.Web.ViewModels.Administration.Categories;
-@model CategoryCrudModelList
+﻿@using ForumSystem.Web.ViewModels.Administration.Posts;
+@model PostCrudModelList
 @{
     var count = (this.Model.PaginationModel.CurrentPage - 1) * 5 + 1;
-    this.ViewData["Title"] = "Admin Categories";
+    this.ViewData["Title"] = "Admin Posts";
 }
 
 <section class="pb-5 header text-center">
-    <div class="container py-5">
-        <header class="py-5">
-            <h1>@this.ViewData["Title"]</h1>
-            <a class="btn btn-primary" asp-area="Administration" asp-controller="Categories" asp-action="Create">Create Category</a>
-        </header>
+    <div class="container">
+        <div class="ibox-content m-b-sm border-bottom">
+            <div class="p-xs">
+                <h1>@this.ViewData["Title"]</h1>
+                <a class="btn btn-primary" asp-area="" asp-controller="Posts" asp-action="Create">Create Post</a>
+            </div>
+        </div>
+
         <div class="row text-center">
             <div class="col-md-12 mx-auto">
                 <div class="card border-0 shadow text-center">
@@ -21,28 +24,28 @@
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Name</th>
+                                        <th scope="col">Category Image</th>
+                                        <th scope="col">Title</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var category in this.Model.Categories)
+                                    @foreach (var post in this.Model.Posts)
                                     {
                                         <tr>
                                             <th scope="row">@(count++)</th>
                                             <td>
-                                                <img class="img-responsive pull-left" src="@category.ImageUrl" width="100" />
+                                                <img class="img-responsive pull-left" src="@post.CategoryImageUrl" width="100" />
                                             </td>
-                                            <td class="d-flex text-center justify-content-center">@category.Name</td>
+                                            <td class="d-flex text-center justify-content-center">@post.EditTitle</td>
                                             <td>
                                                 <!-- Call to action buttons -->
                                                 <ul class="list-inline m-0">
                                                     <li class="list-inline-item">
-                                                        <a asp-area="Administration" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
+                                                        <a asp-area="" asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" class="btn btn-success btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
                                                     </li>
                                                     <li class="list-inline-item">
-                                                        <a asp-area="Administration" asp-controller="Categories" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                                                        <a asp-area="" asp-controller="Posts" asp-action="Delete" asp-route-id="@post.Id" class="btn btn-danger btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
                                                     </li>
                                                 </ul>
                                             </td>

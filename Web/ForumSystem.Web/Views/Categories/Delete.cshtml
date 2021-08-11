@@ -1,4 +1,4 @@
-﻿@using ForumSystem.Web.ViewModels.Administration.Categories;
+﻿@using ForumSystem.Web.ViewModels.Categories;
 @model CategoryEditModel
 @{
     ViewData["Title"] = "Delete";
@@ -15,13 +15,16 @@
         <div class="col-sm-5">
             <img src="@this.Model.ImageUrl" width="340" />
         </div>
-        <div class="col-sm-7" style="word-wrap: break-word;">
-            @Html.Raw(this.Model.SanitizeDescription)
+        <div class="col-sm-7">
+            <div class="wrap-word-content">
+                @Html.Raw(this.Model.SanitizeDescription)
+            </div>
         </div>
     </div>
 
     <form asp-action="Delete" class="float-md-right">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-controller="Categories" asp-action="ByName" asp-route-name="@this.Model.Name" asp-route-id="@this.Model.Id" class="btn btn-secondary">Go to Category</a>
     </form>
 </div>

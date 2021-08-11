@@ -1,12 +1,13 @@
 ﻿namespace ForumSystem.Web.Tests.Controllers.APIs
 {
+    using System.Linq;
+
     using ForumSystem.Data.Models;
     using ForumSystem.Web.Controllers.APIs;
     using ForumSystem.Web.ViewModels.Comments;
 
     using MyTested.AspNetCore.Mvc;
     using Shouldly;
-    using System.Linq;
     using Xunit;
 
     using static ForumSystem.Web.Tests.Data.CommentsTestData;

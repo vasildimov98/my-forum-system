@@ -3,11 +3,11 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using ForumSystem.Web.ViewModels.Administration.Categories;
+    using ForumSystem.Web.ViewModels.Categories;
 
     public interface ICategoriesService
     {
-        public Task<bool> CreateAsync(CategoryInputModel input);
+        public Task<bool> CreateAsync(CategoryInputModel input, string userId);
 
         public Task EditAsync(int id, CategoryEditModel input);
 

@@ -5,6 +5,7 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
+    using ForumSystem.Web.ViewModels.Categories;
     using ForumSystem.Web.ViewModels.Chat;
     using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Posts;
@@ -97,5 +98,108 @@
 
             return this.View(category);
         }
+
+        [Authorize]
+        public IActionResult Create()
+            => this.View();
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Create(CategoryInputModel input)
+        {
+            var userId = this.userManager
+                .GetUserId(this.User);
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.View();
+            }
+
+            var isCategoryNameTaken = await this.categoriesService
+                .CreateAsync(input, userId);
+
+            if (!isCategoryNameTaken)
+            {
+                this.TempData[InvalidMessageKey] = "Category name is taken, please try another one.";
+                return this.View();
+            }
+
+            return this.RedirectToAction("ByName", "Categories", new { name = input.Name, id = 1 });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var category = await this.categoriesService
+                .GetByIdAsync<CategoryEditModel>(id);
+
+            if (category == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(category);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(CategoryEditModel input)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(input.Id);
+            }
+
+            try
+            {
+                await this.categoriesService
+                    .EditAsync(input.Id, input);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("ByName", "Categories", new { name = input.Name, id = 1 });
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var category = await this.categoriesService
+                .GetByIdAsync<CategoryEditModel>((int)id);
+
+            if (category == null)
+            {
+                return this.NotFound();
+            }
+
+            return this.View(category);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            try
+            {
+                await this.categoriesService
+                    .DeleteAsync(id);
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("All", "Categories", new { area = string.Empty, id = 1 });
+        }
+
     }
 }

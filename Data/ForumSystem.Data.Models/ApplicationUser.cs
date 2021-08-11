@@ -37,7 +37,6 @@ namespace ForumSystem.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        [ForeignKey(nameof(ProfileImage))]
         public string ProfileImageId { get; set; }
 
         public virtual ProfileImage ProfileImage { get; set; }

@@ -35,7 +35,9 @@
 
 
                         <h2><strong>@this.Model.Name</strong></h2>
-                        <p class="justify-content-center">@Html.Raw(this.Model.SanitizeDescription)</p>
+                        <div class="wrap-word-content">
+                            @Html.Raw(this.Model.SanitizeDescription)
+                        </div>
                     </div>
                 </div>
 

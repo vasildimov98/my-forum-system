@@ -1,4 +1,4 @@
-﻿namespace ForumSystem.Web.ViewModels.Administration.Categories
+﻿namespace ForumSystem.Web.ViewModels.Categories
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -23,7 +23,7 @@
         [MaxLength(350, ErrorMessage = "Description way too long. Only 350 letters allowed!")]
         public string Description { get; set; }
 
-        public string SanitizeDescription => new HtmlSanitizer().Sanitize(this.Description);
+        public string SanitizeDescription => new HtmlSanitizer().Sanitize(Description);
 
         [Required]
         [Display(Name = "Image")]

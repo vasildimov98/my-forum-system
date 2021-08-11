@@ -8,8 +8,7 @@
     using ForumSystem.Data.Common.Repositories;
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-    using ForumSystem.Web.ViewModels.Administration.Categories;
-
+    using ForumSystem.Web.ViewModels.Categories;
     using Microsoft.EntityFrameworkCore;
 
     public class CategoriesService : ICategoriesService
@@ -28,7 +27,7 @@
             this.commentsRepository = commentRepository;
         }
 
-        public async Task<bool> CreateAsync(CategoryInputModel input)
+        public async Task<bool> CreateAsync(CategoryInputModel input, string userId)
         {
             var isCategoryNameTaken = this.categoriesRepository
                 .All()
@@ -44,6 +43,7 @@
                 Name = input.Name,
                 Description = input.Description,
                 ImageUrl = input.ImageUrl,
+                OwnerId = userId,
             };
 
             await this.categoriesRepository.AddAsync(category);

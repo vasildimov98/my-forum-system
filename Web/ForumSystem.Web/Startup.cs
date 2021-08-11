@@ -150,7 +150,6 @@
                                pattern: "Post/Edit/{id:min(1)}",
                                defaults: new
                                {
-                                   area = "Administration",
                                    controller = "Posts",
                                    action = "Edit",
                                });
@@ -161,7 +160,6 @@
                              pattern: "Post/Delete/{id:min(1)}",
                              defaults: new
                              {
-                                 area = "Administration",
                                  controller = "Posts",
                                  action = "Delete",
                              });
@@ -172,7 +170,6 @@
                               pattern: "Category/Create/{id?}",
                               defaults: new
                               {
-                                  area = "Administration",
                                   controller = "Categories",
                                   action = "Create",
                               });
@@ -183,7 +180,6 @@
                               pattern: "Category/Edit/{id:min(1)}",
                               defaults: new
                               {
-                                  area = "Administration",
                                   controller = "Categories",
                                   action = "Edit",
                               });
@@ -194,7 +190,6 @@
                              pattern: "Category/Delete/{id:min(1)}",
                              defaults: new
                              {
-                                 area = "Administration",
                                  controller = "Categories",
                                  action = "Delete",
                              });

@@ -44,5 +44,37 @@
                 .Configuration()
                 .ShouldMap("/Posts/ById/3")
                 .To<PostsController>(c => c.ById(With.Value<int>(3)));
+
+        [Fact]
+        public void GetEditShouldBeRoutedCorrectly()
+            => MyRouting
+                .Configuration()
+                .ShouldMap("Post/Edit/1")
+                .To<PostsController>(c => c.Edit(With.Value<int>(1)));
+
+        [Fact]
+        public void PostEditShouldBeRoutedCorrectly()
+            => MyRouting
+                .Configuration()
+                .ShouldMap(request => request
+                    .WithMethod(HttpMethod.Post)
+                    .WithLocation("Post/Edit/1"))
+                .To<PostsController>(c => c.Edit(With.Any<int>()));
+
+        [Fact]
+        public void GetDeleteShouldBeRoutedCorrectly()
+            => MyRouting
+                .Configuration()
+                .ShouldMap("Post/Delete/1")
+                .To<PostsController>(c => c.Delete(With.Value<int>(1)));
+
+        [Fact]
+        public void PostDeleteShouldBeRoutedCorrectly()
+            => MyRouting
+                .Configuration()
+                .ShouldMap(request => request
+                    .WithMethod(HttpMethod.Post)
+                    .WithLocation("Post/Delete/1"))
+                .To<PostsController>(c => c.DeleteConfirmed(With.Value<int>(1)));
     }
 }

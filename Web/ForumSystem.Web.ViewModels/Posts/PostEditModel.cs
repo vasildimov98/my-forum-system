@@ -1,11 +1,10 @@
-﻿namespace ForumSystem.Web.ViewModels.Administration.Posts
+﻿namespace ForumSystem.Web.ViewModels.Posts
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
-    using ForumSystem.Web.ViewModels.Posts;
 
     public class PostEditModel : IMapFrom<Post>
     {
