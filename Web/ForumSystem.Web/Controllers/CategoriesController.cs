@@ -178,7 +178,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool isFromAdminPanel = false)
         {
             if (id == null)
             {
@@ -193,13 +193,15 @@
                 return this.NotFound();
             }
 
+            category.IsFromAdminPanel = isFromAdminPanel;
+
             return this.View(category);
         }
 
         [HttpPost]
         [Authorize]
         [ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, bool isFromAdminPanel)
         {
             try
             {
@@ -209,6 +211,11 @@
             catch
             {
                 return this.NotFound();
+            }
+
+            if (isFromAdminPanel)
+            {
+                return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName });
             }
 
             return this.RedirectToAction("All", "Categories", new { area = string.Empty, id = 1 });

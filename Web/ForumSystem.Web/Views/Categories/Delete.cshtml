@@ -22,9 +22,13 @@
         </div>
     </div>
 
-    <form asp-action="Delete" class="float-md-right">
+    <form method="post" asp-action="Delete" class="float-md-right">
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="IsFromAdminPanel" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-controller="Categories" asp-action="ByName" asp-route-name="@this.Model.Name" asp-route-id="@this.Model.Id" class="btn btn-secondary">Go to Category</a>
+        <a asp-controller="Categories"
+           asp-action="ByName"
+           asp-route-name="@this.Model.Name"
+           asp-route-id="@this.Model.Id" class="btn btn-secondary">Go to Category</a>
     </form>
 </div>

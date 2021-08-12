@@ -5,6 +5,7 @@
         public const string SystemName = "Tellit";
 
         public const string AdministratorRoleName = "Administrator";
+        public const string AdministratorAreaName = "Administration";
 
         public const string InvalidMessageKey = "InvalidMessage";
         public const string SuccessMessageKey = "SuccessMessage";
