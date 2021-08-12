@@ -235,7 +235,7 @@
 
             if (isFromAdminPanel)
             {
-                return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName });
+                return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName, id = 1 });
             }
 
             var username = (await this.userManager.GetUserAsync(this.User)).UserName;

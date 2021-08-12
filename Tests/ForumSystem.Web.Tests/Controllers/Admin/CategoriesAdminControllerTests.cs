@@ -27,7 +27,7 @@
             => MyController<CategoriesAdminController>
                 .Instance(instance => instance
                         .WithUser()
-                        .WithData(GetCategories(totalCategories)))
+                        .WithData(GetApprovedCategories(totalCategories)))
                 .Calling(c => c.Index(currentPage))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs

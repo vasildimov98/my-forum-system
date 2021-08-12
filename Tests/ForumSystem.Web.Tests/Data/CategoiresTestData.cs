@@ -9,7 +9,7 @@
 
     public static class CategoiresTestData
     {
-        public static List<Category> GetCategories(int count)
+        public static List<Category> GetApprovedCategories(int count)
         {
             var user = new ApplicationUser
             {
@@ -36,6 +36,7 @@
                        ImageUrl = "TestImageURl",
                        Owner = user,
                        Messages = messages,
+                       IsApprovedByAdmin = true,
                    }).ToList();
 
             return categories;
@@ -60,6 +61,7 @@
                         Name = $"TestName{index}",
                         ImageUrl = $"TestImage{index}",
                         Posts = posts,
+                        IsApprovedByAdmin = true,
                     };
 
                     return category;

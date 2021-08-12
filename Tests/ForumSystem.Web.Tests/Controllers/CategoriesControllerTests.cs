@@ -3,6 +3,7 @@
     using System.Linq;
 
     using ForumSystem.Data.Models;
+    using ForumSystem.Web.Areas.Administration.Controllers;
     using ForumSystem.Web.Controllers;
     using ForumSystem.Web.ViewModels.Categories;
 
@@ -12,6 +13,7 @@
 
     using static ForumSystem.Common.GlobalConstants;
     using static ForumSystem.Web.Tests.Data.CategoiresTestData;
+    using static ForumSystem.Web.Tests.Data.UsersTestData;
 
     public class CategoriesControllerTests
     {
@@ -23,7 +25,7 @@
             int totalPages)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(12)))
+                    .WithData(GetApprovedCategories(12)))
                 .Calling(c => c.All(page))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
@@ -52,14 +54,17 @@
                 .View();
 
         [Theory]
-        [InlineData("TestName", "TestDescriptionTestDescriptionTestDescription", "test.png", 1)]
+        [InlineData("TestName", "TestDescriptionTestDescriptionTestDescription", "test.png", 1, "TestUser")]
         public void PostCreateShouldBeForAuthorizeUserAndReturnCorrectView(
             string name,
             string description,
             string imageUrl,
-            int id)
+            int id,
+            string username)
             => MyController<CategoriesController>
-                .Instance()
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetUsers(1)))
                 .Calling(c => c.Create(new CategoryInputModel
                 {
                     Name = name,
@@ -79,7 +84,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByName(name, id)));
+                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByOwner(username, id)));
 
         [Theory]
         [InlineData("TestName1", "TestDescriptionTestDescriptionTestDescription", "test.png", 1)]
@@ -90,7 +95,8 @@
             int page)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(page)))
+                    .WithUser()
+                    .WithData(GetApprovedCategories(page)))
                 .Calling(c => c.Create(new CategoryInputModel
                 {
                     Name = takenName,
@@ -126,7 +132,7 @@
             int page)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(page)))
+                    .WithData(GetApprovedCategories(page)))
                 .Calling(c => c.Create(new CategoryInputModel
                 {
                     Name = invalidName,
@@ -156,7 +162,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetCategories(categoryId)))
+                    .WithData(GetApprovedCategories(categoryId)))
                 .Calling(c => c
                     .Edit(categoryId))
                 .ShouldHave()
@@ -197,7 +203,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetCategories(categoryId)))
+                    .WithData(GetApprovedCategories(categoryId)))
                 .Calling(c => c
                     .Edit(new CategoryEditModel
                     {
@@ -284,7 +290,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetCategories(categoryId)))
+                    .WithData(GetApprovedCategories(categoryId)))
                 .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -307,7 +313,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetCategories(1)))
+                    .WithData(GetApprovedCategories(1)))
                 .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -333,15 +339,16 @@
                 .NotFound();
 
         [Theory]
-        [InlineData(1, 1, false)]
-        public void PostDeleteShouldRedirectIfSuccessfullyDeletesCategory(
+        [InlineData(1, 1, false, "TestUser")]
+        public void PostDeleteShouldRedirectToByOwnerCategoryIfSuccessfullyDeletesCategory(
             int categoryId,
             int page,
-            bool isFromAdminPanel)
+            bool isFromAdminPanel,
+            string username)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetCategories(categoryId)))
+                    .WithData(GetApprovedCategories(categoryId)))
                 .Calling(c => c.DeleteConfirmed(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -350,7 +357,27 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.All(page)));
+                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByOwner(username, page)));
+
+        [Theory]
+        [InlineData(1, 1, true)]
+        public void PostDeleteShouldRedirectToAdminPanelIfAdministratorIsDeletingAndIfSuccessfullyDeletesCategory(
+            int categoryId,
+            int page,
+            bool isFromAdminPanel)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetApprovedCategories(categoryId)))
+                .Calling(c => c.DeleteConfirmed(categoryId, isFromAdminPanel))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForHttpMethod(HttpMethod.Post)
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(redirect => redirect
+                    .To<CategoriesAdminController>(c => c.Index(page)));
 
         [Theory]
         [InlineData(1, 2, false)]
@@ -361,7 +388,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetCategories(categoryId)))
+                    .WithData(GetApprovedCategories(categoryId)))
                 .Calling(c => c.DeleteConfirmed(invalidCategoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs

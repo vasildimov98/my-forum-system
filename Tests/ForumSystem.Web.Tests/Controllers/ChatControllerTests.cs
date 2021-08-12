@@ -20,7 +20,7 @@
             int count)
             => MyController<ChatsController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(1)))
+                    .WithData(GetApprovedCategories(1)))
                 .Calling(c => c.LiveChat(categoryName))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -42,7 +42,7 @@
             string invalidName)
             => MyController<ChatsController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(1)))
+                    .WithData(GetApprovedCategories(1)))
                 .Calling(c => c.LiveChat(invalidName))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
