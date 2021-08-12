@@ -205,6 +205,16 @@
                                });
 
                         endpoints
+                          .MapControllerRoute(
+                              name: "categories-username-page",
+                              pattern: "Categories/ByOwner/{username:required}/{id?}",
+                              defaults: new
+                              {
+                                  controller = "Categories",
+                                  action = "ByOwner",
+                              });
+
+                        endpoints
                          .MapControllerRoute(
                              name: "category-live-chat",
                              pattern: "Chat/{name:required}",

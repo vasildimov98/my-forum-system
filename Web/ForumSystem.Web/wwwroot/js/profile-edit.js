@@ -29,7 +29,7 @@
     if (!response.ok) {
         let error = await response.text();
         document
-            .getElementById('my-container')
+            .getElementById('my-user-profile-container')
             .prepend(createBootstrapDivAlertElement(error));
 
         setTimeout(function () {
@@ -62,7 +62,7 @@ async function editUsername(inputId) {
 
     if (errorMessage) {
         document
-            .getElementById('my-container')
+            .getElementById('my-user-profile-container')
             .prepend(createBootstrapDivAlertElement(errorMessage));
 
         setTimeout(function () {

@@ -5,7 +5,6 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Web.Controllers;
     using ForumSystem.Web.ViewModels.Categories;
-    using ForumSystem.Web.ViewModels.Chat;
 
     using MyTested.AspNetCore.Mvc;
     using Shouldly;
@@ -276,16 +275,17 @@
                     .Passing(id => id.ShouldBe(categoryId)));
 
         [Theory]
-        [InlineData(1, "TestName1", "TestDescription1")]
+        [InlineData(1, false, "TestName1", "TestDescription1")]
         public void GetDeleteShouldReturnCorrectViewIfIdIsCorrect(
             int categoryId,
+            bool isFromAdminPanel,
             string name,
             string description)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
                     .WithData(GetCategories(categoryId)))
-                .Calling(c => c.Delete(categoryId))
+                .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -300,14 +300,15 @@
                     }));
 
         [Theory]
-        [InlineData(null)]
+        [InlineData(null, false)]
         public void GetDeleteShouldReturnNotFoundIfIdIsNull(
-            int? categoryId)
+            int? categoryId,
+            bool isFromAdminPanel)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
                     .WithData(GetCategories(1)))
-                .Calling(c => c.Delete(categoryId))
+                .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -316,13 +317,14 @@
                 .NotFound();
 
         [Theory]
-        [InlineData(1)]
+        [InlineData(1, false)]
         public void GetDeleteShouldReturnNotFoundIfCategoryDoesntExits(
-            int categoryId)
+            int categoryId,
+            bool isFromAdminPanel)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser())
-                .Calling(c => c.Delete(categoryId))
+                .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -331,15 +333,16 @@
                 .NotFound();
 
         [Theory]
-        [InlineData(1, 1)]
+        [InlineData(1, 1, false)]
         public void PostDeleteShouldRedirectIfSuccessfullyDeletesCategory(
             int categoryId,
-            int page)
+            int page,
+            bool isFromAdminPanel)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
                     .WithData(GetCategories(categoryId)))
-                .Calling(c => c.DeleteConfirmed(categoryId))
+                .Calling(c => c.DeleteConfirmed(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForHttpMethod(HttpMethod.Post)
@@ -350,15 +353,16 @@
                     .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.All(page)));
 
         [Theory]
-        [InlineData(1, 2)]
+        [InlineData(1, 2, false)]
         public void PostDeleteShouldReturnNotFoundIfCategoryDoesntExists(
             int categoryId,
-            int invalidCategoryId)
+            int invalidCategoryId,
+            bool isFromAdminPanel)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
                     .WithData(GetCategories(categoryId)))
-                .Calling(c => c.DeleteConfirmed(invalidCategoryId))
+                .Calling(c => c.DeleteConfirmed(invalidCategoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForHttpMethod(HttpMethod.Post)

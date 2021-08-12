@@ -139,6 +139,25 @@
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> GetByOwnerUsernameAsync<T>(string ownerId, int? take = null, int skip = 0)
+        {
+            var query = this.categoriesRepository
+                    .All()
+                    .Where(x => x.Owner.UserName == ownerId && x.IsApprovedByAdmin)
+                    .OrderByDescending(x => x.Posts.Count)
+                    .Skip(skip);
+
+            if (take.HasValue)
+            {
+                query = query
+                    .Take(take.Value);
+            }
+
+            return await query
+                .To<T>()
+                .ToListAsync();
+        }
+
         public async Task<T> GetByIdAsync<T>(int id)
             => await this.categoriesRepository
                 .All()
@@ -176,6 +195,12 @@
             return query
                 .Count();
         }
+
+        public int GetCountByOwner(string username)
+            => this.categoriesRepository
+                .All()
+                .Where(x => x.IsApprovedByAdmin && x.Owner.UserName == username)
+                .Count();
 
         public int GetIdCategoryIdByName(string name)
             => this.categoriesRepository.All()

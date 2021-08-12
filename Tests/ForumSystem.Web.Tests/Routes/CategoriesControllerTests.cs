@@ -59,7 +59,7 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("Category/Delete/1")
-                .To<CategoriesController>(c => c.Delete(With.Value<int>(1)));
+                .To<CategoriesController>(c => c.Delete(With.Value<int>(1), With.Value<bool>(false)));
 
         [Fact]
         public void PostDeleteShouldBeRoutedCorrectly()
@@ -68,6 +68,6 @@
                 .ShouldMap(request => request
                     .WithMethod(HttpMethod.Post)
                     .WithLocation("Category/Delete/1"))
-                .To<CategoriesController>(c => c.DeleteConfirmed(With.Value<int>(1)));
+                .To<CategoriesController>(c => c.DeleteConfirmed(With.Value<int>(1), With.Value<bool>(false)));
     }
 }

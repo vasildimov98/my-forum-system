@@ -4,89 +4,91 @@
     this.ViewData["Title"] = "Category";
 }
 
-<div id="my-container" class="container-fluid mt-100">
+<div id="my-user-profile-container" class="container mb-3">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="media flex-wrap w-100">
-                                    <div class="px-4 pt-3">
+        <div class="col-md-12 p-0">
+            <div class="wrapper wrapper-content animated fadeInRight">
 
-                                        <form method="post" id="xssForm"></form>
+                <div class="ibox-content m-b-sm border-bottom">
+                    <div class="media flex-wrap w-100">
 
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6 p-0">
+                                    <form method="post" id="xssForm"></form>
+
+                                    @if (this.Model.IsLoggedInUser)
+                                    {
+                                        <form method="post">
+                                            <input onchange="uploadImage('my-input')" id="my-input" type="file" hidden />
+                                        </form>
+                                    }
+
+                                    <div class="image_wrapper mb-1">
+                                        <img id="profile-image" src="@this.Model.ImageSrc">
                                         @if (this.Model.IsLoggedInUser)
                                         {
-                                            <form method="post">
-                                                <input onchange="uploadImage('my-input')" id="my-input" type="file" hidden />
-                                            </form>
+                                            <a onclick="$('#my-input').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit bg-danger"></i></a>
                                         }
+                                    </div>
 
-                                        <div class="image_wrapper">
-                                            <img id="profile-image" src="@this.Model.ImageSrc">
-                                            @if (this.Model.IsLoggedInUser)
-                                            {
-                                                <a onclick="$('#my-input').click();" class="btn btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit Image"><i class="fa fa-edit bg-danger"></i></a>
-                                            }
-                                        </div>
+                                    <div class="form-inline">
+                                        @if (this.Model.IsLoggedInUser)
+                                        {
+                                            <div class="form-group">
+                                                <strong class="pr-2">Username:</strong>
+                                                <input onchange="editUsername('my-username-input')" id="my-username-input" class="no-border d-inline w-auto" type="text" name="username" value="@this.Model.UserName" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <strong class="pr-2">Username: </strong> @this.Model.UserName
+                                        }
+                                    </div>
 
-                                        <div class="form-inline">
-                                            @if (this.Model.IsLoggedInUser)
-                                            {
-                                                <div class="form-group">
-                                                    <strong class="pr-2">Username:</strong>
-                                                    <input onchange="editUsername('my-username-input')" id="my-username-input" class="no-border d-inline" type="text" name="username" value="@this.Model.UserName" />
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <strong class="pr-2">Username: </strong> @this.Model.UserName
-                                            }
-                                        </div>
+                                    <div class="text-muted small float-left">
+                                        <div>Member since <strong>@this.Model.CreatedOn.Date.ToString("d")</strong></div>
+                                        <div><strong>@this.Model.PostsCount</strong> posts</div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6">
-                                <div class="text-muted small float-right">
-                                    <div>Member since <strong>@this.Model.CreatedOn.Date.ToString("d")</strong></div>
-                                    <div class="float-sm-right"><strong>@this.Model.PostsCount</strong> posts</div>
+                                <div class="col-md-6 p-0">
+                                    <a asp-controller="Categories"
+                                            asp-action="ByOwner"
+                                            asp-route-username="@this.Model.UserName"
+                                            asp-route-id="1"
+                                            class="btn btn-info float-md-right">My Categories</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="ibox-content forum-container">
-                    @if (this.Model.PostsCount == 0)
-                    {
+                @if (this.Model.PostsCount == 0)
+                {
+                    <div class="ibox-content forum-container">
+
                         <div class="forum-title">
-                            <h4>It feels empty! There is still no posts written from current user</h4>
+                            <h3>There are no posts. :( You can be the first one to write one. :)</h3>
                         </div>
-                    }
-                    else
-                    {
-                        <div class="pull-right forum-desc">
-                            <samll>Total posts: @this.Model.PostsCount</samll>
-                        </div>
-
-                        <span>Feel free to choose topic you're interested in.</span>
-
+                    </div>
+                }
+                else
+                {
+                    <div class="ibox-content forum-container">
                         <div class="forum-title">
                             <h3>Posts: </h3>
                         </div>
-                    }
 
+                        @foreach (var post in this.Model.Posts)
+                        {
+                            <partial name="~/Views/PartialViews/_Post.cshtml" model="post" />
+                        }
 
-                    @foreach (var post in this.Model.Posts)
-                    {
-                        <partial name="~/Views/PartialViews/_Post.cshtml" , model="post" />
-                    }
+                        <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel" />
+                    </div>
+                }
 
-                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel" />
-                </div>
             </div>
         </div>
     </div>

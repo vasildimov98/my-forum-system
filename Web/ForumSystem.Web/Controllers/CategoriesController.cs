@@ -1,12 +1,12 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Categories;
-    using ForumSystem.Web.ViewModels.Chat;
     using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Posts;
 
@@ -38,19 +38,10 @@
         [Authorize]
         public async Task<IActionResult> All(int id)
         {
-            var userId = this.userManager.GetUserId(this.User);
             var page = Math.Max(1, id);
 
             var categories = await this.categoriesService
                 .GetAllAsync<CategoryViewModel>(CategoriesPerPage, (page - 1) * CategoriesPerPage);
-
-            if (!this.User.IsInRole(AdministratorRoleName))
-            {
-                foreach (var category in categories)
-                {
-                    category.IsSignInUserTheOwner = category.OwnerId == userId ? true : false;
-                }
-            }
 
             var categoriesCount = this.categoriesService.GetCount();
 
@@ -64,6 +55,35 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "default",
+                },
+            };
+
+            return this.View(viewModel);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ByOwner(string username, int id)
+        {
+            var page = Math.Max(1, id);
+
+            var categories = await this.categoriesService
+                .GetByOwnerUsernameAsync<CategoriesByUserViewModel>(
+                    username,
+                    CategoriesPerPage,
+                    (page - 1) * CategoriesPerPage);
+
+            var categoriesCount = this.categoriesService.GetCountByOwner(username);
+
+            var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+
+            var viewModel = new CategoriesByUserViewModelList
+            {
+                Categories = categories,
+                PaginationModel = new PaginationViewModel
+                {
+                    CurrentPage = page,
+                    TotalPages = pagesCount,
+                    RouteName = "categories-username-page",
                 },
             };
 
@@ -118,13 +138,13 @@
                 return this.View();
             }
 
-            var userId = this.userManager
-                .GetUserId(this.User);
+            var user = await this.userManager
+                .GetUserAsync(this.User);
 
             var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
 
             var isCategoryNameTaken = await this.categoriesService
-                .CreateAsync(input, userId, isUserAdmin);
+                .CreateAsync(input, user.Id, isUserAdmin);
 
             if (!isCategoryNameTaken)
             {
@@ -137,7 +157,7 @@
                 this.TempData[SuccessMessageKey] = SuccessCategoryCreate;
             }
 
-            return this.RedirectToAction("All", "Categories", new { id = 1 });
+            return this.RedirectToAction("ByOwner", "Categories", new { username = user.UserName, id = 1 });
         }
 
         [Authorize]
@@ -218,7 +238,9 @@
                 return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName });
             }
 
-            return this.RedirectToAction("All", "Categories", new { area = string.Empty, id = 1 });
+            var username = (await this.userManager.GetUserAsync(this.User)).UserName;
+
+            return this.RedirectToAction("ByOwner", "Categories", new { area = string.Empty, username, id = 1 });
         }
     }
 }

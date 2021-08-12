@@ -146,7 +146,7 @@
                .AndAlso()
                .ShouldReturn()
                .BadRequest(badRequest => badRequest
-                   .WithErrorMessage(InvalidFileImageLength));
+                   .WithErrorMessage(InvalidFileImageLengthMessage));
 
         [Theory]
         [InlineData(".tif")]
