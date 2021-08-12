@@ -9,16 +9,16 @@
 <form asp-area="" asp-controller="Categories" asp-action="Create" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    @if (this.TempData.ContainsKey("InvalidMessage"))
+    @if (this.TempData.ContainsKey(InvalidMessageKey))
     {
         <div class="text-danger">
-            @this.TempData["InvalidMessage"]
+            @this.TempData[InvalidMessageKey]
         </div>
     }
 
     <div class="form-check">
         <label asp-for="Name"></label>
-        <input asp-for="Name" onkeyup="textCounter(this,'counter',40);" class="form-control" />
+        <textarea asp-for="Name" onkeyup="textCounter(this,'counter',40);" class="form-control authoresize-area"></textarea>
         <div id="counter" class="words-written">
             0/40
         </div>

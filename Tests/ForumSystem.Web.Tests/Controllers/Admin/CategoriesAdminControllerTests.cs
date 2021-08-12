@@ -16,8 +16,8 @@
     {
         [Theory]
         [InlineData(15, 5, 1, 3, 1)]
-        //[InlineData(10, 5, 2, 2, 2)]
-        //[InlineData(5, 5, 0, 1, 1)]
+        [InlineData(10, 5, 2, 2, 2)]
+        [InlineData(5, 5, 0, 1, 1)]
         public void GetIndexShouldBeRestrictedOnlyForAdministrationAndReturnCorrectResult(
             int totalCategories,
             int cateogryPerPage,

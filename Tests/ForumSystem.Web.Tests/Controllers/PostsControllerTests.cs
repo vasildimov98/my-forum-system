@@ -67,6 +67,11 @@
 
         [Theory]
         [InlineData("Test", "Test", 1)]
+        [InlineData(
+            @"Title 
+                      with new line",
+            "TestTestTestTestTestTest",
+            1)]
         public void PostCreateShouldReturnTheSameViewIfModelStateIsIncorrect(
             string title,
             string invalidContent,

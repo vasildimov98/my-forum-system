@@ -168,6 +168,6 @@
                .AndAlso()
                .ShouldReturn()
                .BadRequest(badRequest => badRequest
-                   .WithErrorMessage(InvalidFileImageExtention));
+                   .WithErrorMessage(InvalidFileImageExtentionMessage));
     }
 }

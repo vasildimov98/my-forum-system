@@ -47,5 +47,19 @@
 
             return this.View(viewModel);
         }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var isApproved = await this.categorieService.ApproveCategoryAsync(id);
+
+            if (!isApproved)
+            {
+                this.TempData[InvalidMessageKey] = InvalidApprovalMessage;
+                return this.RedirectToAction(nameof(this.Index));
+            }
+
+            return this.RedirectToAction(nameof(this.Index));
+        }
     }
 }

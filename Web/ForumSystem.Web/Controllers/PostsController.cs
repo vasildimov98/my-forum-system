@@ -103,6 +103,11 @@
         [Authorize]
         public async Task<IActionResult> Create(PostInputModel input)
         {
+            if (input.Title.Contains(Environment.NewLine))
+            {
+                this.ModelState.AddModelError(string.Empty, "Title is not allowed to have new line!");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 return this.View(input);
@@ -131,7 +136,6 @@
                 .GetAllAsync<CategoryDropDownViewModel>();
 
             post.Categories = categories;
-
 
             return this.View(post);
         }

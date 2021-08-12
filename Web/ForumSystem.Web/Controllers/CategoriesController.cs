@@ -107,20 +107,25 @@
         [Authorize]
         public async Task<IActionResult> Create(CategoryInputModel input)
         {
-            var userId = this.userManager
-                .GetUserId(this.User);
+            if (input.Name.Contains(Environment.NewLine))
+            {
+                this.ModelState.AddModelError(string.Empty, "Name of community cannot contain new line!");
+            }
 
             if (!this.ModelState.IsValid)
             {
                 return this.View();
             }
 
+            var userId = this.userManager
+                .GetUserId(this.User);
+
             var isCategoryNameTaken = await this.categoriesService
                 .CreateAsync(input, userId);
 
             if (!isCategoryNameTaken)
             {
-                this.TempData[InvalidMessageKey] = "Category name is taken, please try another one.";
+                this.TempData[InvalidMessageKey] = InvalidNameMessage;
                 return this.View();
             }
 
@@ -200,6 +205,5 @@
 
             return this.RedirectToAction("All", "Categories", new { area = string.Empty, id = 1 });
         }
-
     }
 }

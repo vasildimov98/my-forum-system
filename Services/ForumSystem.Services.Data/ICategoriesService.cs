@@ -24,5 +24,7 @@
         public int GetCount();
 
         public int GetIdCategoryIdByName(string name);
+
+        Task<bool> ApproveCategoryAsync(int id);
     }
 }

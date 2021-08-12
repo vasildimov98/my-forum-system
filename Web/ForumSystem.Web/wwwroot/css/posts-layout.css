@@ -1,4 +1,8 @@
-﻿.wrap-word-content {
+﻿textarea.authoresize-area {
+    resize: none;
+}
+
+.wrap-word-content {
     word-break: break-word;
 }
 

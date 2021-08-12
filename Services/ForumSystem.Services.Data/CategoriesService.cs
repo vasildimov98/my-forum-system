@@ -9,6 +9,7 @@
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
     using ForumSystem.Web.ViewModels.Categories;
+
     using Microsoft.EntityFrameworkCore;
 
     public class CategoriesService : ICategoriesService
@@ -155,5 +156,10 @@
                 .Where(x => x.Name == name)
                 .Select(x => x.Id)
                 .FirstOrDefault();
+
+        public Task<bool> ApproveCategoryAsync(int id)
+        {
+            return Task.FromResult<bool>(false);
+        }
     }
 }

@@ -23,6 +23,8 @@
         [Required]
         public string ImageUrl { get; set; }
 
+        public bool IsApprovedByAdmin { get; set; }
+
         [Required]
         [ForeignKey(nameof(Owner))]
         public string OwnerId { get; set; }

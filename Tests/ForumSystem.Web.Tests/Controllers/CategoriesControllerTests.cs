@@ -85,7 +85,7 @@
         [Theory]
         [InlineData("TestName1", "TestDescriptionTestDescriptionTestDescription", "test.png", 1)]
         public void PostCreateShouldBeForAuthorizeUserAndReturnToSameViewIfCategoryNameIsTaken(
-            string name,
+            string takenName,
             string description,
             string imageUrl,
             int page)
@@ -94,7 +94,7 @@
                     .WithData(GetCategories(page)))
                 .Calling(c => c.Create(new CategoryInputModel
                 {
-                    Name = name,
+                    Name = takenName,
                     Description = description,
                     ImageUrl = imageUrl,
                 }))
@@ -104,11 +104,46 @@
                     .RestrictingForAuthorizedRequests())
                 .Data(data => data
                     .WithSet<Category>(categories => !categories
-                        .Any(c => c.Name == name &&
+                        .Any(c => c.Name == takenName &&
                                   c.Description == description &&
                                   c.ImageUrl == imageUrl)))
                 .TempData(tempData => tempData
                     .ContainingEntryWithKey(InvalidMessageKey))
+                .AndAlso()
+                .ShouldReturn()
+                .View();
+
+        [Theory]
+        [InlineData(
+            @"TestName1
+                    with new line",
+            "TestDescriptionTestDescriptionTestDescription",
+            "test.png",
+            1)]
+        public void PostCreateShouldBeForAuthorizeUserAndReturnToSameViewIfModelStateIsIncorrect(
+            string invalidName,
+            string description,
+            string imageUrl,
+            int page)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithData(GetCategories(page)))
+                .Calling(c => c.Create(new CategoryInputModel
+                {
+                    Name = invalidName,
+                    Description = description,
+                    ImageUrl = imageUrl,
+                }))
+                .ShouldHave()
+                .ActionAttributes(attrs => attrs
+                    .RestrictingForHttpMethod(HttpMethod.Post)
+                    .RestrictingForAuthorizedRequests())
+                .Data(data => data
+                    .WithSet<Category>(categories => !categories
+                        .Any(c => c.Name == invalidName &&
+                                  c.Description == description &&
+                                  c.ImageUrl == imageUrl)))
+                .InvalidModelState()
                 .AndAlso()
                 .ShouldReturn()
                 .View();
