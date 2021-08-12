@@ -1,6 +1,7 @@
 ﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Services.Data;
@@ -28,9 +29,9 @@
             var page = Math.Max(1, id);
 
             var categories = await this.categorieService
-                .GetAllAsync<CategoryCrudModel>(CategoryPerPage, (page - 1) * CategoryPerPage);
+                .GetAllAsync<CategoryCrudModel>(CategoryPerPage, (page - 1) * CategoryPerPage, false);
 
-            var categoryCount = this.categorieService.GetCount();
+            var categoryCount = this.categorieService.GetCount(false);
 
             var pagesCount = (int)Math.Ceiling((decimal)categoryCount / CategoryPerPage);
 
@@ -49,7 +50,7 @@
         }
 
         [Authorize(Roles = AdministratorRoleName)]
-        public async Task<IActionResult> Approve(int id)
+        public async Task<IActionResult> Approve(int id, int page)
         {
             var isApproved = await this.categorieService.ApproveCategoryAsync(id);
 
@@ -59,7 +60,7 @@
                 return this.RedirectToAction(nameof(this.Index));
             }
 
-            return this.RedirectToAction(nameof(this.Index));
+            return this.RedirectToAction(nameof(this.Index), new { id = page });
         }
     }
 }

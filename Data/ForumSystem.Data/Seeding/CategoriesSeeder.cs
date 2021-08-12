@@ -93,6 +93,7 @@
             foreach (var category in categories)
             {
                 category.OwnerId = administrator.Id;
+                category.IsApprovedByAdmin = true;
             }
 
             await dbContext.Categories.AddRangeAsync(categories);

@@ -28,7 +28,7 @@
             this.commentsRepository = commentRepository;
         }
 
-        public async Task<bool> CreateAsync(CategoryInputModel input, string userId)
+        public async Task<bool> CreateAsync(CategoryInputModel input, string userId, bool isUserAdmin = false)
         {
             var isCategoryNameTaken = this.categoriesRepository
                 .All()
@@ -45,6 +45,7 @@
                 Description = input.Description,
                 ImageUrl = input.ImageUrl,
                 OwnerId = userId,
+                IsApprovedByAdmin = isUserAdmin,
             };
 
             await this.categoriesRepository.AddAsync(category);
@@ -106,12 +107,26 @@
             await this.categoriesRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0, bool onlyApproved = true)
         {
             var query = this.categoriesRepository
-                .All()
-                .OrderByDescending(x => x.Posts.Count)
-                .Skip(skip);
+                .All();
+
+            if (onlyApproved)
+            {
+                query = query
+                    .Where(x => x.IsApprovedByAdmin)
+                    .OrderByDescending(x => x.Posts.Count)
+                    .Skip(skip);
+            }
+
+            if (!onlyApproved)
+            {
+                query = query
+                    .OrderBy(x => x.IsApprovedByAdmin)
+                    .ThenBy(x => x.CreatedOn)
+                    .Skip(skip);
+            }
 
             if (take.HasValue)
             {
@@ -134,6 +149,7 @@
         public async Task<IEnumerable<T>> GetMostFamousCategories<T>(int take = 5)
             => await this.categoriesRepository
                 .All()
+                .Where(x => x.IsApprovedByAdmin)
                 .OrderByDescending(x => x.Posts.Count())
                 .Take(take)
                 .To<T>()
@@ -146,10 +162,20 @@
             .To<T>()
             .FirstOrDefaultAsync();
 
-        public int GetCount()
-            => this.categoriesRepository
-                   .All()
-                   .Count();
+        public int GetCount(bool onlyApproved = true)
+        {
+            var query = this.categoriesRepository
+                .All();
+
+            if (onlyApproved)
+            {
+                query = query
+                   .Where(x => x.IsApprovedByAdmin);
+            }
+
+            return query
+                .Count();
+        }
 
         public int GetIdCategoryIdByName(string name)
             => this.categoriesRepository.All()
@@ -157,9 +183,22 @@
                 .Select(x => x.Id)
                 .FirstOrDefault();
 
-        public Task<bool> ApproveCategoryAsync(int id)
+        public async Task<bool> ApproveCategoryAsync(int id)
         {
-            return Task.FromResult<bool>(false);
+            var category = this.categoriesRepository
+                 .All()
+                 .Where(x => x.Id == id)
+                 .FirstOrDefault();
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            category.IsApprovedByAdmin = true;
+            await this.categoriesRepository.SaveChangesAsync();
+
+            return category.IsApprovedByAdmin;
         }
     }
 }

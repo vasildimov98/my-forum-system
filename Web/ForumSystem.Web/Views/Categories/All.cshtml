@@ -5,6 +5,16 @@
     var count = ((this.Model.PaginationModel.CurrentPage - 1) * 10) + 1;
 }
 
+@if (this.TempData.ContainsKey(SuccessMessageKey))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @this.TempData[SuccessMessageKey]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
 <div class="ibox-content forum-container mb-3">
 
     <div class="forum-title">
@@ -23,7 +33,7 @@
 
                         <ul class="list-inline m-0 float-right">
                             @if (category.IsSignInUserTheOwner
-                               || this.User.IsInRole(AdministratorRoleName))
+                              || this.User.IsInRole(AdministratorRoleName))
                             {
                                 <li class="list-inline-item">
                                     <a asp-area="" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-success btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>

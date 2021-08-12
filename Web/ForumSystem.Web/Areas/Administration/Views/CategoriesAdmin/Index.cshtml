@@ -51,12 +51,18 @@
                                             <td>
                                                 <!-- Call to action buttons -->
                                                 <ul class="list-inline m-0">
-                                                    <li class="list-inline-item">
-                                                        <a asp-area="Administration" asp-controller="CategoriesAdmin" asp-action="Approve" asp-route-id="@category.Id" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
-                                                    </li>
+
+                                                    @if (!category.IsApprovedByAdmin)
+                                                    {
+                                                        <li class="list-inline-item">
+                                                            <a asp-area="Administration" asp-controller="CategoriesAdmin" asp-action="Approve" asp-route-id="@category.Id" asp-route-page="@this.Model.PaginationModel.CurrentPage" class="btn btn-primary btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Approve"><i class="fas fa-check"></i></a>
+                                                        </li>
+                                                    }
+
                                                     <li class="list-inline-item">
                                                         <a asp-area="" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
                                                     </li>
+
                                                     <li class="list-inline-item">
                                                         <a asp-area="" asp-controller="Categories" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
                                                     </li>

@@ -9,6 +9,7 @@
     using ForumSystem.Web.ViewModels.Chat;
     using ForumSystem.Web.ViewModels.PartialViews;
     using ForumSystem.Web.ViewModels.Posts;
+
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -120,8 +121,10 @@
             var userId = this.userManager
                 .GetUserId(this.User);
 
+            var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
             var isCategoryNameTaken = await this.categoriesService
-                .CreateAsync(input, userId);
+                .CreateAsync(input, userId, isUserAdmin);
 
             if (!isCategoryNameTaken)
             {
@@ -129,7 +132,12 @@
                 return this.View();
             }
 
-            return this.RedirectToAction("ByName", "Categories", new { name = input.Name, id = 1 });
+            if (!isUserAdmin)
+            {
+                this.TempData[SuccessMessageKey] = SuccessCategoryCreate;
+            }
+
+            return this.RedirectToAction("All", "Categories", new { id = 1 });
         }
 
         [Authorize]

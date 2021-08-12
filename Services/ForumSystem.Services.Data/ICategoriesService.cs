@@ -7,13 +7,13 @@
 
     public interface ICategoriesService
     {
-        public Task<bool> CreateAsync(CategoryInputModel input, string userId);
+        public Task<bool> CreateAsync(CategoryInputModel input, string userId, bool isUserAdmin = false);
 
         public Task EditAsync(int id, CategoryEditModel input);
 
         public Task DeleteAsync(int id);
 
-        public Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0);
+        public Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0, bool onlyApproved = true);
 
         public Task<IEnumerable<T>> GetMostFamousCategories<T>(int take = 5);
 
@@ -21,7 +21,7 @@
 
         public Task<T> GetByNameAsync<T>(string name);
 
-        public int GetCount();
+        public int GetCount(bool onlyApproved = true);
 
         public int GetIdCategoryIdByName(string name);
 
