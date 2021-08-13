@@ -1,5 +1,6 @@
 ﻿namespace ForumSystem.Web.Tests.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,7 +10,7 @@
 
     public static class CategoiresTestData
     {
-        public static List<Category> GetApprovedCategories(int count)
+        public static List<Category> GetCategories(int count, bool isApproved = true, bool isDiffUser = false)
         {
             var user = new ApplicationUser
             {
@@ -34,9 +35,31 @@
                        Name = $"TestName{i}",
                        Description = $"TestDescription{i}",
                        ImageUrl = "TestImageURl",
-                       Owner = user,
+                       Owner = isDiffUser ? new ApplicationUser 
+                       {
+                           Id = $"DiffTestUserId{i}",
+                           UserName = $"DiffTestUsername{i}",
+                       }
+                       : user,
                        Messages = messages,
-                       IsApprovedByAdmin = true,
+                       IsApprovedByAdmin = isApproved,
+                   }).ToList();
+
+            return categories;
+        }
+
+        public static List<Category> GetMixedCategories(int total, int approved)
+        {
+            var categories = Enumerable
+                   .Range(1, total)
+                   .Select(i => new Category
+                   {
+                       Id = i,
+                       Name = $"TestName{i}",
+                       Description = $"TestDescription{i}",
+                       ImageUrl = "TestImageURl",
+                       IsApprovedByAdmin = i <= approved,
+                       OwnerId = TestUser.Identifier,
                    }).ToList();
 
             return categories;

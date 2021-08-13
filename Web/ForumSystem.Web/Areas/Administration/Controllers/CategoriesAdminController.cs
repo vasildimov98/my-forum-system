@@ -1,7 +1,6 @@
 ﻿namespace ForumSystem.Web.Areas.Administration.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Services.Data;
@@ -52,15 +51,16 @@
         [Authorize(Roles = AdministratorRoleName)]
         public async Task<IActionResult> Approve(int id, int page)
         {
-            var isApproved = await this.categorieService.ApproveCategoryAsync(id);
+            var isApproved = await this.categorieService
+                .ApproveCategoryAsync(id);
 
             if (!isApproved)
             {
                 this.TempData[InvalidMessageKey] = InvalidApprovalMessage;
-                return this.RedirectToAction(nameof(this.Index));
+                return this.RedirectToAction(nameof(this.Index), new { area = AdministratorAreaName, id = page });
             }
 
-            return this.RedirectToAction(nameof(this.Index), new { id = page });
+            return this.RedirectToAction(nameof(this.Index), new { area = AdministratorAreaName, id = page });
         }
     }
 }

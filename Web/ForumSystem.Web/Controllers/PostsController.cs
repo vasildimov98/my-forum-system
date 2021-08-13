@@ -186,7 +186,7 @@
         }
 
         [Authorize]
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int? id, bool isFromAdminPanel)
         {
             if (id == null)
             {
@@ -205,6 +205,8 @@
             {
                 return this.Unauthorized();
             }
+
+            post.IsFromAdminPanel = isFromAdminPanel;
 
             return this.View(post);
         }
@@ -238,7 +240,7 @@
 
             if (isFromAdminPanel)
             {
-                return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName, id = 1 });
+                return this.RedirectToAction("Index", "PostsAdmin", new { area = AdministratorAreaName, id = 1 });
             }
 
             return this.RedirectToAction("All", "Posts", new { area = string.Empty, id = 1 });

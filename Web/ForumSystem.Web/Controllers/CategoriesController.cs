@@ -1,7 +1,6 @@
 ﻿namespace ForumSystem.Web.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using ForumSystem.Data.Models;
@@ -47,7 +46,7 @@
 
             var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
 
-            var viewModel = new CategoryViewModelList
+            var viewModel = new CateogoriesListModel
             {
                 Categories = categories,
                 PaginationModel = new PaginationViewModel
@@ -64,7 +63,8 @@
         [Authorize]
         public async Task<IActionResult> ByOwner(string username, int id)
         {
-            var loggedInUser = await this.userManager.GetUserAsync(this.User);
+            var loggedInUser = await this.userManager
+                .GetUserAsync(this.User);
 
             if (loggedInUser.UserName != username)
             {
@@ -74,7 +74,7 @@
             var page = Math.Max(1, id);
 
             var categories = await this.categoriesService
-                .GetByOwnerUsernameAsync<CategoriesByUserViewModel>(
+                .GetByOwnerUsernameAsync<CategoryByUserViewModel>(
                     username,
                     CategoriesPerPage,
                     (page - 1) * CategoriesPerPage);
@@ -83,7 +83,7 @@
 
             var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
 
-            var viewModel = new CategoriesByUserViewModelList
+            var viewModel = new CategoriesByUserListModel
             {
                 Categories = categories,
                 PaginationModel = new PaginationViewModel

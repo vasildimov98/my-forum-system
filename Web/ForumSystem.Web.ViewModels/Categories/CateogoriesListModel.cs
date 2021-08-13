@@ -4,7 +4,7 @@
 
     using ForumSystem.Web.ViewModels.PartialViews;
 
-    public class CategoryViewModelList
+    public class CateogoriesListModel
     {
         public IEnumerable<CategoryViewModel> Categories { get; set; }
 

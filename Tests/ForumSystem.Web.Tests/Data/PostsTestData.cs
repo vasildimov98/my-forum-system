@@ -9,7 +9,7 @@
 
     public class PostsTestData
     {
-        public static List<Post> GetPosts(int count)
+        public static List<Post> GetPosts(int count = 1, bool isDiffOwner = false)
         {
             var user = new ApplicationUser
             {
@@ -28,7 +28,11 @@
                         {
                             Id = i,
                         },
-                        User = user,
+                        User = isDiffOwner ? new ApplicationUser 
+                        {
+                            Id = $"TestId{i}",
+                            UserName = $"TestUserName{i}",
+                        } : user,
                     }).ToList();
 
             return posts;

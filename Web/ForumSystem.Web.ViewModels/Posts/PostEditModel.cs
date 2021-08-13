@@ -27,6 +27,8 @@
 
         public int CommentsCount { get; set; }
 
+        public bool IsFromAdminPanel { get; set; }
+
         public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
     }
 }

@@ -15,6 +15,18 @@
                 .ShouldMap("/Categories/All")
                 .To<CategoriesController>(c => c.All(With.Value<int>(1)));
 
+        [Theory]
+        [InlineData("TestUser", 1, "/Categories/ByOwner/TestUser/1")]
+        [InlineData("TestUser2", 2, "/Categories/ByOwner/TestUser2/2")]
+        public void GetByOwnerShouldRoutedCorrectly(
+            string username,
+            int page,
+            string location)
+            => MyRouting
+                .Configuration()
+                .ShouldMap(location)
+                .To<CategoriesController>(c => c.ByOwner(username, page));
+
         [Fact]
         public void GetByNameShouldBeRoutedCorrectly()
             => MyRouting
@@ -61,13 +73,29 @@
                 .ShouldMap("Category/Delete/1")
                 .To<CategoriesController>(c => c.Delete(With.Value<int>(1), With.Value<bool>(false)));
 
-        [Fact]
-        public void PostDeleteShouldBeRoutedCorrectly()
+        [Theory]
+        [InlineData(2, "Category/Delete/2")]
+        public void PostDeleteShouldBeRoutedCorrectly(
+            int id,
+            string location)
             => MyRouting
                 .Configuration()
                 .ShouldMap(request => request
                     .WithMethod(HttpMethod.Post)
-                    .WithLocation("Category/Delete/1"))
-                .To<CategoriesController>(c => c.DeleteConfirmed(With.Value<int>(1), With.Value<bool>(false)));
+                    .WithLocation(location))
+                .To<CategoriesController>(c => c.DeleteConfirmed(id, With.Value<bool>(false)));
+
+        [Theory]
+        [InlineData(2, true, "Category/Delete/2?isFromAdminPanel=True")]
+        public void PostDeleteShouldBeRoutedCorrectlyIfFromAdminPanel(
+           int id,
+           bool isFromAdminPanel,
+           string location)
+           => MyRouting
+               .Configuration()
+               .ShouldMap(request => request
+                   .WithMethod(HttpMethod.Post)
+                   .WithLocation(location))
+               .To<CategoriesController>(c => c.DeleteConfirmed(id, isFromAdminPanel));
     }
 }

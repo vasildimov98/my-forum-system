@@ -55,7 +55,13 @@
                                                     @if (!category.IsApprovedByAdmin)
                                                     {
                                                         <li class="list-inline-item">
-                                                            <a asp-area="Administration" asp-controller="CategoriesAdmin" asp-action="Approve" asp-route-id="@category.Id" asp-route-page="@this.Model.PaginationModel.CurrentPage" class="btn btn-primary btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Approve"><i class="fas fa-check"></i></a>
+                                                            <a asp-area="Administration"
+                                                               asp-controller="CategoriesAdmin"
+                                                               asp-action="Approve"
+                                                               asp-route-id="@category.Id"
+                                                               asp-route-page="@this.Model.PaginationModel.CurrentPage"
+                                                               class="btn btn-primary btn-sm rounded-0" type="button"
+                                                               data-toggle="tooltip" data-placement="top" title="Approve"><i class="fas fa-check"></i></a>
                                                         </li>
                                                     }
 

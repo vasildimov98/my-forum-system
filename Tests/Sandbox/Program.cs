@@ -30,14 +30,14 @@
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider(true);
 
             // Seed data on application startup
-            //using (var serviceScope = serviceProvider.CreateScope())
-            //{
+
+            // using (var serviceScope = serviceProvider.CreateScope())
+            // {
             //    var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             //    dbContext.Database.Migrate();
             //    new ApplicationDbContextSeeder()
             //        .SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
-            //}
-
+            // }
             using (var serviceScope = serviceProvider.CreateScope())
             {
                 serviceProvider = serviceScope.ServiceProvider;

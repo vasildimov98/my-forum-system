@@ -12,6 +12,7 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("/Chat/Test-Name")
-                .To<ChatsController>(c => c.LiveChat("Test-Name"));
+                .To<ChatsController>(c => c.LiveChat(With
+                                                        .Value<string>("Test-Name")));
     }
 }

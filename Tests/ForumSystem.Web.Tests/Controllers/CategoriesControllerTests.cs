@@ -25,7 +25,7 @@
             int totalPages)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetApprovedCategories(12)))
+                    .WithData(GetCategories(12)))
                 .Calling(c => c.All(page))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
@@ -33,13 +33,93 @@
                 .AndAlso()
                 .ShouldReturn()
                 .View(view => view
-                    .WithModelOfType<CategoryViewModelList>()
+                    .WithModelOfType<CateogoriesListModel>()
                     .Passing(categoriesViewModel =>
                     {
                         categoriesViewModel.Categories.Count().ShouldBe(categoriesCount);
                         categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(page);
                         categoriesViewModel.PaginationModel.TotalPages.ShouldBe(totalPages);
                     }));
+
+        [Theory]
+        [InlineData(10, 5, 1, 5, 1)]
+        [InlineData(12, 10, 1, 10, 1)]
+        [InlineData(20, 20, 2, 10, 2)]
+        public void GetAllShouldReturnOnlyApprovedCateogries(
+            int total,
+            int approved,
+            int page,
+            int expectedCategories,
+            int expectedPages)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.All(page))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .View(view => view
+                    .WithModelOfType<CateogoriesListModel>()
+                    .Passing(categoriesViewModel =>
+                    {
+                        categoriesViewModel.Categories.Count().ShouldBe(expectedCategories);
+                        categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(page);
+                        categoriesViewModel.PaginationModel.TotalPages.ShouldBe(expectedPages);
+                    }));
+
+        [Theory]
+        [InlineData(10, 5, 1, 5, 1)]
+        [InlineData(12, 10, 1, 10, 1)]
+        [InlineData(20, 20, 2, 10, 2)]
+        public void GetByOwnerShouldReturnOnlyCurrentlyLoggInUserAndOnlyHisApprovedOne(
+            int total,
+            int approved,
+            int page,
+            int expectedCategories,
+            int expectedPages)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetUsers(1))
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.ByOwner(TestUser.Username, page))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .View(view => view
+                    .WithModelOfType<CategoriesByUserListModel>()
+                    .Passing(categoriesViewModel =>
+                    {
+                        categoriesViewModel.Categories.Count().ShouldBe(expectedCategories);
+                        categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(page);
+                        categoriesViewModel.PaginationModel.TotalPages.ShouldBe(expectedPages);
+                    }));
+
+        [Theory]
+        [InlineData(10, 5, 1, "InvalidUser")]
+        [InlineData(12, 10, 1, "InvalidUser1")]
+        [InlineData(0, 0, 1, "InvalidUser2")]
+        public void GetByOwnerShouldReturnUnauthorizeIfCurrectlyLogInUserIsNotTheOwnerOfCategories(
+            int total,
+            int approved,
+            int page,
+            string invalidUserName)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetUsers(1))
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.ByOwner(invalidUserName, page))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .Unauthorized();
 
         [Fact]
         public void GetCreateShouldBeForAuthorizeUserAndReturnCorrectView()
@@ -84,7 +164,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByOwner(username, id)));
+                    .To<CategoriesController>(c => c.ByOwner(username, id)));
 
         [Theory]
         [InlineData("TestName1", "TestDescriptionTestDescriptionTestDescription", "test.png", 1)]
@@ -96,7 +176,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(page)))
+                    .WithData(GetCategories(page)))
                 .Calling(c => c.Create(new CategoryInputModel
                 {
                     Name = takenName,
@@ -132,7 +212,7 @@
             int page)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetApprovedCategories(page)))
+                    .WithData(GetCategories(page)))
                 .Calling(c => c.Create(new CategoryInputModel
                 {
                     Name = invalidName,
@@ -162,7 +242,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(categoryId)))
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c
                     .Edit(categoryId))
                 .ShouldHave()
@@ -177,6 +257,33 @@
                         editModel.Name.ShouldBe(name);
                         editModel.Description.ShouldBe(description);
                     }));
+
+        [Theory]
+        [InlineData(1, true, true, "TestName1", "TestDescription1")]
+        public void GetEditShouldReturnCorrectResultEvenIfUserIsNotTheOwnerButItIsTheAdministrator(
+           int categoryId,
+           bool isApprove,
+           bool isDiffUser,
+           string name,
+           string content)
+           => MyController<CategoriesController>
+               .Instance(instance => instance
+                   .WithUser(new string[] { AdministratorRoleName })
+                   .WithData(GetCategories(categoryId, isApprove, isDiffUser)))
+               .Calling(c => c
+                   .Edit(categoryId))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .View(view => view
+                   .WithModelOfType<CategoryEditModel>()
+                   .Passing(editModel =>
+                   {
+                       editModel.Name.ShouldBe(name);
+                       editModel.Description.ShouldBe(content);
+                   }));
 
         [Theory]
         [InlineData(1)]
@@ -194,6 +301,25 @@
                .NotFound();
 
         [Theory]
+        [InlineData(1, true, true)]
+        public void GetEditShouldBeOnlyForAuthorizeUsersAndThoesWhoOwnsThePostAndShouldReturnUnautorizeIfUserNotOwner(
+           int categoryId,
+           bool isApproved,
+           bool isDiffOwner)
+           => MyController<CategoriesController>
+               .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetCategories(categoryId, isApproved, isDiffOwner)))
+               .Calling(c => c
+                   .Edit(categoryId))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .Unauthorized();
+
+        [Theory]
         [InlineData(1, "EditName", "EditDesctiption", "EditImage.jpg")]
         public void PostEditShouldBeOnlyForAuthorizeUsersAndShouldReturnCorrectResult(
             int categoryId,
@@ -203,7 +329,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(categoryId)))
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c
                     .Edit(new CategoryEditModel
                     {
@@ -226,7 +352,45 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByName(editName, categoryId)));
+                    .To<CategoriesController>(c => c.ByName(editName, categoryId)));
+
+        [Theory]
+        [InlineData(1, true, true, "EditName", "EditDesctiption", "EditImage.jpg", 1)]
+        public void PostEditShouldEditThePostEvenIfUserIsNotTheOwnerButItIsTheAdministrator(
+          int categoryId,
+          bool isApproved,
+          bool isDiffOwner,
+          string editName,
+          string editDescription,
+          string editImage,
+          int page)
+          => MyController<CategoriesController>
+              .Instance(instance => instance
+                  .WithUser(new string[] { AdministratorRoleName })
+                  .WithData(GetCategories(categoryId, isApproved, isDiffOwner)))
+              .Calling(c => c
+                  .Edit(new CategoryEditModel
+                  {
+                      Id = categoryId,
+                      Name = editName,
+                      Description = editDescription,
+                      ImageUrl = editImage,
+                  }))
+              .ShouldHave()
+              .ActionAttributes(attrs => attrs
+                  .RestrictingForHttpMethod(HttpMethod.Post)
+                  .RestrictingForAuthorizedRequests())
+              .Data(data => data
+                  .WithSet<Category>(post => post
+                      .Any(p => p.Id == categoryId &&
+                                p.Name == editName &&
+                                p.Description == editDescription &&
+                                p.ImageUrl == editImage)))
+              .ValidModelState()
+              .AndAlso()
+              .ShouldReturn()
+              .Redirect(redirect => redirect
+                  .To<CategoriesController>(c => c.ByName(editName, page)));
 
         [Theory]
         [InlineData(1, "EditName", "EditDesctiption", "EditImage.jpg")]
@@ -252,6 +416,35 @@
                .AndAlso()
                .ShouldReturn()
                .NotFound();
+
+        [Theory]
+        [InlineData(1, true, true, "EditName", "EditDesctiption", "EditImage.jpg")]
+        public void PostEditShouldReturnUnauthorizeIfUserIsNotTheOwner(
+          int categoryId,
+          bool isApproved,
+          bool isDiffOwner,
+          string editName,
+          string editDescription,
+          string editImage)
+           => MyController<CategoriesController>
+               .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetCategories(categoryId, isApproved, isDiffOwner)))
+               .Calling(c => c
+                    .Edit(new CategoryEditModel
+                    {
+                        Id = categoryId,
+                        Name = editName,
+                        Description = editDescription,
+                        ImageUrl = editImage,
+                    }))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForHttpMethod(HttpMethod.Post)
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .Unauthorized();
 
         [Theory]
         [InlineData(1, "editName", "EditDesctiption", "EditImage.jpg")]
@@ -290,7 +483,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(categoryId)))
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -306,6 +499,35 @@
                     }));
 
         [Theory]
+        [InlineData(1, true, true, false, "TestName1", "TestDescription1", "TestImageURl")]
+        public void GetDeleteShouldReturnCorrectViewIfUserIsNotTheOwnerButIsTheAdministrator(
+          int categoryId,
+          bool isApproved,
+          bool isDiffOwner,
+          bool isFromAdminPanel,
+          string name,
+          string description,
+          string image)
+           => MyController<CategoriesController>
+               .Instance(instance => instance
+                   .WithUser(new string[] { AdministratorRoleName })
+                   .WithData(GetCategories(categoryId, isApproved, isDiffOwner)))
+               .Calling(c => c.Delete(categoryId, isFromAdminPanel))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .View(view => view
+                   .WithModelOfType<CategoryEditModel>()
+                   .Passing(model =>
+                   {
+                       model.Name.ShouldBe(name);
+                       model.Description.ShouldBe(description);
+                       model.ImageUrl.ShouldBe(image);
+                   }));
+
+        [Theory]
         [InlineData(null, false)]
         public void GetDeleteShouldReturnNotFoundIfIdIsNull(
             int? categoryId,
@@ -313,7 +535,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(1)))
+                    .WithData(GetCategories(1)))
                 .Calling(c => c.Delete(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -339,6 +561,26 @@
                 .NotFound();
 
         [Theory]
+        [InlineData(1, true, true, false)]
+        [InlineData(1, true, true, true)]
+        public void GetDeleteShouldReturnUnauthorizeIfLogInUserIsNotTheOwner(
+          int categoryId,
+          bool isApproved,
+          bool isDiffOwner,
+          bool isFromAdminPanel)
+          => MyController<CategoriesController>
+              .Instance(instance => instance
+                  .WithUser()
+                  .WithData(GetCategories(categoryId, isApproved, isDiffOwner)))
+              .Calling(c => c.Delete(categoryId, isFromAdminPanel))
+              .ShouldHave()
+              .ActionAttributes(attrs => attrs
+                  .RestrictingForAuthorizedRequests())
+              .AndAlso()
+              .ShouldReturn()
+              .Unauthorized();
+
+        [Theory]
         [InlineData(1, 1, false, "TestUser")]
         public void PostDeleteShouldRedirectToByOwnerCategoryIfSuccessfullyDeletesCategory(
             int categoryId,
@@ -348,7 +590,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(categoryId)))
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c.DeleteConfirmed(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -357,7 +599,29 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<ForumSystem.Web.Controllers.CategoriesController>(c => c.ByOwner(username, page)));
+                    .To<CategoriesController>(c => c.ByOwner(username, page)));
+
+        [Theory]
+        [InlineData(1, true, true, false, 1)]
+        public void PostDeleteShouldDeleteEvenIfUserIsNotTheOwnerButIsTheAdministrator(
+         int postId,
+         bool isApproved,
+         bool isDiffOwner,
+         bool isFromAdminPanel,
+         int page)
+         => MyController<CategoriesController>
+             .Instance(instance => instance
+                 .WithUser(new string[] { AdministratorRoleName })
+                 .WithData(GetCategories(postId, isApproved, isDiffOwner)))
+             .Calling(c => c.DeleteConfirmed(postId, isFromAdminPanel))
+             .ShouldHave()
+             .ActionAttributes(attrs => attrs
+                 .RestrictingForHttpMethod(HttpMethod.Post)
+                 .RestrictingForAuthorizedRequests())
+             .AndAlso()
+             .ShouldReturn()
+             .Redirect(redirect => redirect
+                 .To<CategoriesController>(c => c.ByOwner(TestUser.Username, page)));
 
         [Theory]
         [InlineData(1, 1, true)]
@@ -368,7 +632,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(categoryId)))
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c.DeleteConfirmed(categoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -388,7 +652,7 @@
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()
-                    .WithData(GetApprovedCategories(categoryId)))
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c.DeleteConfirmed(invalidCategoryId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
@@ -397,5 +661,25 @@
                 .AndAlso()
                 .ShouldReturn()
                 .NotFound();
+
+        [Theory]
+        [InlineData(1, true, true, false)]
+        public void PostDeleteShouldReturnUnauthorizeIfCategoryDoesntExists(
+           int postId,
+           bool isApproved,
+           bool isDiffOwner,
+           bool isFromAdminPanel)
+           => MyController<CategoriesController>
+               .Instance(instance => instance
+                   .WithUser()
+                   .WithData(GetCategories(postId, isApproved, isDiffOwner)))
+               .Calling(c => c.DeleteConfirmed(postId, isFromAdminPanel))
+               .ShouldHave()
+               .ActionAttributes(attrs => attrs
+                   .RestrictingForHttpMethod(HttpMethod.Post)
+                   .RestrictingForAuthorizedRequests())
+               .AndAlso()
+               .ShouldReturn()
+               .Unauthorized();
     }
 }

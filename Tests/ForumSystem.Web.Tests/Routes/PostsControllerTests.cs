@@ -66,15 +66,42 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("Post/Delete/1")
-                .To<PostsController>(c => c.Delete(With.Value<int>(1)));
+                .To<PostsController>(c => c.Delete(With.Value<int>(1), With.Value<bool>(false)));
 
-        [Fact]
-        public void PostDeleteShouldBeRoutedCorrectly()
+        [Theory]
+        [InlineData(1, true, "Post/Delete/1?isFromAdminPanel=True")]
+        public void GetDeleteCallFromAdminPanelShouldBeRoutedCorrectly(
+            int postId,
+            bool isFromAdminPanel,
+            string location)
+            => MyRouting
+                .Configuration()
+                .ShouldMap(location)
+                .To<PostsController>(c => c.Delete(postId, isFromAdminPanel));
+
+        [Theory]
+        [InlineData(2, "Post/Delete/2")]
+        public void PostDeleteShouldBeRoutedCorrectly(
+            int id,
+            string location)
             => MyRouting
                 .Configuration()
                 .ShouldMap(request => request
                     .WithMethod(HttpMethod.Post)
-                    .WithLocation("Post/Delete/1"))
-                .To<PostsController>(c => c.DeleteConfirmed(With.Value<int>(1), With.Value<bool>(false)));
+                    .WithLocation(location))
+                .To<PostsController>(c => c.DeleteConfirmed(id, With.Value<bool>(false)));
+
+        [Theory]
+        [InlineData(2, true, "Post/Delete/2?isFromAdminPanel=True")]
+        public void PostDeleteShouldBeRoutedCorrectlyIfFromAdminPanel(
+           int id,
+           bool isFromAdminPanel,
+           string location)
+           => MyRouting
+               .Configuration()
+               .ShouldMap(request => request
+                   .WithMethod(HttpMethod.Post)
+                   .WithLocation(location))
+               .To<PostsController>(c => c.DeleteConfirmed(id, isFromAdminPanel));
     }
 }

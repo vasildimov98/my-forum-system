@@ -4,9 +4,9 @@
 
     using ForumSystem.Web.ViewModels.PartialViews;
 
-    public class CategoriesByUserViewModelList
+    public class CategoriesByUserListModel
     {
-        public IEnumerable<CategoriesByUserViewModel> Categories { get; set; }
+        public IEnumerable<CategoryByUserViewModel> Categories { get; set; }
 
         public PaginationViewModel PaginationModel { get; set; }
     }
