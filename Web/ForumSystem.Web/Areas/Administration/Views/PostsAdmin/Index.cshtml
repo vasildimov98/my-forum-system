@@ -45,7 +45,15 @@
                                                         <a asp-area="" asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" class="btn btn-success btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></a>
                                                     </li>
                                                     <li class="list-inline-item">
-                                                        <a asp-area="" asp-controller="Posts" asp-action="Delete" asp-route-id="@post.Id" class="btn btn-danger btn-sm rounded-0" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                                                        <a asp-area=""
+                                                           asp-controller="Posts"
+                                                           asp-action="Delete"
+                                                           asp-route-id="@post.Id"
+                                                           asp-route-isFromAdminPanel="@true"
+                                                           class="btn btn-danger btn-sm rounded-0"
+                                                           data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           title="Delete"><i class="fa fa-trash"></i></a>
                                                     </li>
                                                 </ul>
                                             </td>

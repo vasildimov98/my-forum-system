@@ -12,6 +12,8 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static ForumSystem.Common.GlobalConstants;
+
     public class PostsController : BaseController
     {
         private const int PostsPerPage = 5;
@@ -42,6 +44,7 @@
 
             var count = this.postsService.GetCount();
             var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
+
             var postsList = new PostsAllViewModel
             {
                 PostsCount = count,
@@ -132,6 +135,11 @@
                 return this.NotFound();
             }
 
+            if (!this.CheckIfLogInUserIsTheOwner(id))
+            {
+                return this.Unauthorized();
+            }
+
             var categories = await this.categoriesService
                 .GetAllAsync<CategoryDropDownViewModel>();
 
@@ -151,16 +159,27 @@
 
             try
             {
+                var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
+                var userId = this.userManager
+                    .GetUserId(this.User);
+
                 await this.postsService
-                .EditAsync(
-                    editModel.Id,
-                    editModel.Title,
-                    editModel.Content,
-                    editModel.CategoryId);
+                    .EditAsync(
+                        isUserAdmin,
+                        userId,
+                        editModel.Id,
+                        editModel.Title,
+                        editModel.Content,
+                        editModel.CategoryId);
             }
-            catch
+            catch (InvalidOperationException)
             {
                 return this.NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return this.Unauthorized();
             }
 
             return this.RedirectToAction("ById", "Posts", new { editModel.Id, area = string.Empty });
@@ -182,24 +201,68 @@
                 return this.NotFound();
             }
 
+            if (!this.CheckIfLogInUserIsTheOwner(id.Value))
+            {
+                return this.Unauthorized();
+            }
+
             return this.View(post);
         }
 
         [HttpPost]
         [ActionName("Delete")]
         [Authorize]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, bool isFromAdminPanel)
         {
             try
             {
-                await this.postsService.DeleteAsync(id);
+                var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
+                var userId = this.userManager
+                    .GetUserId(this.User);
+
+                await this.postsService
+                    .DeleteAsync(
+                        isUserAdmin,
+                        userId,
+                        id);
             }
-            catch
+            catch (InvalidOperationException)
             {
                 return this.NotFound();
             }
+            catch (UnauthorizedAccessException)
+            {
+                return this.Unauthorized();
+            }
+
+            if (isFromAdminPanel)
+            {
+                return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName, id = 1 });
+            }
 
             return this.RedirectToAction("All", "Posts", new { area = string.Empty, id = 1 });
+        }
+
+        private bool CheckIfLogInUserIsTheOwner(int postId)
+        {
+            var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
+            if (!isUserAdmin)
+            {
+                var userId = this.userManager
+               .GetUserId(this.User);
+
+                var isUserTheOwner = this.postsService
+                    .IsUserTheOwner(postId, userId);
+
+                if (!isUserTheOwner)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

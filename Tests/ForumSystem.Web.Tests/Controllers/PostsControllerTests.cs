@@ -290,15 +290,16 @@
                 .NotFound();
 
         [Theory]
-        [InlineData(1, 1)]
+        [InlineData(1, false, 1)]
         public void PostDeleteShouldRedirectIfSuccessfullyDeletesCategory(
             int postId,
+            bool isFromAdminPanel,
             int page)
             => MyController<PostsController>
                 .Instance(instance => instance
                     .WithUser()
                     .WithData(GetPosts(postId)))
-                .Calling(c => c.DeleteConfirmed(postId))
+                .Calling(c => c.DeleteConfirmed(postId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForHttpMethod(HttpMethod.Post)
@@ -309,15 +310,16 @@
                     .To<ForumSystem.Web.Controllers.PostsController>(c => c.All(page)));
 
         [Theory]
-        [InlineData(1, 2)]
+        [InlineData(1, false, 2)]
         public void PostDeleteShouldReturnNotFoundIfCategoryDoesntExists(
             int postId,
+            bool isFromAdminPanel,
             int invalidPostId)
             => MyController<PostsController>
                 .Instance(instance => instance
                     .WithUser()
                     .WithData(GetPosts(postId)))
-                .Calling(c => c.DeleteConfirmed(invalidPostId))
+                .Calling(c => c.DeleteConfirmed(invalidPostId, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForHttpMethod(HttpMethod.Post)

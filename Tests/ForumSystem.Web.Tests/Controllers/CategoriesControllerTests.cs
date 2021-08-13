@@ -320,7 +320,7 @@
                     .RestrictingForAuthorizedRequests())
                 .AndAlso()
                 .ShouldReturn()
-                .NotFound();
+                .BadRequest();
 
         [Theory]
         [InlineData(1, false)]
@@ -380,11 +380,11 @@
                     .To<CategoriesAdminController>(c => c.Index(page)));
 
         [Theory]
-        [InlineData(1, 2, false)]
+        [InlineData(1, false, 2)]
         public void PostDeleteShouldReturnNotFoundIfCategoryDoesntExists(
             int categoryId,
-            int invalidCategoryId,
-            bool isFromAdminPanel)
+            bool isFromAdminPanel,
+            int invalidCategoryId)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithUser()

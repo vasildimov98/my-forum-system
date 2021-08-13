@@ -54,15 +54,25 @@
             return true;
         }
 
-        public async Task EditAsync(int id, CategoryEditModel input)
+        public async Task EditAsync(bool isUserAdmin, string userId, CategoryEditModel input)
         {
             var categoryToEdit = this.categoriesRepository
                 .All()
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == input.Id);
 
             if (categoryToEdit == null)
             {
-                throw new ArgumentNullException(nameof(categoryToEdit));
+                throw new InvalidOperationException(nameof(categoryToEdit));
+            }
+
+            if (!isUserAdmin)
+            {
+                var isUserTheOwner = this.IsUserTheOwner(input.Id, userId);
+
+                if (!isUserTheOwner)
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
 
             categoryToEdit.Name = input.Name;
@@ -73,15 +83,25 @@
             await this.categoriesRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(bool isUserAdmin, string userId, int categoryId)
         {
             var categoryToDelete = this.categoriesRepository
                 .All()
-                .FirstOrDefault(x => x.Id == id);
+                .FirstOrDefault(x => x.Id == categoryId);
 
             if (categoryToDelete == null)
             {
-                throw new ArgumentNullException(nameof(categoryToDelete));
+                throw new InvalidOperationException();
+            }
+
+            if (!isUserAdmin)
+            {
+                var isUserTheOwner = this.IsUserTheOwner(categoryId, userId);
+
+                if (!isUserTheOwner)
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
 
             var posts = this.postsRepository
@@ -158,10 +178,10 @@
                 .ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync<T>(int id)
+        public async Task<T> GetByIdAsync<T>(int categoryId)
             => await this.categoriesRepository
                 .All()
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == categoryId)
                 .To<T>()
                 .FirstOrDefaultAsync();
 
@@ -177,7 +197,7 @@
         public async Task<T> GetByNameAsync<T>(string name)
             => await this.categoriesRepository
             .All()
-            .Where(x => x.Name == name)
+            .Where(x => x.Name == name && x.IsApprovedByAdmin)
             .To<T>()
             .FirstOrDefaultAsync();
 
@@ -208,11 +228,11 @@
                 .Select(x => x.Id)
                 .FirstOrDefault();
 
-        public async Task<bool> ApproveCategoryAsync(int id)
+        public async Task<bool> ApproveCategoryAsync(int categoryId)
         {
             var category = this.categoriesRepository
                  .All()
-                 .Where(x => x.Id == id)
+                 .Where(x => x.Id == categoryId)
                  .FirstOrDefault();
 
             if (category == null)
@@ -225,5 +245,10 @@
 
             return category.IsApprovedByAdmin;
         }
+
+        public bool IsUserTheOwner(int categoryId, string userId)
+            => this.categoriesRepository
+                .All()
+                .Any(x => x.OwnerId == userId && x.Id == categoryId);
     }
 }

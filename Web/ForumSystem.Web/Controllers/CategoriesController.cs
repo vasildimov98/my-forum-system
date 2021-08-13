@@ -64,6 +64,13 @@
         [Authorize]
         public async Task<IActionResult> ByOwner(string username, int id)
         {
+            var loggedInUser = await this.userManager.GetUserAsync(this.User);
+
+            if (loggedInUser.UserName != username)
+            {
+                return this.Unauthorized();
+            }
+
             var page = Math.Max(1, id);
 
             var categories = await this.categoriesService
@@ -171,6 +178,11 @@
                 return this.NotFound();
             }
 
+            if (!this.CheckIfLogInUserIsTheOwner(id))
+            {
+                return this.Unauthorized();
+            }
+
             return this.View(category);
         }
 
@@ -186,12 +198,21 @@
 
             try
             {
+                var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
+                var userId = this.userManager
+               .GetUserId(this.User);
+
                 await this.categoriesService
-                    .EditAsync(input.Id, input);
+                    .EditAsync(isUserAdmin, userId, input);
             }
-            catch
+            catch (InvalidOperationException)
             {
                 return this.NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return this.Unauthorized();
             }
 
             return this.RedirectToAction("ByName", "Categories", new { name = input.Name, id = 1 });
@@ -202,7 +223,7 @@
         {
             if (id == null)
             {
-                return this.NotFound();
+                return this.BadRequest();
             }
 
             var category = await this.categoriesService
@@ -211,6 +232,11 @@
             if (category == null)
             {
                 return this.NotFound();
+            }
+
+            if (!this.CheckIfLogInUserIsTheOwner(id.Value))
+            {
+                return this.Unauthorized();
             }
 
             category.IsFromAdminPanel = isFromAdminPanel;
@@ -225,12 +251,21 @@
         {
             try
             {
+                var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
+                var userId = this.userManager
+                    .GetUserId(this.User);
+
                 await this.categoriesService
-                    .DeleteAsync(id);
+                    .DeleteAsync(isUserAdmin, userId, id);
             }
-            catch
+            catch (InvalidOperationException)
             {
                 return this.NotFound();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return this.Unauthorized();
             }
 
             if (isFromAdminPanel)
@@ -241,6 +276,29 @@
             var username = (await this.userManager.GetUserAsync(this.User)).UserName;
 
             return this.RedirectToAction("ByOwner", "Categories", new { area = string.Empty, username, id = 1 });
+        }
+
+        private bool CheckIfLogInUserIsTheOwner(int categoryId)
+        {
+            var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
+            if (isUserAdmin)
+            {
+                return true;
+            }
+
+            var userId = this.userManager
+           .GetUserId(this.User);
+
+            var isUserTheOwner = this.categoriesService
+                .IsUserTheOwner(categoryId, userId);
+
+            if (!isUserTheOwner)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

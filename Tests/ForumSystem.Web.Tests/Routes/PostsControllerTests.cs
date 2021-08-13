@@ -75,6 +75,6 @@
                 .ShouldMap(request => request
                     .WithMethod(HttpMethod.Post)
                     .WithLocation("Post/Delete/1"))
-                .To<PostsController>(c => c.DeleteConfirmed(With.Value<int>(1)));
+                .To<PostsController>(c => c.DeleteConfirmed(With.Value<int>(1), With.Value<bool>(false)));
     }
 }

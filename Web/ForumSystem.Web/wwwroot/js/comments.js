@@ -35,7 +35,7 @@ async function commentOnCurrSection(event) {
     const content = formNode.querySelector("textarea[name=content]").value;
     const clearContent = clearContentOfHtmlTags(content);
 
-    if (!clearContent.replace(" ", "")) {
+    if (!clearContent) {
         const alertDiv = formNode
             .querySelector(".alert");
 
@@ -93,7 +93,7 @@ async function commentOnCurrSection(event) {
         selector: "textarea",
         resize: false,
         plugins: [
-            "image paste table link code media"
+            "image paste table link code media autoresize"
         ],
         setup: function (editor) {
             editor.on('change', function () {

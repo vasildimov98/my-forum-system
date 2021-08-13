@@ -39,7 +39,13 @@
             return post.Id;
         }
 
-        public async Task EditAsync(int postId, string title, string content, int categoryId)
+        public async Task EditAsync(
+            bool isUserAdmin,
+            string userId,
+            int postId,
+            string title,
+            string content,
+            int categoryId)
         {
             var postToEdit = await this.postsRepository
                 .All()
@@ -47,7 +53,17 @@
 
             if (postToEdit == null)
             {
-                throw new ArgumentNullException(nameof(postToEdit));
+                throw new InvalidOperationException(nameof(postToEdit));
+            }
+
+            if (!isUserAdmin)
+            {
+                var isUserTheOwner = this.IsUserTheOwner(postId, userId);
+
+                if (!isUserTheOwner)
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
 
             postToEdit.Title = title;
@@ -58,7 +74,7 @@
             await this.postsRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int postId)
+        public async Task DeleteAsync(bool isUserAdmin, string userId, int postId)
         {
             var post = await this.postsRepository
                 .All()
@@ -67,6 +83,16 @@
             if (post == null)
             {
                 throw new InvalidOperationException("Post doesn't exits");
+            }
+
+            if (!isUserAdmin)
+            {
+                var isUserTheOwner = this.IsUserTheOwner(postId, userId);
+
+                if (!isUserTheOwner)
+                {
+                    throw new UnauthorizedAccessException();
+                }
             }
 
             var comments = await this.commentsRepository.All()
@@ -150,5 +176,10 @@
             => this.postsRepository
                 .All()
                 .Count();
+
+        public bool IsUserTheOwner(int postId, string userId)
+            => this.postsRepository
+                .All()
+                .Any(x => x.Id == postId && x.UserId == userId);
     }
 }

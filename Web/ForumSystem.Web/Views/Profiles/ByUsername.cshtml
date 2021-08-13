@@ -52,13 +52,17 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 p-0">
-                                    <a asp-controller="Categories"
-                                            asp-action="ByOwner"
-                                            asp-route-username="@this.Model.UserName"
-                                            asp-route-id="1"
-                                            class="btn btn-info float-md-right">My Categories</a>
-                                </div>
+                                @if (this.Model.IsLoggedInUser)
+                                {
+                                    <div class="col-md-6 p-0">
+                                        <a asp-controller="Categories"
+                                                asp-action="ByOwner"
+                                                asp-route-username="@this.Model.UserName"
+                                                asp-route-id="1"
+                                                class="btn btn-info float-md-right">My Categories</a>
+                                    </div>
+                                }
+
                             </div>
                         </div>
                     </div>

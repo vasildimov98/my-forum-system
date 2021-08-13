@@ -28,6 +28,7 @@
                         {
                             Id = i,
                         },
+                        User = user,
                     }).ToList();
 
             return posts;

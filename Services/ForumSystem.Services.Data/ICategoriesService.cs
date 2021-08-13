@@ -9,9 +9,9 @@
     {
         public Task<bool> CreateAsync(CategoryInputModel input, string userId, bool isUserAdmin = false);
 
-        public Task EditAsync(int id, CategoryEditModel input);
+        public Task EditAsync(bool isUserAdmin, string userId, CategoryEditModel input);
 
-        public Task DeleteAsync(int id);
+        public Task DeleteAsync(bool isUserAdmin, string userId, int categoryId);
 
         public Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0, bool onlyApproved = true);
 
@@ -19,16 +19,17 @@
 
         public Task<IEnumerable<T>> GetMostFamousCategories<T>(int take = 5);
 
-        public Task<T> GetByIdAsync<T>(int id);
+        public Task<T> GetByIdAsync<T>(int categoryId);
 
         public Task<T> GetByNameAsync<T>(string name);
 
-        Task<bool> ApproveCategoryAsync(int id);
+        Task<bool> ApproveCategoryAsync(int categoryId);
 
         public int GetCount(bool onlyApproved = true);
 
         int GetCountByOwner(string username);
 
         public int GetIdCategoryIdByName(string name);
+        bool IsUserTheOwner(int categoryId, string userId);
     }
 }

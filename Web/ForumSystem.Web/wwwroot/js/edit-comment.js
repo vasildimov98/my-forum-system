@@ -24,7 +24,7 @@
             selector: "textarea",
             resize: false,
             plugins: [
-                "image paste table link code media"
+                "image paste table link code media autoresize"
             ],
             setup: function (editor) {
                 editor.on('change', function () {
