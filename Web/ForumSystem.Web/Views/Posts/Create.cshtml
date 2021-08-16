@@ -31,14 +31,14 @@
 <form asp-action="Create" method="post" id="myform">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-group">
+    <div id="myModal" class="form-group">
         <label asp-for="CategoryId"></label>
-        <select asp-for="CategoryId" asp-items="categories" name="ajaxSelect2" class="form-control" id="ajaxSelect2">
+        <select asp-for="CategoryId" asp-items="categories" id="ajaxSelect2" class="form-control">
         </select>
     </div>
 
     <hr />
-    <div class="form-group" contenteditable>
+    <div class="form-group">
         <label asp-for="Title"></label>
         <textarea asp-for="Title" onkeyup="textCounter(this,'counter',300);" id="message" class="form-control authoresize-area"></textarea>
         <div id="counter" class="words-written">

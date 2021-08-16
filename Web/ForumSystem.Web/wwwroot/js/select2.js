@@ -2,6 +2,7 @@
     placeholder: "Search category",
     theme: "bootstrap4",
     allowClear: true,
+    width: '100%',
     ajax: {
         url: "/api/categories/search",
         contentType: "application/json; charset=utf-8",

@@ -4,7 +4,7 @@
 
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Posts;
-
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [ApiController]
@@ -19,10 +19,11 @@
         }
 
         [HttpGet]
+        [Authorize]
         [Route("search")]
         public async Task<IActionResult> Search(string term)
         {
-            if (!string.IsNullOrEmpty(term))
+            if (!string.IsNullOrWhiteSpace(term))
             {
                 var data = await this.categories
                     .FindCategoryByTermSearchAsync<CategoryDropDownViewModel>(term);
