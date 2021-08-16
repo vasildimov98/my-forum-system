@@ -9,5 +9,7 @@
         public IEnumerable<PostCrudModel> Posts { get; set; }
 
         public PaginationViewModel PaginationModel { get; set; }
+
+        public string SearchTerm { get; set; }
     }
 }

@@ -22,6 +22,8 @@
 
         public string SanitizeDescription => new HtmlSanitizer().Sanitize(this.Description);
 
+        public string SearchTerm { get; set; }
+
         public IEnumerable<PostListViewModel> Posts { get; set; }
 
         public int PostsCount { get; set; }

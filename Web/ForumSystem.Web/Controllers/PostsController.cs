@@ -35,14 +35,18 @@
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> All(int id = 1)
+        public async Task<IActionResult> All(int id, string searchTerm)
         {
-            var page = id;
+            var page = Math.Max(1, id);
 
             var posts = await this.postsService
-                    .GetAllAsync<PostListViewModel>(PostsPerPage, (page - 1) * PostsPerPage);
+                    .GetAllAsync<PostListViewModel>(
+                    searchTerm,
+                    PostsPerPage,
+                    (page - 1) * PostsPerPage);
 
-            var count = this.postsService.GetCount();
+            var count = this.postsService.GetCount(searchTerm);
+
             var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
 
             var postsList = new PostsAllViewModel
@@ -54,6 +58,7 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "default",
+                    SearchTerm = searchTerm,
                 },
             };
 

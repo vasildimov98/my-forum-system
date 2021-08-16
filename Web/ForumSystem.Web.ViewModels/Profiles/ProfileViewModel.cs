@@ -20,6 +20,8 @@
 
         public bool IsLoggedInUser { get; set; }
 
+        public string SearchTerm { get; set; }
+
         public PaginationViewModel PaginationModel { get; set; }
 
         public IEnumerable<PostListViewModel> Posts { get; set; }

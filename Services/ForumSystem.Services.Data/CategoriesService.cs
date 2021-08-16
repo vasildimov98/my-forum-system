@@ -263,7 +263,8 @@
         }
 
         public int GetIdCategoryIdByName(string name)
-            => this.categoriesRepository.All()
+            => this.categoriesRepository
+                .All()
                 .Where(x => x.Name == name)
                 .Select(x => x.Id)
                 .FirstOrDefault();

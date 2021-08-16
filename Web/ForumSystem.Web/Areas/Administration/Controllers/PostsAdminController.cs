@@ -25,14 +25,17 @@
         }
 
         [Authorize(Roles = AdministratorRoleName)]
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id, string searchTerm)
         {
             var page = Math.Max(1, id);
 
             var posts = await this.postsService
-                .GetAllAsync<PostCrudModel>(PostsPerPage, (page - 1) * PostsPerPage);
+                .GetAllAsync<PostCrudModel>(
+                searchTerm,
+                PostsPerPage,
+                (page - 1) * PostsPerPage);
 
-            var postCount = this.postsService.GetCount();
+            var postCount = this.postsService.GetCount(searchTerm);
 
             var pagesCount = (int)Math.Ceiling((decimal)postCount / PostsPerPage);
 
@@ -44,6 +47,7 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "areaRoute",
+                    SearchTerm = searchTerm,
                 },
             };
 

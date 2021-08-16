@@ -35,7 +35,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> ByUsername(string username, int id)
+        public async Task<IActionResult> ByUsername(string username, int id, string searchTerm)
         {
             var page = Math.Max(1, id);
 
@@ -47,9 +47,19 @@
                 .FirstOrDefaultAsync(x => x.UserName == username);
 
             var posts = await this.postsService
-                .GetAllByUserIdAsync<PostListViewModel>(user.Id, PostsPerPage, (page - 1) * PostsPerPage);
+                .GetAllByUserIdAsync<PostListViewModel>(
+                user.Id,
+                searchTerm,
+                PostsPerPage,
+                (page - 1) * PostsPerPage);
 
             var postsCount = user.Posts.Count;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                postsCount = this.postsService
+                    .GetCountByUsername(username, searchTerm);
+            }
 
             var imageSrc = user.HasImage ?
                 "/profileImages/" + user.ProfileImage.Id + user.ProfileImage.Extention :
@@ -70,6 +80,7 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "user-username-page",
+                    SearchTerm = searchTerm,
                 },
             };
 

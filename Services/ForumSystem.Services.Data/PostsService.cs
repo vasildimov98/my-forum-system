@@ -109,12 +109,20 @@
             await this.postsRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllAsync<T>(
+            string searchTerm = null,
+            int? take = null,
+            int skip = 0)
         {
             var postsQuery = this.postsRepository
                 .All()
                 .OrderByDescending(x => x.CreatedOn)
                 .Skip(skip);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                postsQuery = FilterSearchTerm(searchTerm, postsQuery);
+            }
 
             if (take.HasValue)
             {
@@ -127,7 +135,11 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllByCategoryIdAsync<T>(int categoryId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllByCategoryIdAsync<T>(
+            int categoryId,
+            string searchTerm = null,
+            int? take = null,
+            int skip = 0)
         {
             var postsQuery = this.postsRepository
                .All()
@@ -135,6 +147,11 @@
                .OrderByDescending(x => x.CreatedOn)
                .Skip(skip);
 
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                postsQuery = FilterSearchTerm(searchTerm, postsQuery);
+            }
+
             if (take.HasValue)
             {
                 postsQuery = postsQuery
@@ -146,13 +163,22 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllByUserIdAsync<T>(string userId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetAllByUserIdAsync<T>(
+            string userId,
+            string searchTerm,
+            int? take = null,
+            int skip = 0)
         {
             var postsQuery = this.postsRepository
                .All()
                .Where(x => x.UserId == userId)
                .OrderByDescending(x => x.CreatedOn)
                .Skip(skip);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                postsQuery = FilterSearchTerm(searchTerm, postsQuery);
+            }
 
             if (take.HasValue)
             {
@@ -172,14 +198,48 @@
                 .To<T>()
                 .FirstOrDefault();
 
-        public int GetCount()
+        public int GetCount(string searchTerm = null)
+        {
+            var postsQuery = this.postsRepository.All();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                postsQuery = FilterSearchTerm(searchTerm, postsQuery);
+            }
+
+            return postsQuery.Count();
+        }
+
+        public int GetCountByCategoryName(string categoryName, string searchTerm)
             => this.postsRepository
-                .All()
-                .Count();
+                   .All()
+                   .Where(x => (x.Category.Name == categoryName)
+                         && (EF.Functions.Like(x.Title, $"%{searchTerm}%")
+                            || EF.Functions.Like(x.Content, $"%{searchTerm}%")
+                            || EF.Functions.Like(x.Category.Name, $"%{searchTerm}%")
+                            || EF.Functions.Like(x.Category.Description, $"%{searchTerm}%")))
+                   .Count();
+
+        public int GetCountByUsername(string username, string searchTerm)
+             => this.postsRepository
+                   .All()
+                   .Where(x => (x.User.UserName == username)
+                         && (EF.Functions.Like(x.Title, $"%{searchTerm}%")
+                            || EF.Functions.Like(x.Content, $"%{searchTerm}%")
+                            || EF.Functions.Like(x.Category.Name, $"%{searchTerm}%")
+                            || EF.Functions.Like(x.Category.Description, $"%{searchTerm}%")))
+                   .Count();
 
         public bool IsUserTheOwner(int postId, string userId)
             => this.postsRepository
                 .All()
                 .Any(x => x.Id == postId && x.UserId == userId);
+
+        private static IQueryable<Post> FilterSearchTerm(string searchTerm, IQueryable<Post> postsQuery)
+            => postsQuery
+              .Where(x => EF.Functions.Like(x.Title, $"%{searchTerm}%")
+                       || EF.Functions.Like(x.Content, $"%{searchTerm}%")
+                       || EF.Functions.Like(x.Category.Name, $"%{searchTerm}%")
+                       || EF.Functions.Like(x.Category.Description, $"%{searchTerm}%"));
     }
 }

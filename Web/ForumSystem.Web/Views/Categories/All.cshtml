@@ -25,22 +25,33 @@
 </div>
 
 <div class="ibox-content forum-container mb-3">
-    @foreach (var category in this.Model.Categories)
+    @if (!this.Model.Categories.Any())
     {
-        <div class="forum-item">
-            <div class="row">
-                <a asp-action="ByName" asp-route-name="@category.RouteName" asp-route-id="1" class="text-dark">
-                    <div class="col-md-12 p-0 my-col">
-                        <span>@(count++)</span>
-                        <img src="@category.ImageUrl" width="60" class="ui-w-40 rounded-circle center-block" />
-                        <span>@category.Name</span>
-                    </div>
-                </a>
-            </div>
+        <div class="forum-title">
+            <h3>No categories were found, why don't you create one?</h3>
         </div>
-    }
 
-    <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel">
+        <a asp-area="" asp-controller="Categories" asp-action="Create" class="btn btn-primary btn-block">Create Category</a>
+    }
+    else
+    {
+        @foreach (var category in this.Model.Categories)
+        {
+            <div class="forum-item">
+                <div class="row">
+                    <a asp-action="ByName" asp-route-name="@category.RouteName" asp-route-id="1" class="text-dark">
+                        <div class="col-md-12 p-0 my-col">
+                            <span>@(count++)</span>
+                            <img src="@category.ImageUrl" width="60" class="ui-w-40 rounded-circle center-block" />
+                            <span>@category.Name</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+
+        <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel" />
+    }
 </div>
 
 @section Scripts

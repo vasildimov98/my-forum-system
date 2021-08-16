@@ -105,7 +105,7 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> ByName(string name, int id)
+        public async Task<IActionResult> ByName(string name, int id, string searchTerm)
         {
             var page = id;
 
@@ -120,7 +120,17 @@
             }
 
             category.Posts = await this.postsService
-                .GetAllByCategoryIdAsync<PostListViewModel>(category.Id, PostsPerPage, (page - 1) * PostsPerPage);
+                .GetAllByCategoryIdAsync<PostListViewModel>(
+                category.Id,
+                searchTerm,
+                PostsPerPage,
+                (page - 1) * PostsPerPage);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                category.PostsCount = this.postsService
+                    .GetCountByCategoryName(name, searchTerm);
+            }
 
             var pagesCount = (int)Math.Ceiling((double)category.PostsCount / PostsPerPage);
 
@@ -129,6 +139,7 @@
                 CurrentPage = page,
                 TotalPages = pagesCount,
                 RouteName = "category-name-page",
+                SearchTerm = searchTerm,
             };
 
             return this.View(category);

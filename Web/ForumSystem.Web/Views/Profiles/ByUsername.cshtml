@@ -56,10 +56,10 @@
                                 {
                                     <div class="col-md-6 p-0">
                                         <a asp-controller="Categories"
-                                                asp-action="ByOwner"
-                                                asp-route-username="@this.Model.UserName"
-                                                asp-route-id="1"
-                                                class="btn btn-info float-md-right">My Categories</a>
+                                           asp-action="ByOwner"
+                                           asp-route-username="@this.Model.UserName"
+                                           asp-route-id="1"
+                                           class="btn btn-info float-md-right">My Categories</a>
                                     </div>
                                 }
 
@@ -68,31 +68,36 @@
                     </div>
                 </div>
 
-                @if (this.Model.PostsCount == 0)
-                {
-                    <div class="ibox-content forum-container">
-
-                        <div class="forum-title">
-                            <h3>There are no posts. :( You can be the first one to write one. :)</h3>
+                <div class="ibox-content forum-container">
+                    <form class="mt-3">
+                        <div class="form-row">
+                            <div class="form-group col-md-10">
+                                <input asp-for="SearchTerm" placeholder="Search Posts..." class="form-control" />
+                            </div>
+                            <div class="form-group col-md-2">
+                                <button type="submit" class="btn btn-block btn-primary">Search</button>
+                            </div>
                         </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="ibox-content forum-container">
+                    </form>
+
+                    @if (this.Model.PostsCount == 0)
+                    {
                         <div class="forum-title">
-                            <h3>Posts: </h3>
+                            <h3>It feels empty! Why don't you write a post?</h3>
                         </div>
 
-                        @foreach (var post in this.Model.Posts)
-                        {
-                            <partial name="~/Views/PartialViews/_Post.cshtml" model="post" />
-                        }
+                        <a asp-controller="Posts" asp-action="Create" class="btn btn-block btn-primary">
+                            Write a Post
+                        </a>
+                    }
 
-                        <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel" />
-                    </div>
-                }
+                    @foreach (var post in this.Model.Posts)
+                    {
+                        <partial name="~/Views/PartialViews/_Post.cshtml" , model="post" />
+                    }
 
+                    <partial name="~/Views/PartialViews/_Pagination.cshtml" , model="this.Model.PaginationModel" />
+                </div>
             </div>
         </div>
     </div>
