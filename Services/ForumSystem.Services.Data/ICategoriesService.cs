@@ -17,6 +17,8 @@
 
         public Task<IEnumerable<T>> GetByOwnerUsernameAsync<T>(string userId, int? take = null, int skip = 0);
 
+        Task<IEnumerable<T>> FindCategoryByTermSearchAsync<T>(string term);
+
         public Task<IEnumerable<T>> GetMostFamousCategories<T>(int take = 5);
 
         public Task<T> GetByIdAsync<T>(int categoryId);
@@ -30,6 +32,7 @@
         int GetCountByOwner(string username);
 
         public int GetIdCategoryIdByName(string name);
+
         bool IsUserTheOwner(int categoryId, string userId);
     }
 }

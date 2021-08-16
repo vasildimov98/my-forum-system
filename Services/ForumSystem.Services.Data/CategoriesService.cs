@@ -250,5 +250,13 @@
             => this.categoriesRepository
                 .All()
                 .Any(x => x.OwnerId == userId && x.Id == categoryId);
+
+        public async Task<IEnumerable<T>> FindCategoryByTermSearchAsync<T>(string term)
+            => await this.categoriesRepository
+                .All()
+                .Where(x => EF.Functions.Like(x.Name, $"%{term}%")
+                || EF.Functions.Like(x.Description, $"%{term}%"))
+                .To<T>()
+                .ToListAsync();
     }
 }
