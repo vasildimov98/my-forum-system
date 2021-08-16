@@ -32,7 +32,8 @@
                         {
                             Id = $"TestId{i}",
                             UserName = $"TestUserName{i}",
-                        } : user,
+                        }
+                        : user,
                     }).ToList();
 
             return posts;

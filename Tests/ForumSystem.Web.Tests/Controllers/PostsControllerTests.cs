@@ -449,11 +449,12 @@
                .Unauthorized();
 
         [Theory]
-        [InlineData(1, false, 1)]
+        [InlineData(1, false, 1, null)]
         public void PostDeleteShouldRedirectIfSuccessfullyDeletesCategory(
             int postId,
             bool isFromAdminPanel,
-            int page)
+            int page,
+            string searchTerm)
             => MyController<PostsController>
                 .Instance(instance => instance
                     .WithUser()
@@ -466,15 +467,16 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<PostsController>(c => c.All(page)));
+                    .To<PostsController>(c => c.All(page, searchTerm)));
 
         [Theory]
-        [InlineData(1, true, false, 1)]
+        [InlineData(1, true, false, 1, null)]
         public void PostDeleteShouldDeleteEvenIfUserIsNotTheOwnerButIsTheAdministrator(
          int postId,
          bool isDiffOwner,
          bool isFromAdminPanel,
-         int page)
+         int page,
+         string searchTerm)
          => MyController<PostsController>
              .Instance(instance => instance
                  .WithUser(new string[] { AdministratorRoleName })
@@ -487,16 +489,17 @@
              .AndAlso()
              .ShouldReturn()
              .Redirect(redirect => redirect
-                 .To<PostsController>(c => c.All(page)));
+                 .To<PostsController>(c => c.All(page, searchTerm)));
 
         [Theory]
-        [InlineData(1, true, 1)]
-        [InlineData(10, true, 1)]
-        [InlineData(20, true, 1)]
+        [InlineData(1, true, 1, null)]
+        [InlineData(10, true, 1, null)]
+        [InlineData(20, true, 1, null)]
         public void PostDeleteShouldRedirectToAdminPanelIfSuccessfullyDeletesCategoryFromAdminPanelFirstPage(
             int postId,
             bool isFromAdminPanel,
-            int page)
+            int page,
+            string searchTerm)
             => MyController<PostsController>
                 .Instance(instance => instance
                     .WithUser()
@@ -509,7 +512,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<PostsAdminController>(c => c.Index(page)));
+                    .To<PostsAdminController>(c => c.Index(page, searchTerm)));
 
         [Theory]
         [InlineData(1, false, 2)]

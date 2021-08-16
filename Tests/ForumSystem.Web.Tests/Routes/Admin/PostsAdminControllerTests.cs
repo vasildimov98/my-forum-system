@@ -12,6 +12,6 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("Administration/PostsAdmin/Index")
-                .To<PostsAdminController>(c => c.Index(With.Value<int>(1)));
+                .To<PostsAdminController>(c => c.Index(With.Value<int>(1), With.Value<string>(null)));
     }
 }

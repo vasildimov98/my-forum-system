@@ -35,7 +35,7 @@
                        Name = $"TestName{i}",
                        Description = $"TestDescription{i}",
                        ImageUrl = "TestImageURl",
-                       Owner = isDiffUser ? new ApplicationUser 
+                       Owner = isDiffUser ? new ApplicationUser
                        {
                            Id = $"DiffTestUserId{i}",
                            UserName = $"DiffTestUsername{i}",

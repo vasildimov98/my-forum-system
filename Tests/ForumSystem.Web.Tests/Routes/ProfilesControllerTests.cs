@@ -12,6 +12,6 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("/User/TestUsername/1")
-                .To<ProfilesController>(c => c.ByUsername("TestUsername", 1));
+                .To<ProfilesController>(c => c.ByUsername("TestUsername", 1, null));
     }
 }

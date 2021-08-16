@@ -37,6 +37,7 @@
         int GetCount(string searchTerm = null);
 
         int GetCountByCategoryName(string categoryName, string searchTerm);
+
         int GetCountByUsername(string username, string searchTerm);
     }
 }

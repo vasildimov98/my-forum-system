@@ -13,14 +13,14 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("/")
-                .To<PostsController>(c => c.All(With.No<int>()));
+                .To<PostsController>(c => c.All(With.No<int>(), With.No<string>()));
 
         [Fact]
         public void GetAllShouldBeRoutedCorrectly()
             => MyRouting
                 .Configuration()
                 .ShouldMap("/Posts/All/1")
-                .To<PostsController>(c => c.All(With.Value<int>(1)));
+                .To<PostsController>(c => c.All(With.Value<int>(1), With.Value<string>(null)));
 
         [Fact]
         public void GetCreateShouldBeRoutedCorrectly()

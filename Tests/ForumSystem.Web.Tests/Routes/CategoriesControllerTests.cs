@@ -16,23 +16,24 @@
                 .To<CategoriesController>(c => c.All(With.Value<int>(1), With.Value<string>(null)));
 
         [Theory]
-        [InlineData("TestUser", 1, "/Categories/ByOwner/TestUser/1")]
-        [InlineData("TestUser2", 2, "/Categories/ByOwner/TestUser2/2")]
+        [InlineData("TestUser", 1, null, "/Categories/ByOwner/TestUser/1")]
+        [InlineData("TestUser2", 2, null, "/Categories/ByOwner/TestUser2/2")]
         public void GetByOwnerShouldRoutedCorrectly(
             string username,
             int page,
+            string searchTerm,
             string location)
             => MyRouting
                 .Configuration()
                 .ShouldMap(location)
-                .To<CategoriesController>(c => c.ByOwner(username, page));
+                .To<CategoriesController>(c => c.ByOwner(username, page, searchTerm));
 
         [Fact]
         public void GetByNameShouldBeRoutedCorrectly()
             => MyRouting
                 .Configuration()
                 .ShouldMap("Category/test-test/1")
-                .To<CategoriesController>(c => c.ByName("test-test", 1));
+                .To<CategoriesController>(c => c.ByName("test-test", 1, null));
 
         [Fact]
         public void GetCreateShouldBeRoutedCorrectly()
