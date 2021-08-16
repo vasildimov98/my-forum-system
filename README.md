@@ -28,4 +28,3 @@ Administrators are like every other user, except they have the right to edit and
 * TinyMCE
 * Sweetalert2
 * Fontawesome
-* 
