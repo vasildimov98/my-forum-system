@@ -11,6 +11,7 @@ To be able to read, write or comment on a post, or create a category, first user
 
 Administrators are like every other users, except they have the right to edit, delete every posts and category, and when they create a cateogry they don't need to wait for approval. Administrator also have Admin Panel where they can look at all the posts and categories and change or dismissed them. 
 
+<<<<<<< HEAD
 🔨 ## Built with
 
 * ASP.NET CORE 5 MVC
@@ -29,4 +30,3 @@ Administrators are like every other users, except they have the right to edit, d
 * TinyMCE
 * Sweetalert2
 * Fontawesome
-* Momment
