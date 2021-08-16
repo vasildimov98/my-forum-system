@@ -12,7 +12,7 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("Administration/CategoriesAdmin/Index")
-                .To<CategoriesAdminController>(c => c.Index(With.Value<int>(1)));
+                .To<CategoriesAdminController>(c => c.Index(With.Value<int>(1), With.Value<string>(string.Empty)));
 
         [Theory]
         [InlineData(1, 1, "Administration/CategoriesAdmin/Approve/1?page=1")]

@@ -18,15 +18,16 @@
     public class CategoriesControllerTests
     {
         [Theory]
-        [InlineData(10, 1, 2)]
+        [InlineData(10, 1, null, 2)]
         public void GetAllShouldReturnCorrectViewModel(
             int categoriesCount,
             int page,
+            string searchTerm,
             int totalPages)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithData(GetCategories(12)))
-                .Calling(c => c.All(page))
+                .Calling(c => c.All(page, searchTerm))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
                     .RestrictingForAuthorizedRequests())
@@ -42,19 +43,20 @@
                     }));
 
         [Theory]
-        [InlineData(10, 5, 1, 5, 1)]
-        [InlineData(12, 10, 1, 10, 1)]
-        [InlineData(20, 20, 2, 10, 2)]
+        [InlineData(10, 5, 1, null, 5, 1)]
+        [InlineData(12, 10, 1, null, 10, 1)]
+        [InlineData(20, 20, 2, null, 10, 2)]
         public void GetAllShouldReturnOnlyApprovedCateogries(
             int total,
             int approved,
             int page,
+            string searchTerm,
             int expectedCategories,
             int expectedPages)
             => MyController<CategoriesController>
                 .Instance(instance => instance
                     .WithData(GetMixedCategories(total, approved)))
-                .Calling(c => c.All(page))
+                .Calling(c => c.All(page, searchTerm))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
                     .RestrictingForAuthorizedRequests())
@@ -624,10 +626,11 @@
                  .To<CategoriesController>(c => c.ByOwner(TestUser.Username, page)));
 
         [Theory]
-        [InlineData(1, 1, true)]
+        [InlineData(1, 1, null, true)]
         public void PostDeleteShouldRedirectToAdminPanelIfAdministratorIsDeletingAndIfSuccessfullyDeletesCategory(
             int categoryId,
             int page,
+            string searchTerm,
             bool isFromAdminPanel)
             => MyController<CategoriesController>
                 .Instance(instance => instance
@@ -641,7 +644,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<CategoriesAdminController>(c => c.Index(page)));
+                    .To<CategoriesAdminController>(c => c.Index(page, searchTerm)));
 
         [Theory]
         [InlineData(1, false, 2)]

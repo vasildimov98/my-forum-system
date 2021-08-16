@@ -18,6 +18,7 @@
         [InlineData(5, "es", 5)]
         [InlineData(8, "3", 1)]
         [InlineData(10, "sas", 0)]
+        [InlineData(0, "es", 0)]
         public void GetSearchShouldReturnCategoriesWithchnameOrDescriptionMarchTheTerm(
             int categoryCount,
             string invalidTerm,

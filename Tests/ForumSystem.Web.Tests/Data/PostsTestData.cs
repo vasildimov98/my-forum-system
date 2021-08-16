@@ -28,7 +28,7 @@
                         {
                             Id = i,
                         },
-                        User = isDiffOwner ? new ApplicationUser 
+                        User = isDiffOwner ? new ApplicationUser
                         {
                             Id = $"TestId{i}",
                             UserName = $"TestUserName{i}",

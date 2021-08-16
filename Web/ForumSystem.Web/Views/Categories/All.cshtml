@@ -2,16 +2,29 @@
 @model CateogoriesListModel
 
 @{
-    this.ViewData["Title"] = "Today's Top Growing Categories";
+    this.ViewData["Title"] = "All Categories";
     var count = ((this.Model.PaginationModel.CurrentPage - 1) * 10) + 1;
 }
 
-<div class="ibox-content forum-container mb-3">
+<div class="ibox-content m-b-sm border-bottom">
 
-    <div class="forum-title">
-        <h3>@this.ViewData["Title"]</h3>
+    <div class="p-xs">
+        <h1>Today's Top Growing Categories</h1>
     </div>
 
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-10">
+                <input asp-for="SearchTerm" placeholder="Search Categories..." class="form-control" />
+            </div>
+            <div class="form-group col-md-2">
+                <button type="submit" class="btn btn-block btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="ibox-content forum-container mb-3">
     @foreach (var category in this.Model.Categories)
     {
         <div class="forum-item">
@@ -28,5 +41,10 @@
     }
 
     <partial name="~/Views/PartialViews/_Pagination.cshtml" model="this.Model.PaginationModel">
-
 </div>
+
+@section Scripts
+{
+    <script src="~/lib/select2/js/select2.full.min.js"></script>
+    <script src="~/js/select2.js"></script>
+}

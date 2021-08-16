@@ -13,7 +13,7 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("/Categories/All")
-                .To<CategoriesController>(c => c.All(With.Value<int>(1)));
+                .To<CategoriesController>(c => c.All(With.Value<int>(1), With.Value<string>(null)));
 
         [Theory]
         [InlineData("TestUser", 1, "/Categories/ByOwner/TestUser/1")]

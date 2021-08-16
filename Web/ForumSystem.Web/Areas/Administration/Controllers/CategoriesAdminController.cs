@@ -23,14 +23,18 @@
         }
 
         [Authorize(Roles = AdministratorRoleName)]
-        public async Task<IActionResult> Index(int id = 1)
+        public async Task<IActionResult> Index(int id, string searchTerm)
         {
             var page = Math.Max(1, id);
 
             var categories = await this.categorieService
-                .GetAllAsync<CategoryCrudModel>(CategoryPerPage, (page - 1) * CategoryPerPage, false);
+                .GetAllAsync<CategoryCrudModel>(
+                         searchTerm,
+                         CategoryPerPage,
+                         (page - 1) * CategoryPerPage,
+                         false);
 
-            var categoryCount = this.categorieService.GetCount(false);
+            var categoryCount = this.categorieService.GetCount(searchTerm, false);
 
             var pagesCount = (int)Math.Ceiling((decimal)categoryCount / CategoryPerPage);
 
@@ -42,6 +46,7 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "areaRoute",
+                    SearchTerm = searchTerm,
                 },
             };
 

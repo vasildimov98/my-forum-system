@@ -16,11 +16,25 @@
     </div>
 }
 
-<div class="ibox-content forum-container mb-3">
+<div class="ibox-content m-b-sm border-bottom">
 
-    <div class="forum-title">
-        <h3>@this.ViewData["Title"]</h3>
+    <div class="p-xs">
+        <h1>@this.ViewData["Title"]</h1>
     </div>
+
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-10">
+                <input asp-for="SearchTerm" placeholder="Search Categories..." class="form-control" />
+            </div>
+            <div class="form-group col-md-2">
+                <button type="submit" class="btn btn-block btn-primary">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="ibox-content forum-container mb-3">
 
     @if (!this.Model.Categories.Any())
     {

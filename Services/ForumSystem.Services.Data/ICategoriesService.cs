@@ -13,9 +13,9 @@
 
         public Task DeleteAsync(bool isUserAdmin, string userId, int categoryId);
 
-        public Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0, bool onlyApproved = true);
+        public Task<IEnumerable<T>> GetAllAsync<T>(string searchTerm = null, int? take = null, int skip = 0, bool onlyApproved = true);
 
-        public Task<IEnumerable<T>> GetByOwnerUsernameAsync<T>(string userId, int? take = null, int skip = 0);
+        public Task<IEnumerable<T>> GetByOwnerUsernameAsync<T>(string username, string searchTerm = null, int? take = null, int skip = 0);
 
         Task<IEnumerable<T>> FindCategoryByTermSearchAsync<T>(string term);
 
@@ -27,9 +27,9 @@
 
         Task<bool> ApproveCategoryAsync(int categoryId);
 
-        public int GetCount(bool onlyApproved = true);
+        public int GetCount(string searchTerm = null, bool onlyApproved = true);
 
-        int GetCountByOwner(string username);
+        int GetCountByOwner(string username, string searchTerm = null);
 
         public int GetIdCategoryIdByName(string name);
 

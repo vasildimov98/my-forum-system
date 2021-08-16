@@ -127,10 +127,21 @@
             await this.categoriesRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(int? take = null, int skip = 0, bool onlyApproved = true)
+        public async Task<IEnumerable<T>> GetAllAsync<T>(
+            string searchTerm = null,
+            int? take = null,
+            int skip = 0,
+            bool onlyApproved = true)
         {
             var query = this.categoriesRepository
                 .All();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query
+                    .Where(x => EF.Functions.Like(x.Name, $"%{searchTerm}%")
+                    || EF.Functions.Like(x.Description, $"%{searchTerm}%"));
+            }
 
             if (onlyApproved)
             {
@@ -159,13 +170,24 @@
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetByOwnerUsernameAsync<T>(string ownerId, int? take = null, int skip = 0)
+        public async Task<IEnumerable<T>> GetByOwnerUsernameAsync<T>(
+            string username,
+            string searchTerm = null,
+            int? take = null,
+            int skip = 0)
         {
             var query = this.categoriesRepository
                     .All()
-                    .Where(x => x.Owner.UserName == ownerId && x.IsApprovedByAdmin)
+                    .Where(x => x.Owner.UserName == username && x.IsApprovedByAdmin)
                     .OrderByDescending(x => x.Posts.Count)
                     .Skip(skip);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query
+                    .Where(x => EF.Functions.Like(x.Name, $"%{searchTerm}%")
+                        || EF.Functions.Like(x.Description, $"%{searchTerm}%"));
+            }
 
             if (take.HasValue)
             {
@@ -201,10 +223,17 @@
             .To<T>()
             .FirstOrDefaultAsync();
 
-        public int GetCount(bool onlyApproved = true)
+        public int GetCount(string searchTerm = null, bool onlyApproved = true)
         {
             var query = this.categoriesRepository
                 .All();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query
+                    .Where(x => EF.Functions.Like(x.Name, $"%{searchTerm}%")
+                    || EF.Functions.Like(x.Description, $"%{searchTerm}%"));
+            }
 
             if (onlyApproved)
             {
@@ -216,11 +245,22 @@
                 .Count();
         }
 
-        public int GetCountByOwner(string username)
-            => this.categoriesRepository
-                .All()
+        public int GetCountByOwner(string username, string searchTerm = null)
+        {
+            var query = this.categoriesRepository
+                .All();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query
+                    .Where(x => EF.Functions.Like(x.Name, $"%{searchTerm}%")
+                    || EF.Functions.Like(x.Description, $"%{searchTerm}%"));
+            }
+
+            return query
                 .Where(x => x.IsApprovedByAdmin && x.Owner.UserName == username)
                 .Count();
+        }
 
         public int GetIdCategoryIdByName(string name)
             => this.categoriesRepository.All()

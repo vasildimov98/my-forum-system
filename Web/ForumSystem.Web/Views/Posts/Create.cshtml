@@ -31,7 +31,7 @@
 <form asp-action="Create" method="post" id="myform">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div id="myModal" class="form-group">
+    <div class="form-group">
         <label asp-for="CategoryId"></label>
         <select asp-for="CategoryId" asp-items="categories" id="ajaxSelect2" class="form-control">
         </select>

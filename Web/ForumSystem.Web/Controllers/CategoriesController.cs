@@ -35,14 +35,14 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> All(int id)
+        public async Task<IActionResult> All(int id, string searchTerm)
         {
             var page = Math.Max(1, id);
 
             var categories = await this.categoriesService
-                .GetAllAsync<CategoryViewModel>(CategoriesPerPage, (page - 1) * CategoriesPerPage);
+                .GetAllAsync<CategoryViewModel>(searchTerm, CategoriesPerPage, (page - 1) * CategoriesPerPage);
 
-            var categoriesCount = this.categoriesService.GetCount();
+            var categoriesCount = this.categoriesService.GetCount(searchTerm);
 
             var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
 
@@ -54,6 +54,7 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "default",
+                    SearchTerm = searchTerm,
                 },
             };
 
@@ -61,7 +62,10 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> ByOwner(string username, int id)
+        public async Task<IActionResult> ByOwner(
+            string username,
+            int id,
+            string searchTerm)
         {
             var loggedInUser = await this.userManager
                 .GetUserAsync(this.User);
@@ -76,10 +80,12 @@
             var categories = await this.categoriesService
                 .GetByOwnerUsernameAsync<CategoryByUserViewModel>(
                     username,
+                    searchTerm,
                     CategoriesPerPage,
                     (page - 1) * CategoriesPerPage);
 
-            var categoriesCount = this.categoriesService.GetCountByOwner(username);
+            var categoriesCount = this.categoriesService
+                .GetCountByOwner(username, searchTerm);
 
             var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
 
@@ -91,6 +97,7 @@
                     CurrentPage = page,
                     TotalPages = pagesCount,
                     RouteName = "categories-username-page",
+                    SearchTerm = searchTerm,
                 },
             };
 

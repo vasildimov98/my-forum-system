@@ -9,5 +9,7 @@
         public IEnumerable<CategoryByUserViewModel> Categories { get; set; }
 
         public PaginationViewModel PaginationModel { get; set; }
+
+        public string SearchTerm { get; set; }
     }
 }

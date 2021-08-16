@@ -11,5 +11,7 @@
         public int TotalPages { get; set; }
 
         public string RouteName { get; set; }
+
+        public string SearchTerm { get; set; }
     }
 }
