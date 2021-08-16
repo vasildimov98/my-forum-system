@@ -1,9 +1,9 @@
 
-👓 ## Introduction
+## 👓 Introduction
 
 This project is design for the final project defence of ASP.NET Core course at SoftUni (June 2021). It is a forum system website and it's called **Tellit**.
 
-✏️ ## Overview
+## ✏️ Overview
 
 **Tellit** is a place where users can browse posts, give their opion on a post by like it or dislike it, or they can comment on it any time. Users can also create posts or categories. When a user creates a post he has to give it a title, a content and a category. He can choice from the categories that are created or he can create a new one from himself. When a user creates a category he has to wait for its a approval from the administrator. When the category is a approve every user can now write a post or search for posts at this community.
 
@@ -11,8 +11,7 @@ To be able to read, write or comment on a post, or create a category, first user
 
 Administrators are like every other users, except they have the right to edit, delete every posts and category, and when they create a cateogry they don't need to wait for approval. Administrator also have Admin Panel where they can look at all the posts and categories and change or dismissed them. 
 
-<<<<<<< HEAD
-🔨 ## Built with
+## 🔨 Built with
 
 * ASP.NET CORE 5 MVC
 * ASP.NET CORE view components
