@@ -18,6 +18,9 @@
         [InlineData(15, 5, 1, null, 3, 1)]
         [InlineData(10, 5, 2, null, 2, 2)]
         [InlineData(5, 5, 1, null, 1, 1)]
+        [InlineData(15, 2, 1, "3", 1, 1)]
+        [InlineData(10, 5, 2, "tes", 2, 2)]
+        [InlineData(5, 1, 1, "2", 1, 1)]
         public void GetIndexShouldBeRestrictedOnlyForAdministrationAndReturnCorrectResult(
             int totalCategories,
             int cateogryPerPage,
@@ -47,6 +50,62 @@
                         categoryCrudModel.PaginationModel.TotalPages
                             .ShouldBe(totalPages);
                     }));
+
+        [Theory]
+        [InlineData(10, 5, -1, null, 1)]
+        [InlineData(12, 10, 0, null, 1)]
+        [InlineData(20, 20, -2, null, 1)]
+        [InlineData(10, 5, -123, "4", 1)]
+        [InlineData(12, 10, 0, "tes", 1)]
+        [InlineData(40, 40, -5, "3", 1)]
+        public void GetIndexShouldRedirectToTheFirstPageOfSameActionIfGivenIdIsLessOrEqualToZero(
+            int total,
+            int approved,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<CategoriesAdminController>
+                .Instance(instance => instance
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.Index(page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<CategoriesAdminController>(c => c.Index(expectedPage, searchTerm)));
+
+        [Theory]
+        [InlineData(10, 5, 123, null, 2)]
+        [InlineData(12, 10, 1000, null, 3)]
+        [InlineData(40, 40, 10, null, 8)]
+        [InlineData(10, 5, 123, "4", 1)]
+        [InlineData(12, 10, 1000, "tes", 3)]
+        [InlineData(40, 40, 5, "3", 3)]
+        public void GetIndexShouldRedirectToTheLastPageOfSameActionIfGivenIdIsMoreThanTotalPages(
+            int total,
+            int approved,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<CategoriesAdminController>
+                .Instance(instance => instance
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.Index(page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<CategoriesAdminController>(c => c.Index(expectedPage, searchTerm)));
 
         [Theory]
         [InlineData(10, 5, 1, null, 5, 2)]

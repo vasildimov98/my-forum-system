@@ -18,15 +18,18 @@
     public class CategoriesControllerTests
     {
         [Theory]
-        [InlineData(10, 1, null, 2)]
-        public void GetAllShouldReturnCorrectViewModel(
+        [InlineData(10, 1, null, 1, 10)]
+        [InlineData(10, 1, "3", 1, 1)]
+        [InlineData(12, 1, "tes", 2, 10)]
+        public void GetAllShouldReturnCorrectViewModelWithOrWithoutSearchTerm(
             int categoriesCount,
             int page,
             string searchTerm,
-            int totalPages)
+            int totalPages,
+            int expectedCategoriesReturn)
             => MyController<CategoriesController>
                 .Instance(instance => instance
-                    .WithData(GetCategories(12)))
+                    .WithData(GetCategories(categoriesCount)))
                 .Calling(c => c.All(page, searchTerm))
                 .ShouldHave()
                 .ActionAttributes(attr => attr
@@ -37,7 +40,7 @@
                     .WithModelOfType<CateogoriesListModel>()
                     .Passing(categoriesViewModel =>
                     {
-                        categoriesViewModel.Categories.Count().ShouldBe(categoriesCount);
+                        categoriesViewModel.Categories.Count().ShouldBe(expectedCategoriesReturn);
                         categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(page);
                         categoriesViewModel.PaginationModel.TotalPages.ShouldBe(totalPages);
                     }));
@@ -72,9 +75,67 @@
                     }));
 
         [Theory]
+        [InlineData(10, 5, -1, null, 1)]
+        [InlineData(12, 10, 0, null, 1)]
+        [InlineData(20, 20, -2, null, 1)]
+        [InlineData(10, 5, -123, "4", 1)]
+        [InlineData(12, 10, 0, "tes", 1)]
+        [InlineData(40, 40, -5, "3", 1)]
+        public void GetAllShouldRedirectToTheFirstPageOfSameActionIfGivenIdIsLessOrEqualToZero(
+            int total,
+            int approved,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.All(page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<CategoriesController>(c => c.All(expectedPage, searchTerm)));
+
+        [Theory]
+        [InlineData(10, 5, 123, null, 1)]
+        [InlineData(12, 10, 1000, null, 1)]
+        [InlineData(40, 40, 5, null, 4)]
+        [InlineData(10, 5, 123, "4", 1)]
+        [InlineData(12, 10, 1000, "tes", 1)]
+        [InlineData(40, 40, 5, "3", 2)]
+        public void GetAllShouldRedirectToTheLastPageOfSameActionIfGivenIdIsMoreThanTotalPages(
+            int total,
+            int approved,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.All(page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<CategoriesController>(c => c.All(expectedPage, searchTerm)));
+
+        [Theory]
         [InlineData(10, 5, 1, null, 5, 1)]
         [InlineData(12, 10, 1, null, 10, 1)]
         [InlineData(20, 20, 2, null, 10, 2)]
+        [InlineData(20, 13, 1, "3", 2, 1)]
+        [InlineData(20, 20, 2, "tes", 10, 2)]
         public void GetByOwnerShouldReturnOnlyCurrentlyLoggInUserAndOnlyHisApprovedOne(
             int total,
             int approved,
@@ -101,6 +162,66 @@
                         categoriesViewModel.PaginationModel.CurrentPage.ShouldBe(page);
                         categoriesViewModel.PaginationModel.TotalPages.ShouldBe(expectedPages);
                     }));
+
+        [Theory]
+        [InlineData(10, 5, -1, null, 1)]
+        [InlineData(12, 10, 0, null, 1)]
+        [InlineData(20, 20, -2, null, 1)]
+        [InlineData(10, 5, -123, "4", 1)]
+        [InlineData(12, 10, 0, "tes", 1)]
+        [InlineData(40, 40, -5, "3", 1)]
+        public void GetByOwnerShouldRedirectToTheFirstPageOfSameActionIfGivenIdIsLessOrEqualToZero(
+            int total,
+            int approved,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetUsers(1))
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.ByOwner(TestUser.Username, page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<CategoriesController>(c => c.ByOwner(TestUser.Username, expectedPage, searchTerm)));
+
+        [Theory]
+        [InlineData(10, 5, 123, null, 1)]
+        [InlineData(12, 10, 1000, null, 1)]
+        [InlineData(40, 40, 5, null, 4)]
+        [InlineData(10, 5, 123, "4", 1)]
+        [InlineData(12, 10, 1000, "tes", 1)]
+        [InlineData(40, 40, 5, "3", 2)]
+        public void GetByOwnerShouldRedirectToTheLastPageOfSameActionIfGivenIdIsMoreThanTotalPages(
+            int total,
+            int approved,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<CategoriesController>
+                .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetUsers(1))
+                    .WithData(GetMixedCategories(total, approved)))
+                .Calling(c => c.ByOwner(TestUser.Username, page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<CategoriesController>(c => c.ByOwner(TestUser.Username, expectedPage, searchTerm)));
 
         [Theory]
         [InlineData(10, 5, 1, null, "InvalidUser")]

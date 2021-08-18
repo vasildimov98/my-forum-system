@@ -47,5 +47,59 @@
                         postCrudModel.PaginationModel.TotalPages
                             .ShouldBe(totalPages);
                     }));
+
+        [Theory]
+        [InlineData(10, -1, null, 1)]
+        [InlineData(12, 0, null, 1)]
+        [InlineData(20, -2, null, 1)]
+        [InlineData(10, -123, "4", 1)]
+        [InlineData(12, 0, "tes", 1)]
+        [InlineData(40, -5, "3", 1)]
+        public void GetIndexShouldRedirectToTheFirstPageOfSameActionIfGivenIdIsLessOrEqualToZero(
+            int total,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<PostsAdminController>
+                .Instance(instance => instance
+                    .WithData(GetPosts(total)))
+                .Calling(c => c.Index(page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<PostsAdminController>(c => c.Index(expectedPage, searchTerm)));
+
+        [Theory]
+        [InlineData(10, 123, null, 2)]
+        [InlineData(12, 1000, null, 3)]
+        [InlineData(40, 10, null, 8)]
+        [InlineData(10, 123, "4", 1)]
+        [InlineData(12, 1000, "tes", 3)]
+        [InlineData(40, 5, "3", 3)]
+        public void GetIndexShouldRedirectToTheLastPageOfSameActionIfGivenIdIsMoreThanTotalPages(
+            int total,
+            int page,
+            string searchTerm,
+            int expectedPage)
+            => MyController<PostsAdminController>
+                .Instance(instance => instance
+                    .WithData(GetPosts(total)))
+                .Calling(c => c.Index(page, searchTerm))
+                .ShouldHave()
+                .ActionAttributes(attr => attr
+                    .RestrictingForAuthorizedRequests())
+                .TempData(data => data
+                    .ContainingEntryWithKey(InvalidMessageKey)
+                    .ContainingEntryWithValue(InvalidPageRequest))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect(red => red
+                    .To<PostsAdminController>(c => c.Index(expectedPage, searchTerm)));
     }
 }

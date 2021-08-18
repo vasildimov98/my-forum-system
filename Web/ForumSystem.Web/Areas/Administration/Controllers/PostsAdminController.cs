@@ -32,7 +32,7 @@
 
                 this.TempData[InvalidMessageKey] = InvalidPageRequest;
 
-                return this.RedirectToAction(nameof(this.Index), new { id, searchTerm });
+                return this.RedirectToAction(nameof(this.Index), new { area = AdministratorAreaName, id, searchTerm });
             }
 
             var currentPage = id;
@@ -52,7 +52,7 @@
 
                 this.TempData[InvalidMessageKey] = InvalidPageRequest;
 
-                return this.RedirectToAction(nameof(this.Index), new { id = currentPage, searchTerm });
+                return this.RedirectToAction(nameof(this.Index), new { area = AdministratorAreaName, id = currentPage, searchTerm });
             }
 
             var posts = await this.postsService
