@@ -668,23 +668,6 @@
                    }));
 
         [Theory]
-        [InlineData(null, false)]
-        public void GetDeleteShouldReturnNotFoundIfIdIsNull(
-            int? categoryId,
-            bool isFromAdminPanel)
-            => MyController<CategoriesController>
-                .Instance(instance => instance
-                    .WithUser()
-                    .WithData(GetCategories(1)))
-                .Calling(c => c.Delete(categoryId, isFromAdminPanel))
-                .ShouldHave()
-                .ActionAttributes(attrs => attrs
-                    .RestrictingForAuthorizedRequests())
-                .AndAlso()
-                .ShouldReturn()
-                .BadRequest();
-
-        [Theory]
         [InlineData(1, false)]
         public void GetDeleteShouldReturnNotFoundIfCategoryDoesntExits(
             int categoryId,

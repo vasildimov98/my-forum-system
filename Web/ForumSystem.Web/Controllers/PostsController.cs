@@ -227,15 +227,10 @@
         }
 
         [Authorize]
-        public IActionResult Delete(int? id, bool isFromAdminPanel)
+        public IActionResult Delete(int id, bool isFromAdminPanel)
         {
-            if (id == null)
-            {
-                return this.BadRequest();
-            }
-
             var post = this.postsService
-                .GetById<PostEditModel>(id.Value);
+                .GetById<PostEditModel>(id);
 
             if (post == null)
             {
@@ -245,7 +240,7 @@
                 return this.RedirectToAction("Error", "Home");
             }
 
-            if (!this.CheckIfLogInUserIsTheOwner(id.Value))
+            if (!this.CheckIfLogInUserIsTheOwner(id))
             {
                 return this.Unauthorized();
             }

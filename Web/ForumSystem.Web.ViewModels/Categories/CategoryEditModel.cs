@@ -19,11 +19,12 @@
               ErrorMessage = "Name should start with upper case letter!")]
         public string Name { get; set; }
 
-        [Required]
-        [MaxLength(350, ErrorMessage = "Description way too long. Only 350 letters allowed!")]
         public string Description { get; set; }
 
-        public string SanitizeDescription => new HtmlSanitizer().Sanitize(Description);
+        [Required]
+        [Display(Name = "Description")]
+        [MaxLength(3000, ErrorMessage = "Description way too long. Only 3000 letters allowed!")]
+        public string SanitizeDescription => new HtmlSanitizer().Sanitize(this.Description);
 
         [Required]
         [Display(Name = "Image")]

@@ -5,6 +5,7 @@
 
     using ForumSystem.Data.Models;
     using ForumSystem.Services.Mapping;
+    using Ganss.XSS;
 
     public class PostEditModel : IMapFrom<Post>
     {
@@ -14,9 +15,12 @@
         [MaxLength(300)]
         public string Title { get; set; }
 
-        [Required]
-        [MinLength(50, ErrorMessage = "Content is way to short. Tell me more.")]
         public string Content { get; set; }
+
+        [Required]
+        [Display(Name = "Content")]
+        [MinLength(50, ErrorMessage = "Content is way to short. Tell me more.")]
+        public string SanitizeContent => new HtmlSanitizer().Sanitize(this.Content);
 
         [Display(Name = "Category")]
         public int CategoryId { get; set; }

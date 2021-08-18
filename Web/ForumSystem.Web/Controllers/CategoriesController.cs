@@ -295,11 +295,18 @@
             {
                 var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
 
-                var userId = this.userManager
-               .GetUserId(this.User);
+                var user = await this.userManager
+                        .GetUserAsync(this.User);
 
                 await this.categoriesService
-                    .EditAsync(isUserAdmin, userId, input);
+                    .EditAsync(isUserAdmin, user.Id, input);
+
+                if (!isUserAdmin)
+                {
+                    this.TempData[SuccessMessageKey] = SuccessCategoryEdit;
+                }
+
+                return this.RedirectToAction("ByOwner", "Categories", new { username = user.UserName, id = 1 });
             }
             catch (InvalidOperationException)
             {
@@ -309,20 +316,13 @@
             {
                 return this.Unauthorized();
             }
-
-            return this.RedirectToAction("ByName", "Categories", new { name = input.Name, id = 1 });
         }
 
         [Authorize]
-        public async Task<IActionResult> Delete(int? id, bool isFromAdminPanel = false)
+        public async Task<IActionResult> Delete(int id, bool isFromAdminPanel = false)
         {
-            if (id == null)
-            {
-                return this.BadRequest();
-            }
-
             var category = await this.categoriesService
-                .GetByIdAsync<CategoryEditModel>((int)id);
+                .GetByIdAsync<CategoryEditModel>(id);
 
             if (category == null)
             {
@@ -332,7 +332,7 @@
                 return this.RedirectToAction("Error", "Home");
             }
 
-            if (!this.CheckIfLogInUserIsTheOwner(id.Value))
+            if (!this.CheckIfLogInUserIsTheOwner(id))
             {
                 return this.Unauthorized();
             }

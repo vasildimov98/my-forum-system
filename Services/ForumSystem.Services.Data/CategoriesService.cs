@@ -78,6 +78,7 @@
             categoryToEdit.Name = input.Name;
             categoryToEdit.Description = input.Description;
             categoryToEdit.ImageUrl = input.ImageUrl;
+            categoryToEdit.IsApprovedByAdmin = false;
 
             this.categoriesRepository.Update(categoryToEdit);
             await this.categoriesRepository.SaveChangesAsync();

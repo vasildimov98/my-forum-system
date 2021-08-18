@@ -404,23 +404,6 @@
                     }));
 
         [Theory]
-        [InlineData(null, false)]
-        public void GetDeleteShouldReturnBadRequestIfPostIdIsNullIfIdIsNull(
-            int? postId,
-            bool isFromAdminPanel)
-            => MyController<PostsController>
-                .Instance(instance => instance
-                    .WithUser()
-                    .WithData(GetPosts()))
-                .Calling(c => c.Delete(postId, isFromAdminPanel))
-                .ShouldHave()
-                .ActionAttributes(attrs => attrs
-                    .RestrictingForAuthorizedRequests())
-                .AndAlso()
-                .ShouldReturn()
-                .BadRequest();
-
-        [Theory]
         [InlineData(1, false)]
         public void GetDeleteShouldReturnNotFoundIfPostDoesntExits(
             int postId,
