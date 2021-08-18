@@ -34,5 +34,7 @@
         public string ImageUrl { get; set; }
 
         public bool IsFromAdminPanel { get; set; }
+
+        public int FromPage { get; set; }
     }
 }

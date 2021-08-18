@@ -15,6 +15,8 @@
         [MaxLength(300)]
         public string Title { get; set; }
 
+        public string UrlTitle => this.Title.Replace(" ", "_");
+
         public string Content { get; set; }
 
         [Required]
@@ -34,5 +36,7 @@
         public bool IsFromAdminPanel { get; set; }
 
         public IEnumerable<CategoryDropDownViewModel> Categories { get; set; }
+
+        public int FromPage { get; set; }
     }
 }

@@ -26,6 +26,8 @@
 <h1>@this.ViewData["Title"]</h1>
 
 <form asp-area="" asp-controller="Posts" asp-action="Edit" asp-route-id="@this.Model.Id" method="post">
+    <input type="hidden" asp-for="FromPage" />
+    <input type="hidden" asp-for="IsFromAdminPanel" />
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group">
@@ -50,7 +52,7 @@
     <hr />
     <div class="form-check float-md-right">
         <input type="submit" value="Edit" class="btn btn-success my-post-btn" /> |
-        <a asp-controller="Posts" asp-action="ById" asp-route-id="@this.Model.Id" class="btn btn-secondary">Go to Post</a>
+        <a asp-controller="Posts" asp-action="ById" asp-route-id="@this.Model.Id" asp-route-title="@this.Model.UrlTitle" class="btn btn-secondary">Go to Post</a>
     </div>
 </form>
 

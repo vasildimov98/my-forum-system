@@ -116,7 +116,8 @@
         {
             var postsQuery = this.postsRepository
                 .All()
-                .OrderByDescending(x => x.CreatedOn)
+                .OrderByDescending(x => x.Comments.Count)
+                .ThenByDescending(x => x.CreatedOn)
                 .Skip(skip);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -144,7 +145,8 @@
             var postsQuery = this.postsRepository
                .All()
                .Where(x => x.CategoryId == categoryId)
-               .OrderByDescending(x => x.CreatedOn)
+               .OrderByDescending(x => x.Comments.Count)
+               .ThenByDescending(x => x.CreatedOn)
                .Skip(skip);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -172,7 +174,8 @@
             var postsQuery = this.postsRepository
                .All()
                .Where(x => x.UserId == userId)
-               .OrderByDescending(x => x.CreatedOn)
+               .OrderByDescending(x => x.Comments.Count)
+               .ThenByDescending(x => x.CreatedOn)
                .Skip(skip);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))

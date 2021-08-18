@@ -78,7 +78,11 @@
             categoryToEdit.Name = input.Name;
             categoryToEdit.Description = input.Description;
             categoryToEdit.ImageUrl = input.ImageUrl;
-            categoryToEdit.IsApprovedByAdmin = false;
+
+            if (!isUserAdmin)
+            {
+                categoryToEdit.IsApprovedByAdmin = false;
+            }
 
             this.categoriesRepository.Update(categoryToEdit);
             await this.categoriesRepository.SaveChangesAsync();
@@ -201,10 +205,11 @@
                 .ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync<T>(int categoryId)
+        public async Task<T> GetByIdAsync<T>(int categoryId, bool isUserAdmin)
             => await this.categoriesRepository
                 .All()
-                .Where(x => x.Id == categoryId)
+                .Where(x => (x.Id == categoryId)
+                    && (x.IsApprovedByAdmin || isUserAdmin))
                 .To<T>()
                 .FirstOrDefaultAsync();
 

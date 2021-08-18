@@ -260,10 +260,15 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(
+                         int id,
+                         int fromPage,
+                         bool isFromAdminPanel)
         {
+            var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
             var category = await this.categoriesService
-                .GetByIdAsync<CategoryEditModel>(id);
+                .GetByIdAsync<CategoryEditModel>(id, isUserAdmin);
 
             if (category == null)
             {
@@ -278,17 +283,20 @@
                 return this.Unauthorized();
             }
 
+            category.FromPage = fromPage;
+            category.IsFromAdminPanel = isFromAdminPanel;
+
             return this.View(category);
         }
 
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CategoryEditModel input)
+        public async Task<IActionResult> Edit(CategoryEditModel editModel)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.View(input.Id);
+                return this.View(editModel.Id);
             }
 
             try
@@ -299,11 +307,16 @@
                         .GetUserAsync(this.User);
 
                 await this.categoriesService
-                    .EditAsync(isUserAdmin, user.Id, input);
+                    .EditAsync(isUserAdmin, user.Id, editModel);
 
                 if (!isUserAdmin)
                 {
                     this.TempData[SuccessMessageKey] = SuccessCategoryEdit;
+                }
+
+                if (editModel.IsFromAdminPanel)
+                {
+                    return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName, id = editModel.FromPage });
                 }
 
                 return this.RedirectToAction("ByOwner", "Categories", new { username = user.UserName, id = 1 });
@@ -319,10 +332,12 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Delete(int id, bool isFromAdminPanel = false)
+        public async Task<IActionResult> Delete(int id, bool isFromAdminPanel)
         {
+            var isUserAdmin = this.User.IsInRole(AdministratorRoleName);
+
             var category = await this.categoriesService
-                .GetByIdAsync<CategoryEditModel>(id);
+                .GetByIdAsync<CategoryEditModel>(id, isUserAdmin);
 
             if (category == null)
             {
@@ -356,6 +371,15 @@
 
                 await this.categoriesService
                     .DeleteAsync(isUserAdmin, userId, id);
+
+                if (isFromAdminPanel)
+                {
+                    return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName, id = 1 });
+                }
+
+                var username = (await this.userManager.GetUserAsync(this.User)).UserName;
+
+                return this.RedirectToAction("ByOwner", "Categories", new { area = string.Empty, username, id = 1 });
             }
             catch (InvalidOperationException)
             {
@@ -365,15 +389,6 @@
             {
                 return this.Unauthorized();
             }
-
-            if (isFromAdminPanel)
-            {
-                return this.RedirectToAction("Index", "CategoriesAdmin", new { area = AdministratorAreaName, id = 1 });
-            }
-
-            var username = (await this.userManager.GetUserAsync(this.User)).UserName;
-
-            return this.RedirectToAction("ByOwner", "Categories", new { area = string.Empty, username, id = 1 });
         }
 
         private bool CheckIfLogInUserIsTheOwner(int categoryId)

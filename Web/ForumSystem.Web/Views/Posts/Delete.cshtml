@@ -37,7 +37,7 @@
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="IsFromAdminPanel" />
                 <input type="submit" value="Delete" class="btn btn-danger" /> |
-                <a asp-controller="Posts" asp-action="ById" asp-route-id="@this.Model.Id" class="btn btn-secondary">Go to Post</a>
+                <a asp-controller="Posts" asp-action="ById" asp-route-id="@this.Model.Id" asp-route-title="@this.Model.UrlTitle" class="btn btn-secondary">Go to Post</a>
             </form>
         </div>
     </div>

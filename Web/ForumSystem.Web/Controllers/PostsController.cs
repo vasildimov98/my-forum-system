@@ -163,7 +163,10 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(
+                    int id,
+                    int fromPage,
+                    bool isFromAdminPanel)
         {
             var post = this.postsService
                 .GetById<PostEditModel>(id);
@@ -185,6 +188,8 @@
                 .GetAllAsync<CategoryDropDownViewModel>();
 
             post.Categories = categories;
+            post.FromPage = fromPage;
+            post.IsFromAdminPanel = isFromAdminPanel;
 
             return this.View(post);
         }
@@ -213,6 +218,13 @@
                         editModel.Title,
                         editModel.Content,
                         editModel.CategoryId);
+
+                if (editModel.IsFromAdminPanel)
+                {
+                    return this.RedirectToAction("Index", "PostsAdmin", new { area = AdministratorAreaName, id = editModel.FromPage });
+                }
+
+                return this.RedirectToAction("ById", "Posts", new { editModel.Id, editModel.Title, area = string.Empty });
             }
             catch (InvalidOperationException)
             {
@@ -222,8 +234,6 @@
             {
                 return this.Unauthorized();
             }
-
-            return this.RedirectToAction("ById", "Posts", new { editModel.Id, editModel.Title, area = string.Empty });
         }
 
         [Authorize]
@@ -267,6 +277,13 @@
                         isUserAdmin,
                         userId,
                         id);
+
+                if (isFromAdminPanel)
+                {
+                    return this.RedirectToAction("Index", "PostsAdmin", new { area = AdministratorAreaName, id = 1 });
+                }
+
+                return this.RedirectToAction("All", "Posts", new { area = string.Empty, id = 1 });
             }
             catch (InvalidOperationException)
             {
@@ -276,13 +293,6 @@
             {
                 return this.Unauthorized();
             }
-
-            if (isFromAdminPanel)
-            {
-                return this.RedirectToAction("Index", "PostsAdmin", new { area = AdministratorAreaName, id = 1 });
-            }
-
-            return this.RedirectToAction("All", "Posts", new { area = string.Empty, id = 1 });
         }
 
         private bool CheckIfLogInUserIsTheOwner(int postId)

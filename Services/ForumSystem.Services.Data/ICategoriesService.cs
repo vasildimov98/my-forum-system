@@ -21,7 +21,7 @@
 
         public Task<IEnumerable<T>> GetMostFamousCategories<T>(int take = 5);
 
-        public Task<T> GetByIdAsync<T>(int categoryId);
+        public Task<T> GetByIdAsync<T>(int categoryId, bool isUserAdmin);
 
         public Task<T> GetByNameAsync<T>(string name);
 
