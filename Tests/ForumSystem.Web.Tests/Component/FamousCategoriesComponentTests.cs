@@ -17,9 +17,10 @@
     public class FamousCategoriesComponentTests
     {
         [Theory]
-        [InlineData(5, "TestName10", "TestName10", "TestName10", "TestName10", "TestName10")]
+        [InlineData(5, 5, "TestName10", "TestName10", "TestName10", "TestName10", "TestName10")]
         public void ViewComponentShouldReturnTopFiveCateogiresWithMostPostsAndToCashThem(
             int countOfCategory,
+            int casheTime,
             string firstCategoryName,
             string secondCategoryName,
             string thirdCategoryName,
@@ -35,7 +36,7 @@
                 .MemoryCache(cashe => cashe
                     .ContainingEntry(entry => entry
                         .WithKey(FamousCategoriesKey)
-                        .WithAbsoluteExpirationRelativeToNow(TimeSpan.FromMinutes(30))
+                        .WithAbsoluteExpirationRelativeToNow(TimeSpan.FromMinutes(casheTime))
                         .WithValueOfType<List<FamousCategoryViewModel>>()))
                 .AndAlso()
                 .ShouldReturn()

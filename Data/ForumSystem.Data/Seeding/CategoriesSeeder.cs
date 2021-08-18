@@ -36,8 +36,8 @@
                 },
                 new Category
                 {
-                    Name = "Money",
-                    Description = "<p>Money is any item or verifiable record that is generally accepted as payment for goods and services and repayment of debts, such as taxes, in a particular country or socio-economic context.</p>",
+                    Name = "Economics & Finance",
+                    Description = "<p>Financial economics is a branch of economics that analyzes the use and distribution of resources in markets. Financial decisions must often take into account future events, whether those be related to individual stocks, portfolios, or the market as a whole.</p>",
                     ImageUrl = "http://wearethenationnews.com/wp-content/uploads/2021/05/Befriend-your-money-and-reap-the-benefits.jpeg",
                 },
                 new Category

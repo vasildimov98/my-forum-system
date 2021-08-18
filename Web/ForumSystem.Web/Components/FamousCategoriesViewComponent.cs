@@ -36,7 +36,7 @@
                 .GetMostFamousCategories<FamousCategoryViewModel>();
 
                 var options = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(30));
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
 
                 this.cache
                     .Set(FamousCategoriesKey, famousCategories, options);
