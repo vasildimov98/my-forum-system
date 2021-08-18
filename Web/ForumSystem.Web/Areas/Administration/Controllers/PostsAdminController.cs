@@ -6,7 +6,6 @@
     using ForumSystem.Services.Data;
     using ForumSystem.Web.ViewModels.Administration.Posts;
     using ForumSystem.Web.ViewModels.PartialViews;
-    using ForumSystem.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -27,25 +26,48 @@
         [Authorize(Roles = AdministratorRoleName)]
         public async Task<IActionResult> Index(int id, string searchTerm)
         {
-            var page = Math.Max(1, id);
+            if (id <= 0)
+            {
+                id = 1;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.Index), new { id, searchTerm });
+            }
+
+            var currentPage = id;
+
+            var postsCount = this.postsService.GetCount(searchTerm);
+
+            var totalPages = (int)Math.Ceiling((double)postsCount / PostsPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.Index), new { id = currentPage, searchTerm });
+            }
 
             var posts = await this.postsService
                 .GetAllAsync<PostCrudModel>(
                 searchTerm,
                 PostsPerPage,
-                (page - 1) * PostsPerPage);
-
-            var postCount = this.postsService.GetCount(searchTerm);
-
-            var pagesCount = (int)Math.Ceiling((decimal)postCount / PostsPerPage);
+                (currentPage - 1) * PostsPerPage);
 
             var viewModel = new PostCrudModelList
             {
                 Posts = posts,
                 PaginationModel = new PaginationViewModel
                 {
-                    CurrentPage = page,
-                    TotalPages = pagesCount,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
                     RouteName = "areaRoute",
                     SearchTerm = searchTerm,
                 },

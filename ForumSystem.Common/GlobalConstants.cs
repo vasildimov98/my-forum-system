@@ -18,5 +18,7 @@
         public const string InvalidApprovalMessage = "Something went wrong with the approval!";
         public const string InvalidNameMessage = "Category name is taken, please try another one.";
         public const string SuccessCategoryCreate = "Category is created and now is waiting for admin approval!";
+
+        public const string InvalidPageRequest = "Invalid page number.";
     }
 }

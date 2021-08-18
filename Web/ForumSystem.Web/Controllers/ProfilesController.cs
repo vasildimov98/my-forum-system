@@ -16,6 +16,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
+    using static ForumSystem.Common.GlobalConstants;
+
     public class ProfilesController : BaseController
     {
         private const int PostsPerPage = 5;
@@ -37,7 +39,16 @@
         [Authorize]
         public async Task<IActionResult> ByUsername(string username, int id, string searchTerm)
         {
-            var page = Math.Max(1, id);
+            if (id <= 0)
+            {
+                id = 1;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.ByUsername), new { username, id, searchTerm });
+            }
+
+            var currentPage = id;
 
             var loggedInUserId = this.userManager.GetUserId(this.User);
 
@@ -51,7 +62,7 @@
                 user.Id,
                 searchTerm,
                 PostsPerPage,
-                (page - 1) * PostsPerPage);
+                (currentPage - 1) * PostsPerPage);
 
             var postsCount = user.Posts.Count;
 
@@ -61,11 +72,25 @@
                     .GetCountByUsername(username, searchTerm);
             }
 
+            var totalPages = (int)Math.Ceiling((double)postsCount / PostsPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.ByUsername), new { username, id = currentPage, searchTerm });
+            }
+
             var imageSrc = user.HasImage ?
                 "/profileImages/" + user.ProfileImage.Id + user.ProfileImage.Extention :
                 "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
-
-            var pagesCount = (int)Math.Ceiling((double)postsCount / PostsPerPage);
 
             var viewModel = new ProfileViewModel
             {
@@ -77,8 +102,8 @@
                 IsLoggedInUser = user.Id == loggedInUserId,
                 PaginationModel = new PaginationViewModel
                 {
-                    CurrentPage = page,
-                    TotalPages = pagesCount,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
                     RouteName = "user-username-page",
                     SearchTerm = searchTerm,
                 },

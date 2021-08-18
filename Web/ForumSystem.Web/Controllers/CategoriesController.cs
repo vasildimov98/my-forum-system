@@ -37,22 +37,45 @@
         [Authorize]
         public async Task<IActionResult> All(int id, string searchTerm)
         {
-            var page = Math.Max(1, id);
+            if (id <= 0)
+            {
+                id = 1;
 
-            var categories = await this.categoriesService
-                .GetAllAsync<CategoryViewModel>(searchTerm, CategoriesPerPage, (page - 1) * CategoriesPerPage);
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.All), new { id, searchTerm });
+            }
+
+            var currentPage = id;
 
             var categoriesCount = this.categoriesService.GetCount(searchTerm);
 
-            var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+            var totalPages = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.All), new { id = currentPage, searchTerm });
+            }
+
+            var categories = await this.categoriesService
+                .GetAllAsync<CategoryViewModel>(searchTerm, CategoriesPerPage, (currentPage - 1) * CategoriesPerPage);
 
             var viewModel = new CateogoriesListModel
             {
                 Categories = categories,
                 PaginationModel = new PaginationViewModel
                 {
-                    CurrentPage = page,
-                    TotalPages = pagesCount,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
                     RouteName = "default",
                     SearchTerm = searchTerm,
                 },
@@ -75,27 +98,50 @@
                 return this.Unauthorized();
             }
 
-            var page = Math.Max(1, id);
+            if (id <= 0)
+            {
+                id = 1;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.ByOwner), new { username, id, searchTerm });
+            }
+
+            var currentPage = Math.Max(1, id);
+
+            var categoriesCount = this.categoriesService
+                .GetCountByOwner(username, searchTerm);
+
+            var totalPages = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.ByOwner), new { username, id = currentPage, searchTerm });
+            }
 
             var categories = await this.categoriesService
                 .GetByOwnerUsernameAsync<CategoryByUserViewModel>(
                     username,
                     searchTerm,
                     CategoriesPerPage,
-                    (page - 1) * CategoriesPerPage);
-
-            var categoriesCount = this.categoriesService
-                .GetCountByOwner(username, searchTerm);
-
-            var pagesCount = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+                    (currentPage - 1) * CategoriesPerPage);
 
             var viewModel = new CategoriesByUserListModel
             {
                 Categories = categories,
                 PaginationModel = new PaginationViewModel
                 {
-                    CurrentPage = page,
-                    TotalPages = pagesCount,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
                     RouteName = "categories-username-page",
                     SearchTerm = searchTerm,
                 },
@@ -107,24 +153,26 @@
         [Authorize]
         public async Task<IActionResult> ByName(string name, int id, string searchTerm)
         {
-            var page = id;
+            if (id <= 0)
+            {
+                id = 1;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.ByName), new { name, id, searchTerm });
+            }
+
+            var currentPage = id;
 
             name = name.Replace("-", " ");
 
             var category = await this.categoriesService
-                .GetByNameAsync<CategoryPostsListModel>(name);
+               .GetByNameAsync<CategoryPostsListModel>(name);
 
             if (category == null)
             {
                 return this.NotFound();
             }
-
-            category.Posts = await this.postsService
-                .GetAllByCategoryIdAsync<PostListViewModel>(
-                category.Id,
-                searchTerm,
-                PostsPerPage,
-                (page - 1) * PostsPerPage);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -132,12 +180,35 @@
                     .GetCountByCategoryName(name, searchTerm);
             }
 
-            var pagesCount = (int)Math.Ceiling((double)category.PostsCount / PostsPerPage);
+            var totalPages = (int)Math.Ceiling((double)category.PostsCount / PostsPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                name = name.Replace(" ", "-");
+
+                return this.RedirectToAction(nameof(this.ByName), new { name, id = currentPage, searchTerm });
+            }
+
+            category.Posts = await this.postsService
+                .GetAllByCategoryIdAsync<PostListViewModel>(
+                category.Id,
+                searchTerm,
+                PostsPerPage,
+                (currentPage - 1) * PostsPerPage);
 
             category.PaginationModel = new PaginationViewModel
             {
-                CurrentPage = page,
-                TotalPages = pagesCount,
+                CurrentPage = currentPage,
+                TotalPages = totalPages,
                 RouteName = "category-name-page",
                 SearchTerm = searchTerm,
             };

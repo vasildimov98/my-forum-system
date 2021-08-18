@@ -16,7 +16,7 @@
 
         public string Title { get; set; }
 
-        public string Url => $"/Post/{this.Id}/{this.Title.ToLower().Replace(" ", "-")}";
+        public string Url => $"/Post/{this.Id}/{this.Title.ToLower().Replace(" ", "_")}";
 
         public string PostCreatorHref => $"/User/{this.UserUserName}/1";
 

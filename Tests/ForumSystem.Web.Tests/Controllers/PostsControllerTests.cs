@@ -66,7 +66,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<PostsController>(c => c.ById(With.Any<int>())));
+                    .To<PostsController>(c => c.ById(1, title)));
 
         [Theory]
         [InlineData("Test", "Test", 1)]
@@ -227,7 +227,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<PostsController>(c => c.ById(postId)));
+                    .To<PostsController>(c => c.ById(postId, editTitle)));
 
         [Theory]
         [InlineData(1, true, "EditTitle", "EditContentEditContentEditContentEditContentEditContent", 1)]
@@ -263,7 +263,7 @@
                .AndAlso()
                .ShouldReturn()
                .Redirect(redirect => redirect
-                   .To<PostsController>(c => c.ById(postId)));
+                   .To<PostsController>(c => c.ById(postId, editTitle)));
 
         [Theory]
         [InlineData(1, "EditTitle", "EditContentEditContentEditContentEditContentEditContent", 1)]

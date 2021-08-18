@@ -7,16 +7,16 @@
 
 @if (this.TempData.ContainsKey(InvalidMessageKey))
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @this.TempData[InvalidMessageKey]
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>@this.TempData[InvalidMessageKey]</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
 }
 
-<section class="pb-5 header">
-    <div class="container">
+<section class="mb-3 header">
+    <div class="container p-0">
         <div class="ibox-content m-b-sm border-bottom">
             <div class="p-xs">
                 <h1>@this.ViewData["Title"]</h1>
@@ -37,8 +37,7 @@
         <div class="row text-center">
             <div class="col-md-12 mx-auto">
                 <div class="card border-0 shadow text-center">
-                    <div class="card-body p-5">
-                        <!-- Responsive table -->
+                    <div class="card-body">
                         <div class="table-responsive">
                             <table class="table m-0 text-nowrap">
                                 <thead>
@@ -59,7 +58,6 @@
                                             </td>
                                             <td class="d-flex text-center justify-content-center">@category.Name</td>
                                             <td>
-                                                <!-- Call to action buttons -->
                                                 <ul class="list-inline m-0">
 
                                                     @if (!category.IsApprovedByAdmin)

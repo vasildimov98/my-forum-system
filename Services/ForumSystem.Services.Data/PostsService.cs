@@ -198,6 +198,14 @@
                 .To<T>()
                 .FirstOrDefault();
 
+        public T GetByIdAndTitle<T>(int id, string title)
+            => this.postsRepository
+                .All()
+                .Where(x => x.Id == id
+                && EF.Functions.Like(x.Title, $"%{title}%"))
+                .To<T>()
+                .FirstOrDefault();
+
         public int GetCount(string searchTerm = null)
         {
             var postsQuery = this.postsRepository.All();

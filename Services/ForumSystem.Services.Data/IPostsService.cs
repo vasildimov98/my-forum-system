@@ -34,6 +34,8 @@
 
         public T GetById<T>(int id);
 
+        public T GetByIdAndTitle<T>(int id, string title);
+
         int GetCount(string searchTerm = null);
 
         int GetCountByCategoryName(string categoryName, string searchTerm);

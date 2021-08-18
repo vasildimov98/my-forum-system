@@ -35,28 +35,56 @@
             this.userManager = userManager;
         }
 
-        public async Task<IActionResult> All(int id, string searchTerm)
+        public async Task<IActionResult> All(int? id, string searchTerm)
         {
-            var page = Math.Max(1, id);
+            if (!id.HasValue)
+            {
+                id = 1;
+            }
+
+            if (id <= 0)
+            {
+                id = 1;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.All), new { id, searchTerm });
+            }
+
+            var currentPage = id.Value;
+
+            var postsCount = this.postsService.GetCount(searchTerm);
+
+            var totalPages = (int)Math.Ceiling((double)postsCount / PostsPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.All), new { id = currentPage, searchTerm });
+            }
 
             var posts = await this.postsService
                     .GetAllAsync<PostListViewModel>(
                     searchTerm,
                     PostsPerPage,
-                    (page - 1) * PostsPerPage);
-
-            var count = this.postsService.GetCount(searchTerm);
-
-            var pagesCount = (int)Math.Ceiling((double)count / PostsPerPage);
+                    (currentPage - 1) * PostsPerPage);
 
             var postsList = new PostsAllViewModel
             {
-                PostsCount = count,
+                PostsCount = postsCount,
                 Posts = posts,
                 PaginationModel = new PaginationViewModel
                 {
-                    CurrentPage = page,
-                    TotalPages = pagesCount,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
                     RouteName = "default",
                     SearchTerm = searchTerm,
                 },
@@ -66,11 +94,11 @@
         }
 
         [Authorize]
-        public async Task<IActionResult> ById(int id)
+        public async Task<IActionResult> ById(int id, string title)
         {
             var user = await this.userManager.GetUserAsync(this.User);
             var post = this.postsService
-                .GetById<PostViewModel>(id);
+                .GetByIdAndTitle<PostViewModel>(id, title.Replace("_", " "));
 
             if (post == null)
             {
@@ -126,7 +154,9 @@
 
             var id = await this.postsService.CreateAsync(input.Title, input.Content, input.CategoryId, userId);
 
-            return this.RedirectToAction(nameof(this.ById), new { id });
+            var title = input.Title.Replace(" ", "_");
+
+            return this.RedirectToAction(nameof(this.ById), new { id, title });
         }
 
         [Authorize]
@@ -187,7 +217,7 @@
                 return this.Unauthorized();
             }
 
-            return this.RedirectToAction("ById", "Posts", new { editModel.Id, area = string.Empty });
+            return this.RedirectToAction("ById", "Posts", new { editModel.Id, editModel.Title, area = string.Empty });
         }
 
         [Authorize]

@@ -17,7 +17,7 @@
         [Theory]
         [InlineData(15, 5, 1, null, 3, 1)]
         [InlineData(10, 5, 2, null, 2, 2)]
-        [InlineData(5, 5, 0, null, 1, 1)]
+        [InlineData(5, 5, 1, null, 1, 1)]
         public void GetIndexShouldBeRestrictedOnlyForAdministrationAndReturnCorrectResult(
             int totalCategories,
             int cateogryPerPage,
@@ -52,7 +52,7 @@
         [InlineData(10, 5, 1, null, 5, 2)]
         [InlineData(12, 10, 1, null, 5, 3)]
         [InlineData(20, 20, 2, null, 5, 4)]
-        public void GetAllShouldReturnEverySingleCateogryEvenIfNotUnapproved(
+        public void GetIndexShouldReturnEverySingleCateogryEvenIfNotUnapproved(
             int total,
             int approved,
             int page,

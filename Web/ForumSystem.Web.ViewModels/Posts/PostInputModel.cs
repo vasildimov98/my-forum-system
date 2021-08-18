@@ -7,6 +7,7 @@
     {
         [Required]
         [MaxLength(300)]
+        [RegularExpression("^[^_]*$", ErrorMessage = "Underscore is not allowed in the title.")]
         public string Title { get; set; }
 
         [Required]

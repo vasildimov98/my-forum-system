@@ -42,8 +42,8 @@
         public void GetByIdShouldBeRoutedCorrectly()
             => MyRouting
                 .Configuration()
-                .ShouldMap("/Posts/ById/3")
-                .To<PostsController>(c => c.ById(With.Value<int>(3)));
+                .ShouldMap("/Post/3/test_test")
+                .To<PostsController>(c => c.ById(With.Value<int>(3), With.Value<string>("test_test")));
 
         [Fact]
         public void GetEditShouldBeRoutedCorrectly()

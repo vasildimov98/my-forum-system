@@ -13,38 +13,61 @@
 
     public class CategoriesAdminController : AdministrationController
     {
-        private const int CategoryPerPage = 5;
+        private const int CategoriesPerPage = 5;
 
-        private readonly ICategoriesService categorieService;
+        private readonly ICategoriesService categoriesService;
 
         public CategoriesAdminController(ICategoriesService categoriesService)
         {
-            this.categorieService = categoriesService;
+            this.categoriesService = categoriesService;
         }
 
         [Authorize(Roles = AdministratorRoleName)]
         public async Task<IActionResult> Index(int id, string searchTerm)
         {
-            var page = Math.Max(1, id);
+            if (id <= 0)
+            {
+                id = 1;
 
-            var categories = await this.categorieService
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.Index), new { id, searchTerm });
+            }
+
+            var currentPage = id;
+
+            var categoriesCount = this.categoriesService.GetCount(searchTerm, false);
+
+            var totalPages = (int)Math.Ceiling((double)categoriesCount / CategoriesPerPage);
+
+            if (totalPages == 0)
+            {
+                totalPages = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+
+                this.TempData[InvalidMessageKey] = InvalidPageRequest;
+
+                return this.RedirectToAction(nameof(this.Index), new { id = currentPage, searchTerm });
+            }
+
+            var categories = await this.categoriesService
                 .GetAllAsync<CategoryCrudModel>(
                          searchTerm,
-                         CategoryPerPage,
-                         (page - 1) * CategoryPerPage,
+                         CategoriesPerPage,
+                         (currentPage - 1) * CategoriesPerPage,
                          false);
-
-            var categoryCount = this.categorieService.GetCount(searchTerm, false);
-
-            var pagesCount = (int)Math.Ceiling((decimal)categoryCount / CategoryPerPage);
 
             var viewModel = new CategoryCrudModelList
             {
                 Categories = categories,
                 PaginationModel = new PaginationViewModel
                 {
-                    CurrentPage = page,
-                    TotalPages = pagesCount,
+                    CurrentPage = currentPage,
+                    TotalPages = totalPages,
                     RouteName = "areaRoute",
                     SearchTerm = searchTerm,
                 },
@@ -56,7 +79,7 @@
         [Authorize(Roles = AdministratorRoleName)]
         public async Task<IActionResult> Approve(int id, int page)
         {
-            var isApproved = await this.categorieService
+            var isApproved = await this.categoriesService
                 .ApproveCategoryAsync(id);
 
             if (!isApproved)
