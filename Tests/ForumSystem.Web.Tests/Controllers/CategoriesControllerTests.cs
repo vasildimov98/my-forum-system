@@ -307,9 +307,15 @@
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())
+               .TempData(data => data
+                    .ContainingEntryWithKey(ErrorTitleKey)
+                    .ContainingEntryWithValue(ErrorNotFoundTitle)
+                    .ContainingEntryWithKey(ErrorMessageKey)
+                    .ContainingEntryWithValue(ErrorNotFoundMessage))
                .AndAlso()
                .ShouldReturn()
-               .NotFound();
+               .Redirect(red => red
+                    .To<HomeController>(c => c.Error()));
 
         [Theory]
         [InlineData(1, true, true)]
@@ -407,7 +413,7 @@
 
         [Theory]
         [InlineData(1, "EditName", "EditDesctiption", "EditImage.jpg")]
-        public void PostEditShouldBeOnlyForAuthorizeUsersAndShouldReturnNotFountIfDoesntExists(
+        public void PostEditShouldBeOnlyForAuthorizeUsersAndShouldReturnRedirectIfDoesntExists(
            int categoryId,
            string editName,
            string editDescription,
@@ -428,7 +434,7 @@
                    .RestrictingForAuthorizedRequests())
                .AndAlso()
                .ShouldReturn()
-               .NotFound();
+               .BadRequest();
 
         [Theory]
         [InlineData(1, true, true, "EditName", "EditDesctiption", "EditImage.jpg")]
@@ -569,9 +575,15 @@
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
-                .AndAlso()
-                .ShouldReturn()
-                .NotFound();
+                .TempData(data => data
+                    .ContainingEntryWithKey(ErrorTitleKey)
+                    .ContainingEntryWithValue(ErrorNotFoundTitle)
+                    .ContainingEntryWithKey(ErrorMessageKey)
+                    .ContainingEntryWithValue(ErrorNotFoundMessage))
+               .AndAlso()
+               .ShouldReturn()
+               .Redirect(red => red
+                    .To<HomeController>(c => c.Error()));
 
         [Theory]
         [InlineData(1, true, true, false)]
@@ -676,7 +688,7 @@
                     .RestrictingForAuthorizedRequests())
                 .AndAlso()
                 .ShouldReturn()
-                .NotFound();
+                .BadRequest();
 
         [Theory]
         [InlineData(1, true, true, false)]

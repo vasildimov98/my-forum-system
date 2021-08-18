@@ -10,7 +10,6 @@
     using ForumSystem.Web.ViewModels.Posts;
 
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
@@ -172,7 +171,10 @@
 
             if (category == null)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -265,7 +267,10 @@
 
             if (category == null)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             if (!this.CheckIfLogInUserIsTheOwner(id))
@@ -298,7 +303,7 @@
             }
             catch (InvalidOperationException)
             {
-                return this.NotFound();
+                return this.BadRequest();
             }
             catch (UnauthorizedAccessException)
             {
@@ -321,7 +326,10 @@
 
             if (category == null)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             if (!this.CheckIfLogInUserIsTheOwner(id.Value))
@@ -351,7 +359,7 @@
             }
             catch (InvalidOperationException)
             {
-                return this.NotFound();
+                return this.BadRequest();
             }
             catch (UnauthorizedAccessException)
             {

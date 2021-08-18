@@ -80,16 +80,15 @@ function createOtherUserChatInfo(messageObj) {
     let element = `<div class="media w-50 mb-3">
                                             <img src="${messageObj.imageSrc}" alt="user" width="50" class="rounded-circle">
                                             <div class="media-body ml-3">
-                                                <div class="bg-light rounded py-2 px-3 mb-2">
+                                                <div class="rounded py-2 px-3 mb-2">
                                                     <p class="text-small mb-0 text-muted">${messageObj.user}</p>
-                                                    <p class="text-small mb-0 response-content">${escapeHtml(messageObj.content)}</p>
+                                                    <p class="text-small mb-0 response-content wrap-word-content">${escapeHtml(messageObj.content)}</p>
                                                 </div>
                                                 <p class="small text-muted">
                                                     <time datetime=${messageObj.sendTime}></time>
                                                 </p>
                                             </div>
                                         </div>`
-
     return element;
 }
 
@@ -97,7 +96,7 @@ function createCurrUserChatInfo(messageObj) {
     let element = `<div class="media w-50 ml-auto mb-3">
                                     <div class="media-body">
                                         <div class="bg-primary rounded py-2 px-3 mb-2">
-                                            <p class="text-small mb-0 text-white">${escapeHtml(messageObj.content)}</p>
+                                            <p class="text-small mb-0 text-white wrap-word-content">${escapeHtml(messageObj.content)}</p>
                                         </div>
                                        <p class="small text-muted">
                                            <time datetime=${messageObj.createdOn}></time>

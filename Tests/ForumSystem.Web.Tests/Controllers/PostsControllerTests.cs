@@ -172,9 +172,15 @@
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())
+               .TempData(data => data
+                    .ContainingEntryWithKey(ErrorTitleKey)
+                    .ContainingEntryWithValue(ErrorNotFoundTitle)
+                    .ContainingEntryWithKey(ErrorMessageKey)
+                    .ContainingEntryWithValue(ErrorNotFoundMessage))
                .AndAlso()
                .ShouldReturn()
-               .NotFound();
+               .Redirect(red => red
+                    .To<HomeController>(c => c.Error()));
 
         [Theory]
         [InlineData(1, true)]
@@ -267,7 +273,7 @@
 
         [Theory]
         [InlineData(1, "EditTitle", "EditContentEditContentEditContentEditContentEditContent", 1)]
-        public void PostEditShouldBeOnlyForAuthorizeUsersAndShouldReturnNotFountIfDoesntExists(
+        public void PostEditShouldBeOnlyForAuthorizeUsersAndShouldReturnBadRequestIfDoesntExists(
            int postId,
            string editTitle,
            string editContent,
@@ -288,7 +294,7 @@
                    .RestrictingForAuthorizedRequests())
                .AndAlso()
                .ShouldReturn()
-               .NotFound();
+               .BadRequest();
 
         [Theory]
         [InlineData(1, true, "EditTitle", "EditContentEditContentEditContentEditContentEditContent", 1)]
@@ -399,7 +405,7 @@
 
         [Theory]
         [InlineData(null, false)]
-        public void GetDeleteShouldReturnNotFoundIfIdIsNull(
+        public void GetDeleteShouldReturnBadRequestIfPostIdIsNullIfIdIsNull(
             int? postId,
             bool isFromAdminPanel)
             => MyController<PostsController>
@@ -412,7 +418,7 @@
                     .RestrictingForAuthorizedRequests())
                 .AndAlso()
                 .ShouldReturn()
-                .NotFound();
+                .BadRequest();
 
         [Theory]
         [InlineData(1, false)]
@@ -426,9 +432,15 @@
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
-                .AndAlso()
-                .ShouldReturn()
-                .NotFound();
+                .TempData(data => data
+                    .ContainingEntryWithKey(ErrorTitleKey)
+                    .ContainingEntryWithValue(ErrorNotFoundTitle)
+                    .ContainingEntryWithKey(ErrorMessageKey)
+                    .ContainingEntryWithValue(ErrorNotFoundMessage))
+               .AndAlso()
+               .ShouldReturn()
+               .Redirect(red => red
+                    .To<HomeController>(c => c.Error()));
 
         [Theory]
         [InlineData(1, true, false)]
@@ -516,7 +528,7 @@
 
         [Theory]
         [InlineData(1, false, 2)]
-        public void PostDeleteShouldReturnNotFoundIfPostDoesntExists(
+        public void PostDeleteShouldReturnBadRequestIfPostDoesntExists(
             int postId,
             bool isFromAdminPanel,
             int invalidPostId)
@@ -531,7 +543,7 @@
                     .RestrictingForAuthorizedRequests())
                 .AndAlso()
                 .ShouldReturn()
-                .NotFound();
+                .BadRequest();
 
         [Theory]
         [InlineData(1, true, false)]

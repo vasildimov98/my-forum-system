@@ -25,7 +25,6 @@
                     .CachingResponse(0))
                .AndAlso()
                .ShouldReturn()
-               .View(view => view
-                    .WithModelOfType<ErrorViewModel>());
+               .View();
     }
 }

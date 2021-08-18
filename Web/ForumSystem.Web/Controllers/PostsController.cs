@@ -102,7 +102,10 @@
 
             if (post == null)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             post.IsSignInUserTheOwnerOfThePost = user.UserName == post.UserUserName;
@@ -167,7 +170,10 @@
 
             if (post == null)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             if (!this.CheckIfLogInUserIsTheOwner(id))
@@ -210,7 +216,7 @@
             }
             catch (InvalidOperationException)
             {
-                return this.NotFound();
+                return this.BadRequest();
             }
             catch (UnauthorizedAccessException)
             {
@@ -225,7 +231,7 @@
         {
             if (id == null)
             {
-                return this.NotFound();
+                return this.BadRequest();
             }
 
             var post = this.postsService
@@ -233,7 +239,10 @@
 
             if (post == null)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             if (!this.CheckIfLogInUserIsTheOwner(id.Value))
@@ -266,7 +275,7 @@
             }
             catch (InvalidOperationException)
             {
-                return this.NotFound();
+                return this.BadRequest();
             }
             catch (UnauthorizedAccessException)
             {

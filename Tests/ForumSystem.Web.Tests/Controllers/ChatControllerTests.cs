@@ -9,6 +9,7 @@
     using Shouldly;
     using Xunit;
 
+    using static ForumSystem.Common.GlobalConstants;
     using static ForumSystem.Web.Tests.Data.CategoiresTestData;
 
     public class ChatControllerTests
@@ -48,8 +49,14 @@
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
-                .AndAlso()
-                .ShouldReturn()
-                .NotFound();
+                .TempData(data => data
+                    .ContainingEntryWithKey(ErrorTitleKey)
+                    .ContainingEntryWithValue(ErrorNotFoundTitle)
+                    .ContainingEntryWithKey(ErrorMessageKey)
+                    .ContainingEntryWithValue(ErrorNotFoundMessage))
+               .AndAlso()
+               .ShouldReturn()
+               .Redirect(red => red
+                    .To<HomeController>(c => c.Error()));
     }
 }

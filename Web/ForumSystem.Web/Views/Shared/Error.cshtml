@@ -1,14 +1,17 @@
-@model ErrorViewModel
 @{
     this.ViewData["Title"] = "Error";
 }
-
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (this.Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@this.Model.RequestId</code>
-    </p>
-}
+<div class="ibox-content m-b-sm border-bottom">
+    @if (!this.TempData.ContainsKey(ErrorTitleKey))
+    {
+        <h1 class="text-danger">Error.</h1>
+        <h2 class="text-danger">An error occurred while processing your request.</h2>
+    }
+    else
+    {
+        <h1 class="text-danger">@TempData[ErrorTitleKey]</h1>
+        <div>
+            @Html.Raw(this.TempData[ErrorMessageKey])
+        </div>
+    }
+</div>

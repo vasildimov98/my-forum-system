@@ -53,9 +53,10 @@
                     }));
 
         [Theory]
-        [InlineData(3, "TestName1", "TestName2", "TestName3")]
+        [InlineData(3, 5, "TestName1", "TestName2", "TestName3")]
         public void ViewComponentShouldReturnAllCateogiresIfThereAreLessThenfiveInTheDatabase(
             int countOfCategory,
+            int casheTime,
             string firstCategoryName,
             string secondCategoryName,
             string thirdCategoryName)
@@ -69,7 +70,7 @@
                 .MemoryCache(cashe => cashe
                     .ContainingEntry(entry => entry
                         .WithKey(FamousCategoriesKey)
-                        .WithAbsoluteExpirationRelativeToNow(TimeSpan.FromMinutes(30))
+                        .WithAbsoluteExpirationRelativeToNow(TimeSpan.FromMinutes(casheTime))
                         .WithValueOfType<List<FamousCategoryViewModel>>()))
                 .AndAlso()
                 .ShouldReturn()

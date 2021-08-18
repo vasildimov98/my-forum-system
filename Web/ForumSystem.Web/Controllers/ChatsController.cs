@@ -8,6 +8,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using static ForumSystem.Common.GlobalConstants;
+
     public class ChatsController : BaseController
     {
         private readonly ICategoriesService categoriesService;
@@ -29,7 +31,10 @@
 
             if (categoryId == 0)
             {
-                return this.NotFound();
+                this.TempData[ErrorTitleKey] = ErrorNotFoundTitle;
+                this.TempData[ErrorMessageKey] = ErrorNotFoundMessage;
+
+                return this.RedirectToAction("Error", "Home");
             }
 
             var viewModel = new LiveChatViewModel

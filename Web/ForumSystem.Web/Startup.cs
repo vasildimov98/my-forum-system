@@ -13,7 +13,6 @@
     using ForumSystem.Services.Messaging;
     using ForumSystem.Web.Hub;
     using ForumSystem.Web.ViewModels;
-
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
