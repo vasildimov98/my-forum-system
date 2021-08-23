@@ -67,7 +67,10 @@
             }
 
             var categories = await this.categoriesService
-                .GetAllAsync<CategoryViewModel>(searchTerm, CategoriesPerPage, (currentPage - 1) * CategoriesPerPage);
+                .GetAllAsync<CategoryViewModel>(
+                        searchTerm,
+                        CategoriesPerPage,
+                        (currentPage - 1) * CategoriesPerPage);
 
             var viewModel = new CateogoriesListModel
             {
@@ -248,6 +251,7 @@
             if (!isCategoryNameTaken)
             {
                 this.TempData[InvalidMessageKey] = InvalidNameMessage;
+
                 return this.View();
             }
 

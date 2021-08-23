@@ -56,7 +56,7 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("Category/Edit/1")
-                .To<CategoriesController>(c => c.Edit(With.Value<int>(1)));
+                .To<CategoriesController>(c => c.Edit(With.Value<int>(1), With.Value<int>(1), With.Value<bool>(false)));
 
         [Fact]
         public void PostEditShouldBeRoutedCorrectly()
@@ -65,7 +65,7 @@
                 .ShouldMap(request => request
                     .WithMethod(HttpMethod.Post)
                     .WithLocation("Category/Edit/1"))
-                .To<CategoriesController>(c => c.Edit(With.Any<int>()));
+                .To<CategoriesController>(c => c.Edit(With.Value<int>(1), With.Value<int>(1), With.Value<bool>(false)));
 
         [Fact]
         public void GetDeleteShouldBeRoutedCorrectly()

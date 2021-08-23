@@ -12,8 +12,8 @@
     using Xunit;
 
     using static ForumSystem.Common.GlobalConstants;
+    using static ForumSystem.Web.Tests.Data.CategoiresTestData;
     using static ForumSystem.Web.Tests.Data.PostsTestData;
-    using static ForumSystem.Web.Tests.Data.UsersTestData;
 
     public class PostsControllerTests
     {
@@ -38,14 +38,15 @@
                     }));
 
         [Theory]
-        [InlineData("Test", "TestTestTestTestTestTest", 1)]
+        [InlineData("Test", "TestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTestTest", 1)]
         public void PostCreateShouldBeForAuthorizeUserAndShouldRedirectCorrectlyWithView(
             string title,
             string content,
             int categoryId)
             => MyController<PostsController>
                 .Instance(instance => instance
-                    .WithUser())
+                    .WithUser()
+                    .WithData(GetCategories(categoryId)))
                 .Calling(c => c.Create(new PostInputModel
                 {
                     Title = title,
@@ -111,9 +112,11 @@
                     }));
 
         [Theory]
-        [InlineData(1, "TestTitle1", "TestContent1")]
+        [InlineData(1, 1, false, "TestTitle1", "TestContent1")]
         public void GetEditShouldBeOnlyForAuthorizeUsersAndShouldReturnCorrectResult(
             int postId,
+            int fromPage,
+            bool isFromAdminPanel,
             string title,
             string content)
             => MyController<PostsController>
@@ -121,7 +124,7 @@
                     .WithUser()
                     .WithData(GetPosts(postId)))
                 .Calling(c => c
-                    .Edit(postId))
+                    .Edit(postId, fromPage, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -136,9 +139,11 @@
                     }));
 
         [Theory]
-        [InlineData(1, true, "TestTitle1", "TestContent1")]
+        [InlineData(1, 1, false, true, "TestTitle1", "TestContent1")]
         public void GetEditShouldReturnCorrectResultEvenIfUserIsNotTheOwnerButItIsTheAdministrator(
             int postId,
+            int fromPage,
+            bool isFromAdminPanel,
             bool isDiffOwner,
             string title,
             string content)
@@ -147,7 +152,7 @@
                     .WithUser(new string[] { AdministratorRoleName })
                     .WithData(GetPosts(postId, isDiffOwner)))
                 .Calling(c => c
-                    .Edit(postId))
+                    .Edit(postId, fromPage, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -162,13 +167,15 @@
                     }));
 
         [Theory]
-        [InlineData(1)]
+        [InlineData(1, 1, false)]
         public void GetEditShouldBeOnlyForAuthorizeUsersAndShouldReturnNotFountIfDoesntExists(
-           int invalidPostId)
+           int invalidPostId,
+           int fromPage,
+           bool isFromPanel)
            => MyController<PostsController>
                .Instance()
                .Calling(c => c
-                   .Edit(invalidPostId))
+                   .Edit(invalidPostId, fromPage, isFromPanel))
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())
@@ -183,16 +190,18 @@
                     .To<HomeController>(c => c.Error()));
 
         [Theory]
-        [InlineData(1, true)]
+        [InlineData(1, 1, false, true)]
         public void GetEditShouldBeOnlyForAuthorizeUsersAndThoesWhoOwnsThePostAndShouldReturnUnautorizeIfUserNotOwner(
            int postId,
+           int fromPage,
+           bool isFromAdminPanel,
            bool isDiffOwner)
            => MyController<PostsController>
                .Instance(instance => instance
                     .WithUser()
                     .WithData(GetPosts(postId, isDiffOwner)))
                .Calling(c => c
-                   .Edit(postId))
+                   .Edit(postId, fromPage, isFromAdminPanel))
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())

@@ -46,7 +46,11 @@
                 pagesToShow.Add(i);
             }
 
-            pagesToShow = pagesToShow.Where(x => x <= this.Model.TotalPages).Distinct().OrderBy(x => x).ToList();
+            pagesToShow = pagesToShow
+                .Where(x => x <= this.Model.TotalPages)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToList();
         }
 
         @for (var i = 0; i < pagesToShow.Count; i++)

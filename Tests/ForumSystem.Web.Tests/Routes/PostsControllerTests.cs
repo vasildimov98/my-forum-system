@@ -50,16 +50,7 @@
             => MyRouting
                 .Configuration()
                 .ShouldMap("Post/Edit/1")
-                .To<PostsController>(c => c.Edit(With.Value<int>(1)));
-
-        [Fact]
-        public void PostEditShouldBeRoutedCorrectly()
-            => MyRouting
-                .Configuration()
-                .ShouldMap(request => request
-                    .WithMethod(HttpMethod.Post)
-                    .WithLocation("Post/Edit/1"))
-                .To<PostsController>(c => c.Edit(With.Any<int>()));
+                .To<PostsController>(c => c.Edit(With.Value<int>(1), With.Value<int>(1), With.Value<bool>(false)));
 
         [Fact]
         public void GetDeleteShouldBeRoutedCorrectly()

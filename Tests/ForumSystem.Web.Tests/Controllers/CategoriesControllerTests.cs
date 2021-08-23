@@ -366,9 +366,11 @@
                 .View();
 
         [Theory]
-        [InlineData(1, "TestName1", "TestDescription1")]
+        [InlineData(1, 1, false, "TestName1", "TestDescription1")]
         public void GetEditShouldBeOnlyForAuthorizeUsersAndShouldReturnCorrectResult(
             int categoryId,
+            int fromPage,
+            bool isFromAdminPanel,
             string name,
             string description)
             => MyController<CategoriesController>
@@ -376,7 +378,7 @@
                     .WithUser()
                     .WithData(GetCategories(categoryId)))
                 .Calling(c => c
-                    .Edit(categoryId))
+                    .Edit(categoryId, fromPage, isFromAdminPanel))
                 .ShouldHave()
                 .ActionAttributes(attrs => attrs
                     .RestrictingForAuthorizedRequests())
@@ -391,9 +393,11 @@
                     }));
 
         [Theory]
-        [InlineData(1, true, true, "TestName1", "TestDescription1")]
+        [InlineData(1, 1, false, true, true, "TestName1", "TestDescription1")]
         public void GetEditShouldReturnCorrectResultEvenIfUserIsNotTheOwnerButItIsTheAdministrator(
            int categoryId,
+           int fromPage,
+           bool isFromAdminPanel,
            bool isApprove,
            bool isDiffUser,
            string name,
@@ -403,7 +407,7 @@
                    .WithUser(new string[] { AdministratorRoleName })
                    .WithData(GetCategories(categoryId, isApprove, isDiffUser)))
                .Calling(c => c
-                   .Edit(categoryId))
+                   .Edit(categoryId, fromPage, isFromAdminPanel))
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())
@@ -418,13 +422,15 @@
                    }));
 
         [Theory]
-        [InlineData(1)]
+        [InlineData(1, 1, false)]
         public void GetEditShouldBeOnlyForAuthorizeUsersAndShouldReturnNotFountIfDoesntExists(
-           int categoryId)
+           int categoryId,
+           int fromPage,
+           bool isFromAdminPanel)
            => MyController<CategoriesController>
                .Instance()
                .Calling(c => c
-                   .Edit(categoryId))
+                   .Edit(categoryId, fromPage, isFromAdminPanel))
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())
@@ -439,9 +445,11 @@
                     .To<HomeController>(c => c.Error()));
 
         [Theory]
-        [InlineData(1, true, true)]
+        [InlineData(1, 1, false, true, true)]
         public void GetEditShouldBeOnlyForAuthorizeUsersAndThoesWhoOwnsThePostAndShouldReturnUnautorizeIfUserNotOwner(
            int categoryId,
+           int fromPage,
+           bool isFromAdminPanel,
            bool isApproved,
            bool isDiffOwner)
            => MyController<CategoriesController>
@@ -449,7 +457,7 @@
                     .WithUser()
                     .WithData(GetCategories(categoryId, isApproved, isDiffOwner)))
                .Calling(c => c
-                   .Edit(categoryId))
+                   .Edit(categoryId, fromPage, isFromAdminPanel))
                .ShouldHave()
                .ActionAttributes(attrs => attrs
                    .RestrictingForAuthorizedRequests())
@@ -491,7 +499,7 @@
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(redirect => redirect
-                    .To<CategoriesController>(c => c.ByName(editName, categoryId, searchTerm)));
+                    .To<CategoriesController>(c => c.ByOwner(TestUser.Username, categoryId, searchTerm)));
 
         [Theory]
         [InlineData(1, true, true, "EditName", "EditDesctiption", "EditImage.jpg", 1, null)]
@@ -530,7 +538,7 @@
               .AndAlso()
               .ShouldReturn()
               .Redirect(redirect => redirect
-                  .To<CategoriesController>(c => c.ByName(editName, page, searchTerm)));
+                  .To<CategoriesController>(c => c.ByOwner(TestUser.Username, page, searchTerm)));
 
         [Theory]
         [InlineData(1, "EditName", "EditDesctiption", "EditImage.jpg")]
@@ -540,7 +548,9 @@
            string editDescription,
            string editImageUrl)
            => MyController<CategoriesController>
-               .Instance()
+               .Instance(instance => instance
+                    .WithUser()
+                    .WithData(GetUsers(categoryId)))
                .Calling(c => c
                     .Edit(new CategoryEditModel
                     {

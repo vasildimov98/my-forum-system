@@ -43,6 +43,11 @@
             {
                 username = await this.usersService
                     .ChangeUsername(input.Username, user);
+
+                return new EditResponseModel
+                {
+                    Username = username,
+                };
             }
             catch (InvalidOperationException ioe)
             {
@@ -52,11 +57,6 @@
                     Username = user.UserName,
                 };
             }
-
-            return new EditResponseModel
-            {
-                Username = username,
-            };
         }
 
         [HttpPost]
@@ -76,13 +76,13 @@
                 imagePath = await this
                     .usersService
                     .UploadProfileImage(image, userId, filePath);
+
+                return this.Ok(imagePath);
             }
             catch (InvalidOperationException ioe)
             {
                 return this.BadRequest(ioe.Message);
             }
-
-            return this.Ok(imagePath);
         }
     }
 }

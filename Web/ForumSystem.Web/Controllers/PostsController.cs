@@ -155,7 +155,8 @@
             var userId = this.userManager
                 .GetUserId(this.User);
 
-            var id = await this.postsService.CreateAsync(input.Title, input.Content, input.CategoryId, userId);
+            var id = await this.postsService
+                .CreateAsync(input.Title, input.Content, input.CategoryId, userId);
 
             var title = input.Title.Replace(" ", "_");
 
